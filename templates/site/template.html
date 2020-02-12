@@ -1,0 +1,29 @@
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="{% static 'site/style.css' %}">
+<style>
+    .tabbed {
+        padding-left: 40px;
+    }
+</style>
+<head>
+    <script src="https://kit.fontawesome.com/72e77932da.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div style="background:transparent !important" class="jumbotron">
+        <h1 align = "left"><font color = "#989898">Personal Dashboard Home Page</font></h1>
+        <!--<p class = "lead" align = "center">Maybe the real treasure was the friends we made along the way</p>-->
+        <hr class="my-4">
+    </div>
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+    <br>
+
+    <div class = "page-footer" align = "center">
+        <p align = "center">Author: Four80ty</p>
+        <p align = "center">Copyrighted Very Legally&copy;</p>
+        <i class="fab fa-github fa-2x"></i>
+    </div>
+</body>

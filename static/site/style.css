@@ -1,0 +1,10 @@
+body {
+    background: url("images/background.gif") no-repeat;
+}
+hr {
+  border: 1px solid #989898;
+  border-radius: 5px;
+}
+p {
+    color: #989898;
+}

@@ -1,0 +1,11 @@
+ a {
+    color: teal;
+}
+
+p {
+  padding-left: 0px;
+}
+
+body {
+    background: white url("images/background.gif") no-repeat;
+}
