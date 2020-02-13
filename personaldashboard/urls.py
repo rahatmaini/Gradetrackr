@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import include, path
 from . import views
 
+app_name = 'personaldashboard'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomeView.as_view(), name="home"),
+    path('home', views.HomeView.as_view(), name="home"),
     path('gradetracker/', include('gradetracker.urls')),
 ]
