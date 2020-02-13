@@ -2,6 +2,11 @@ p {
     color: teal;
 }
 
+.labelHeader {
+    color: teal;
+    font-weight: bold;
+}
+
 p {
   padding-left: 0px;
 }
