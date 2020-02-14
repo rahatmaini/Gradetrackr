@@ -9,11 +9,11 @@
 <div class = "jumbotron">
     <h1 class = "display-3" align = "center">Four80ty's Grade Tracker</h1>
     <p class = "lead" align = "center">You like what you see? >;]</p>
-    <a class="nav-link" href="{% url 'home' %}">Home</a>
-    <hr class="my-4">
     <nav class="nav">
-        <a class="nav-link">Login</a>
+        <a class="nav-link" href="{% url 'home' %}">Home</a>
+        <a style = "float:right" class="nav-link">Login</a>
     </nav>
+    <hr class="my-4">
 </div>
 <div>
     {% block content %}
