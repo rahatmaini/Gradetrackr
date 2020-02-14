@@ -2,11 +2,13 @@ p {
     color: teal;
 }
 
+.section {
+    color: black;
+    font-weight: bold;
+    font-size: 200%;
+}
+
 .labelHeader {
     color: teal;
     font-weight: bold;
-}
-
-p {
-  padding-left: 0px;
 }
