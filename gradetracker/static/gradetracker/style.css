@@ -1,12 +1,22 @@
 p {
-    color: teal;
+    color: #33cccc;
+}
+
+a {
+    color: #33cccc;
+}
+
+.section {
+    color: black;
+    font-weight: bold;
+    font-size: 200%;
 }
 
 .labelHeader {
-    color: teal;
+    color: #33cccc;
     font-weight: bold;
 }
 
-p {
-  padding-left: 0px;
+html {
+  overflow-y: scroll;
 }

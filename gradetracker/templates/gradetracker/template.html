@@ -9,10 +9,20 @@
 <div class = "jumbotron">
     <h1 class = "display-3" align = "center">Four80ty's Grade Tracker</h1>
     <p class = "lead" align = "center">You like what you see? >;]</p>
-    <a class="nav-link" href="{% url 'home' %}">Home</a>
     <hr class="my-4">
     <nav class="nav">
-        <a class="nav-link">Login</a>
+        <form>
+            <div class="form-row">
+                <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
+            </div>
+            <div class="form-row">
+                <a class="nav-item nav-link" href="{% url 'gradetracker:index' %}">Overview</a>
+                <a class="nav-item nav-link" href="{% url 'gradetracker:add' %}">Add a Course</a>
+            </div>
+        </form>
+        <hr class="my-4">
+        <a class="nav-item nav-link">Login</a>
+
     </nav>
 </div>
 <div>

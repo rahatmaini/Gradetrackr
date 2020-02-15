@@ -6,5 +6,6 @@ import personaldashboard
 app_name = 'gradetracker'
 urlpatterns = [
     path('home', personaldashboard.views.HomeView.as_view(), name="home"),
-    path('', views.IndexView.as_view(), name='index'),
+    path('index', views.IndexView.as_view(), name='index'),
+    path('add', views.AddView.as_view(), name='add'),
 ]
