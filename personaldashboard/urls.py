@@ -17,8 +17,6 @@ from django.contrib import admin
 from django.urls import include, path
 from . import views
 from django.views.generic import TemplateView
-from django.conf import settings
-from django.conf.urls.static import static
 
 app_name = 'personaldashboard'
 urlpatterns = [
@@ -26,6 +24,5 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name="home"),
     path('home', views.HomeView.as_view(), name="home"),
     path('gradetracker/', include('gradetracker.urls')),
-    path('accounts/', include('allauth.urls')),
-    static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('accounts/', include('allauth.urls'))
 ]
