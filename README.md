@@ -1,5 +1,5 @@
 # project-101-four80ty
-https://travis-ci.com/uva-cs3240-s20/project-101-four80ty.svg?token=kGvDhncxks3fYLH3rCE2&branch=master
+[![Build Status](https://travis-ci.com/uva-cs3240-s20/project-101-four80ty.svg?token=Lzjc68LiqrNSqMcp3swt&branch=master)](https://travis-ci.com/uva-cs3240-s20/project-101-four80ty)
 
 
 Class project for CS 3240.
