@@ -24,5 +24,5 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name="home"),
     path('home', views.HomeView.as_view(), name="home"),
     path('gradetracker/', include('gradetracker.urls')),
-    path('accounts/', include('allauth.urls'))
+    path('accounts/', include('allauth.urls')),
 ]
