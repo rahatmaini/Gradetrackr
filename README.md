@@ -1,5 +1,5 @@
 # project-101-four80ty
-project-101-four80ty created by GitHub Classroom
+https://travis-ci.com/uva-cs3240-s20/project-101-four80ty.svg?token=kGvDhncxks3fYLH3rCE2&branch=master
 
 
 Class project for CS 3240.
