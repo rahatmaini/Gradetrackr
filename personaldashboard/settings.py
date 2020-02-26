@@ -140,7 +140,12 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-django_heroku.settings(locals())
+# Check to see if application is running on Heroku before calling 
+# django_heroku.settings(locals())
+import os
+if '/app' in os.environ['HOME']:
+    django_heroku.settings(locals())
 
-SITE_ID = 2
+
+SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
