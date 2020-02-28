@@ -23,8 +23,21 @@
             </div>
         </form>
         <hr class="my-4">
-        <a class="nav-item nav-link" href="{% provider_login_url 'google' %}">Login</a>
-
+        {% if user.is_authenticated %}
+            <form method = "post" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                {% endif %}
+                <button type="submit" class = "btn btn-success" onclick="return confirm('Are you sure you want to logout?')">Logout</button>
+            </form>
+        {% else %}
+            <form>
+                <div class = "form-row">
+                    <a class="btn btn-success" href="{% provider_login_url 'google' %}">Login</a>
+                </div>
+            </form>
+            {% endif %}
     </nav>
 </div>
 <div>
