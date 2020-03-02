@@ -1,7 +1,5 @@
 from django.test import TestCase
-from gradetracker.models import Student, Course, GradeCategory, Assignment
-import json
-
+from gradetracker.models import Student, Course, GradeCategory, Assignment, SingularGradeItem
 
 class GradeTrackerTestCase(TestCase):
     def setUp(self):
@@ -10,67 +8,91 @@ class GradeTrackerTestCase(TestCase):
 
     
     def test_set_some_default_grade_averages_to_a_course(self):
-        student1 = Student.objects.create(semesterGPA="",cumulativeGPA="")
+        student1 = Student.objects.create()
         class1 = Course.objects.create(name="APMA 3100: Probability", numOfCredits=3, studentItBelongsTo=student1)
+        category1 = GradeCategory.objects.create(name="Exams",weightage=45, courseItBelongsTo=class1)
 
-        gradesSoFar = [87,90,86]
-        serializedGrades = json.dumps(gradesSoFar)
-        class1.gradePercentage = serializedGrades
+        gradesSoFar = [87,90,86,96]
+        gradesThatShouldveBeenAdded = []
+        for grade in gradesSoFar:
+            Assignment.objects.create(name="Exam "+str(gradesSoFar.index(grade)+1), gradePercentage=grade, gradeCategoryItBelongsTo=category1)
 
-        self.assertEqual([87,90,86],json.loads(class1.gradePercentage))
+        for item in (category1.assignments.all()):
+            gradesThatShouldveBeenAdded.append(item.gradePercentage)
+        
 
-    def test_add_a_new_grade_avg_to_a_course(self):
-        student1 = Student.objects.create(semesterGPA="",cumulativeGPA="")
-        class1 = Course.objects.create(name="APMA 3100: Probability", numOfCredits=3, studentItBelongsTo=student1)
+        self.assertEqual(gradesThatShouldveBeenAdded, gradesSoFar)
 
-        class1.gradePercentage =  json.dumps([87,90,86])
-        jsonDecoder=json.decoder.JSONDecoder()
-        newGrades=jsonDecoder.decode(class1.gradePercentage)
-        newGrades.append(90)
-        class1.gradePercentage = json.dumps(newGrades)
 
-        self.assertEqual([87,90,86,90],jsonDecoder.decode(class1.gradePercentage))
+    def test_update_semester_GPA(self):
+        student1 = Student.objects.create()
+
+        SingularGradeItem.objects.create(gradePercentage=3.5, whichStudentsSemesterGPAisThis=student1)
+        SingularGradeItem.objects.create(gradePercentage=3.7, whichStudentsSemesterGPAisThis=student1)
+        #TODO write helper function to get latest GPA before setting, and set the boolean of current grade to be up or down
+
+        self.assertEqual (float(student1.semGPA.latest('datetimeWhenInputted').gradePercentage),3.7)
+
 
     def test_this_course_belongs_to_this_student(self):
-        student1 = Student.objects.create(semesterGPA="",cumulativeGPA="")
+        student1 = Student.objects.create()
         class1 = Course.objects.create(name="APMA 3100: Probability", numOfCredits=3, studentItBelongsTo=student1)
 
         self.assertEqual(class1.studentItBelongsTo,student1)
 
     def test_this_GradeCategory_belongs_to_this_class(self):
-        student1 = Student.objects.create(semesterGPA="",cumulativeGPA="")
+        semesterGPA = SingularGradeItem.objects.create(gradePercentage=3.5)
+        cumulativeGPA = SingularGradeItem.objects.create(gradePercentage=3.5)
+        student1 = Student.objects.create()
         class1 = Course.objects.create(name="APMA 3100: Probability", numOfCredits=3, studentItBelongsTo=student1)
         category1 = GradeCategory.objects.create(name="Exams",weightage=45, courseItBelongsTo=class1)
 
         self.assertEqual(category1.courseItBelongsTo,class1)
 
-    def test_correct_class_grade_reported(self):
-        student1 = Student.objects.create(semesterGPA="",cumulativeGPA="")
-        class1 = Course.objects.create(name="APMA 3100: Probability", numOfCredits=3, studentItBelongsTo=student1)
-        category1 = GradeCategory.objects.create(name="Exams",weightage=50, courseItBelongsTo=class1)
-        category2 = GradeCategory.objects.create(name="Homework",weightage=50, courseItBelongsTo=class1)
-        assignment1 = Assignment.objects.create(name="Exam 1", gradePercentage=80,gradeCategoryItBelongsTo=category1)
-        assignment2 = Assignment.objects.create(name="Exam 2", gradePercentage=90,gradeCategoryItBelongsTo=category1)
-        assignment3 = Assignment.objects.create(name="HW 1", gradePercentage=100,gradeCategoryItBelongsTo=category2)
 
-        #algorithm: get a class, get its categories, in each category get the avg grade, add to a list of tuples [(category weight : category grade),...] then iterate and calculate grade
+## Use SingularGradeItem.objects.create(gradePercentage=x) to set:
+# a student's semester GPA = SingularGradeItem.objects.create(gradePercentage=3.5, whichStudentsSemesterGPAisThis=student1)
+# a student's cumulative GPA = SingularGradeItem.objects.create(gradePercentage=3.5, whichStudentsCumulativeGPAisThis=student1)
+# a student's class grade = SingularGradeItem.objects.create(gradePercentage=95, whichCoursesAvgGradeIsThis=course1)
+# a student's class's grade category average = SingularGradeItem.objects.create(gradePercentage=95, whichGradeCategorysAvgGradeIsThis=category1)
 
-        gradesAndTheirWeights=[]
+# These above all have histories associated with them, which is why they are done in this way. Multiple SingularGradeObjects will exist for a student's many datapoints
+# Individual assignments do not have histories associated. Your exam #1 grade does not fluctuate (even with regrades, it really isn't a super concerning and volatile grade metric)
+# Individual assignments use the Assignment class
 
-        listOfCategoriesInClass = class1.categories.all()
-        for category in listOfCategoriesInClass: #this code calculates grade per category
-            listOfAssignmentsInCategory = category.assignments.all()
-            gradeAvg=0
-            for assignment in listOfAssignmentsInCategory:
-                gradeAvg+=assignment.gradePercentage
-            gradeAvg/=len(listOfAssignmentsInCategory)
-            gradesAndTheirWeights.append((float(category.weightage),float(gradeAvg)))
+# Helper functions will be written so that after an Assignment is created, that grade percolates upwards in a student's data model
+# This means a new Assignment will create a new SingularGradeItem for an updated grade category average, which will create a new one for course grade average, then for semester GPA, then cumulative GPA...
+# These objects are all assigned to the specific student's data model from top to bottom
+# Assignment -> SingularGradeItem -> SingularGradeItem -> SingularGradeItem -> SingularGradeItem
+
+
+    # def test_correct_class_grade_reported(self):
+    #     student1 = Student.objects.create(semesterGPA="",cumulativeGPA="")
+    #     class1 = Course.objects.create(name="APMA 3100: Probability", numOfCredits=3, studentItBelongsTo=student1)
+    #     category1 = GradeCategory.objects.create(name="Exams",weightage=50, courseItBelongsTo=class1)
+    #     category2 = GradeCategory.objects.create(name="Homework",weightage=50, courseItBelongsTo=class1)
+    #     assignment1 = Assignment.objects.create(name="Exam 1", gradePercentage=80,gradeCategoryItBelongsTo=category1)
+    #     assignment2 = Assignment.objects.create(name="Exam 2", gradePercentage=90,gradeCategoryItBelongsTo=category1)
+    #     assignment3 = Assignment.objects.create(name="HW 1", gradePercentage=100,gradeCategoryItBelongsTo=category2)
+
+    #     #algorithm: get a class, get its categories, in each category get the avg grade, add to a list of tuples [(category weight : category grade),...] then iterate and calculate grade
+
+    #     gradesAndTheirWeights=[]
+
+    #     listOfCategoriesInClass = class1.categories.all()
+    #     for category in listOfCategoriesInClass: #this code calculates grade per category
+    #         listOfAssignmentsInCategory = category.assignments.all()
+    #         gradeAvg=0
+    #         for assignment in listOfAssignmentsInCategory:
+    #             gradeAvg+=assignment.gradePercentage
+    #         gradeAvg/=len(listOfAssignmentsInCategory)
+    #         gradesAndTheirWeights.append((float(category.weightage),float(gradeAvg)))
         
-        avgClassGrade=0
-        for item in gradesAndTheirWeights: #this code calculates grade average
-            avgClassGrade+=item[0]*item[1]/100
+    #     avgClassGrade=0
+    #     for item in gradesAndTheirWeights: #this code calculates grade average
+    #         avgClassGrade+=item[0]*item[1]/100
         
-        self.assertEqual(92.5,avgClassGrade)
+    #     self.assertEqual(92.5,avgClassGrade)
 
             
 
