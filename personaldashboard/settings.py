@@ -145,3 +145,4 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/gradetracker/index'
 LOGOUT_URL = "/"
+
