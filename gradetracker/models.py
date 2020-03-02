@@ -1,19 +1,22 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 # Create your models here.
 
-# HOW TO DEAL WITH LIST FIELDS (since django does not natively support a list/array data type)
-# myModel.myList =json.dumps([1,2,3])     to store into a model
-# myListInPython = json.decode(myModel.myList)    to read from a model, then append as necessary before storing back into model
-# RULE: chronologically sorted from oldest to newest
+# HOW TO DEAL WITH LIST FIELDS (since django does not natively support a list/array data type) myModel.myList
+# =json.dumps([1,2,3])     to store into a model myListInPython = json.decode(myModel.myList)    to read from a
+# model, then append as necessary before storing back into model RULE: chronologically sorted from oldest to newest
 
 # Have to integrate a user model for Google Auth here? Of which Student is possibly subset
 
 class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     semesterGPA = models.TextField()
     cumulativeGPA = models.TextField()
-
 
 class Course(models.Model):
     # isLookingForGroupForThisClass = models.BooleanField(default=False)
