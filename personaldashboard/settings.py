@@ -136,7 +136,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Check to see if application is running on Heroku before calling 
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
 if '/app' in os.environ['HOME']:
     django_heroku.settings(locals())
 
