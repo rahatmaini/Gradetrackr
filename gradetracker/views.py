@@ -13,3 +13,4 @@ class AddView(TemplateView):
 
 class IndexView(TemplateView):
     template_name = 'gradetracker/index.html'
+    #if user is logged in, create a new student object with user context variable
