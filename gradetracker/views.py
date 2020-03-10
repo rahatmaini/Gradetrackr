@@ -11,6 +11,8 @@ from django.views.generic import TemplateView
 class AddView(TemplateView):
     template_name = 'gradetracker/add.html'
 
+
+
 class IndexView(TemplateView):
     template_name = 'gradetracker/index.html'
     #if user is logged in, create a new student object with user context variable
