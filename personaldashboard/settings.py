@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -138,8 +137,10 @@ AUTHENTICATION_BACKENDS = (
 # Check to see if application is running on Heroku before calling 
 # django_heroku.settings(locals())
 if '/app' in os.environ['HOME']:
+    import django_heroku
     django_heroku.settings(locals())
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/gradetracker/index'
 LOGOUT_URL = "/"
+
