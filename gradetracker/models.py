@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+#new stuff
+from django.forms import ModelForm
+#new stuff
 
 # Create your models here.
 
@@ -31,23 +33,23 @@ def create_user_student(sender, instance, created, **kwargs):
 
 class Course(models.Model):
     # isLookingForGroupForThisClass = models.BooleanField(default=False)
-    isFinishedCourseOrNot = models.BooleanField(default=False)  # do we track this course or is this a legacy course?
-    isVerifiedClassOrNot = models.BooleanField(default=False)  # is this an official Lou's List class we have found?
-    isIncludedInGPAOrNot = models.BooleanField(
+    Finished_Course = models.BooleanField(default=False)  # do we track this course or is this a legacy course?
+    Verified_Class = models.BooleanField(default=False)  # is this an official Lou's List class we have found?
+    Include_In_GPA = models.BooleanField(
         default=True)  # is this class used in GPA calculation or is it just a fork of a class someone uses purely for "what if" tracking purposes?
 
-    professorEmail = models.EmailField(null=True)  # if verified class, then we should be able to get this info
-    avgFromVAgrades = models.DecimalField(max_digits=4, decimal_places=3,
+    Professor_Email = models.EmailField(null=True)  # if verified class, then we should be able to get this info
+    Average_From_VAgrades = models.DecimalField(max_digits=4, decimal_places=3,
                                           null=True)  # if verified we should be able to scrape grade from VAgrades.com
 
     name = models.CharField(max_length=100)  # either searchable name from Lou's List or enter your own, <100 characters
-    numOfCredits = models.DecimalField(max_digits=2,
+    number_Of_Credits = models.DecimalField(max_digits=2,
                                        decimal_places=1)  # because now they have half credit courses or something?
 
-    targetGrade = models.DecimalField(max_digits=5, decimal_places=2,
+    target_Grade = models.DecimalField(max_digits=5, decimal_places=2,
                                       null=True)  # for assholes who want a target grade of a 100.00%
 
-    studentItBelongsTo = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="courses")
+    student_It_Belongs_To = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="courses")
 
 
 class GradeCategory(models.Model):
@@ -57,6 +59,18 @@ class GradeCategory(models.Model):
 
     courseItBelongsTo = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="categories")
 
+#new stuff
+class GradeCategoryForm(ModelForm):
+    class Meta:
+        model = GradeCategory
+        fields = ['name', 'weightage', 'courseItBelongsTo']
+
+class CourseForm(ModelForm):
+    class Meta:
+        model = Course
+        fields = ['Finished_Course', 'Verified_Class', 'Include_In_GPA', 'Professor_Email',
+                  'Average_From_VAgrades', 'name', 'number_Of_Credits', 'target_Grade', 'student_It_Belongs_To']
+#new stuff
 
 class SingularGradeItem(models.Model):
     gradePercentage = models.DecimalField(max_digits=5, decimal_places=2)

@@ -5,24 +5,11 @@
     <div class="container-fluid">
         <label class = "section">Add a course to your schedule</label>
         <hr class="my-4">
-        <form>
-            <div class = "form-row">
-                <div class = "col-xs-2">
-                    <label class = "labelHeader" for="CourseName">Course Name</label>
-                    <input type = "text" class = "form-control" id="CourseName">
-                </div>
-                <div class = "col-xs-2">
-                    <label class = "labelHeader" for="other">OTHER INFO</label>
-                    <input type = "text" class = "form-control" id="other">
-                </div>
-                <div class = "col-xs-2">
-                    <label class = "labelHeader" for="more">MORE STUFF</label>
-                    <input type = "text" class = "form-control" id="more">
-                </div>
-            </div>
+            {{form.as_p}}
         </form>
         <br>
         <button type="submit" class="btn btn-info">Submit</button>
     </div>
 </form>
+
 {% endblock %}
