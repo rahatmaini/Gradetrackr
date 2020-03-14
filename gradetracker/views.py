@@ -13,7 +13,7 @@ from .models import Course, CourseForm
 #class AddView(TemplateView):
 #    template_name = 'gradetracker/add.html'
 
-
+def add(request,)
 
 class IndexView(TemplateView):
     template_name = 'gradetracker/index.html'
