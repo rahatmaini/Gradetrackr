@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 class AddView(TemplateView):
     template_name = 'gradetracker/add.html'
 
-
+def add(request,)
 
 class IndexView(TemplateView):
     template_name = 'gradetracker/index.html'
