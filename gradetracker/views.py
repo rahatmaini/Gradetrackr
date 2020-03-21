@@ -20,7 +20,13 @@ class TestView(TemplateView):
 def add(request):
     if request.method == 'POST':
         try:
-            finishedCourse = not request.POST.get('enrolled')
+            finishedCourse = request.POST.get('enrolled')
+            if finishedCourse == "False":
+                finishedCourse = "True"
+            else:
+                finishedCourse = "False"
+
+
             verifiedClass = request.POST.get('verified')
             includeInGPA = request.POST.get('included')
             professorEmail = request.POST.get('email')
@@ -44,8 +50,7 @@ def add(request):
             return render(request, 'gradetracker/add.html', {'error_message': "HELLO " + str(e)})
         return HttpResponseRedirect(reverse('gradetracker:index'))
     else:
-        return render(request, 'gradetracker/add.html', {'error_message':
-                                                                  "Suggestion couldn't be submitted: " })
+        return render(request, 'gradetracker/add.html',)
 
 
 class IndexView(TemplateView):

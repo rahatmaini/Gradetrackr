@@ -51,6 +51,9 @@ class Course(models.Model):
 
     student_It_Belongs_To = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="courses")
 
+    def __str__(self):
+        return self.name
+
 
 class GradeCategory(models.Model):
     name = models.CharField(max_length=100)
