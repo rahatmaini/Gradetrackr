@@ -20,3 +20,14 @@ a {
 html {
   overflow-y: scroll;
 }
+
+div.horizontalgap {
+  float: left;
+  overflow: hidden;
+  height: 50px;
+  width: 0px;
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> master

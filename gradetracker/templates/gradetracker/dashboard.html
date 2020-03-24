@@ -1,0 +1,36 @@
+{% extends 'gradetracker/template.html' %}
+{% block content %}
+
+
+
+{% if courses_list %}
+<div class="container justify-content-center">
+    <div class="container justify-content-center">
+        <h1>All Courses for {{ username }}:</h1>
+    </div>
+        
+    <ul>
+    {% for course in courses_list %}
+
+        <li class="list-group-item">      
+            <div class="card" style="width: 18rem">
+                <div class="card-body">
+                    <!-- List all the courses associated with a user -->
+                  <h5 class="card-title">{{ course.name }}</h5>
+                  <p class="card-text">Credits: {{ course.number_Of_Credits }}</p>
+                </div>
+              </div>
+        </li>
+        
+    {% endfor %}
+    <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: 100%">Add another course</a>
+    </ul>
+
+</div>
+{% else %}
+    <p>No courses have been added.</p>
+    <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: 100%">Add a course</a>
+{% endif %}
+
+
+{% endblock content %}
