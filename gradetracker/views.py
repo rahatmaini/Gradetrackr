@@ -55,3 +55,17 @@ def add(request):
 
 class IndexView(TemplateView):
     template_name = 'gradetracker/index.html'
+
+    
+def CourseDashboard(request):
+    # Render the course dashboard of the authenticated user
+    if request.user.is_authenticated:
+        print(request.user)
+        # TODO Get all the courses associated with that user (as a student)
+        context = {
+        'username' : request.user,
+        'courses_list' : Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+    }
+        return render(request, "gradetracker/dashboard.html", context)
+    else:
+        return HttpResponseRedirect(reverse("google_login"))
