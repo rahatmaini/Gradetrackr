@@ -61,11 +61,23 @@ def CourseDashboard(request):
     # Render the course dashboard of the authenticated user
     if request.user.is_authenticated:
         print(request.user)
-        # TODO Get all the courses associated with that user (as a student)
+        # Get all the courses associated with that user (as a student)
         context = {
         'username' : request.user,
         'courses_list' : Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
     }
         return render(request, "gradetracker/dashboard.html", context)
     else:
+        # if the user is not logged in, redirect the user to the login page.
         return HttpResponseRedirect(reverse("google_login"))
+
+def delete_course(request, course_id=None):
+    course_to_delete = Course.objects.get(id=course_id)
+    course_to_delete.delete()
+
+    context = {
+        'username' : request.user,
+        'courses_list' : Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+    }
+
+    return render(request, "gradetracker/dashboard.html", context)
