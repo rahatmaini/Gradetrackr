@@ -1,10 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 # new stuff
-from .models import Course, CourseForm, Student
+from .models import Course, CourseForm, Student, GradeCategory
 from django.contrib.auth.models import User
 
 
@@ -52,6 +52,20 @@ def add(request):
     else:
         return render(request, 'gradetracker/add.html',)
 
+def gradecat(request):
+    if request.method == 'POST':
+        courseTitle = request.POST.get('courseTitle')
+        gradeCategoryN = request.POST.get('gradeCategoryName')
+        weight = request.POST.get('weight')
+        try:
+            current_course = Course.objects.get(name = courseTitle)
+            new_gradecat = GradeCategory(name = courseTitle, gradeCategoryName = gradeCategoryN, weightage = weight, courseItBelongsTo = current_course)
+            new_gradecat.save()
+        except Exception as e:
+            return render(request, 'gradetracker/gradecat.html', {'error_message': "HELLO " + str(e)})
+        return redirect('gradetracker:index')
+    else:
+        return render(request, 'gradetracker/gradecat.html',)
 
 class IndexView(TemplateView):
     template_name = 'gradetracker/index.html'
@@ -61,23 +75,11 @@ def CourseDashboard(request):
     # Render the course dashboard of the authenticated user
     if request.user.is_authenticated:
         print(request.user)
-        # Get all the courses associated with that user (as a student)
+        # TODO Get all the courses associated with that user (as a student)
         context = {
         'username' : request.user,
         'courses_list' : Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
     }
         return render(request, "gradetracker/dashboard.html", context)
     else:
-        # if the user is not logged in, redirect the user to the login page.
         return HttpResponseRedirect(reverse("google_login"))
-
-def delete_course(request, course_id=None):
-    course_to_delete = Course.objects.get(id=course_id)
-    course_to_delete.delete()
-
-    context = {
-        'username' : request.user,
-        'courses_list' : Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
-    }
-
-    return render(request, "gradetracker/dashboard.html", context)

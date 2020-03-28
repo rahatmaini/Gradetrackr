@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.urls import include, path
 from . import views
 import personaldashboard
 
@@ -10,5 +10,5 @@ urlpatterns = [
     path('add', views.add, name='add'),
     path('test/', views.TestView.as_view(), name='test'),
     path('dashboard', views.CourseDashboard, name='dashboard'),
-    re_path(r'^delete-course/(?P<course_id>\d+)/$', views.delete_course, name='delete_course'),
+    path('gradecat', views.gradecat, name='gradecat'),
 ]
