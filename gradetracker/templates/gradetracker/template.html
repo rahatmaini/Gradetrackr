@@ -8,18 +8,17 @@
     padding-left: 40px;
 }
 </style>
-<div class = "jumbotron">
-    <h1 class = "display-3" align = "center">Four80ty's Grade Tracker</h1>
-    <p class = "lead" align = "center">You like what you see? >;]</p>
-    <hr class="my-4">
+<div class = "jumbotron" style="background-color: #efefed;padding-bottom: 1%;">
+    <h1 class = "display-5" align = "center" style="font-family: 'Source Sans Pro', sans-serif;"><b>grade</b>tracker</h1>
+    <p align = "center" style="color:#464646">by four80ty</p>
     <nav class="nav">
         <form>
-            <div class="form-row">
+           <!--<div class="form-row">
                 <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
-            </div>
+            </div>--> 
             <div class="form-row">
-                <a class="nav-item nav-link" href="{% url 'gradetracker:index' %}">Overview</a>
-                <a class="nav-item nav-link" href="{% url 'gradetracker:add' %}">Add a Course</a>
+                <!--<a class="nav-item nav-link" href="{% url 'gradetracker:index' %}">Overview</a>-->
+                <!--<a class="nav-item nav-link" href="{% url 'gradetracker:add' %}">Add a Course</a>-->
                 <a class="nav-item nav-link" href="{% url 'gradetracker:dashboard' %}">Grade Dashboard</a>
             </div>
         </form>
@@ -30,7 +29,7 @@
                 {% if redirect_field_value %}
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                 {% endif %}
-                <button type="submit" class = "btn btn-info" onclick="return confirm('Are you sure you want to logout?')">Logout</button>
+                <button type="submit" class="btn btn-info" onclick="return confirm('Are you sure you want to logout?')" style="width: auto; border-radius: 99px;" >logout {{ username }}</button>
             </form>
         {% else %}
             <form>
@@ -47,7 +46,9 @@
 </div>
 <br>
 
+<!--
 <div class = "page-footer">
     <p align = "center">Author: Four80ty</p>
     <p align = "center">Copyrighted Very Legally&copy;</p>
 </div>
+-->
