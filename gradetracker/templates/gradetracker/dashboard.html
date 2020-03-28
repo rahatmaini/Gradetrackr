@@ -18,6 +18,7 @@
                     <!-- List all the courses associated with a user -->
                   <h5 class="card-title">{{ course.name }}</h5>
                   <p class="card-text">Credits: {{ course.number_Of_Credits }}</p>
+                  <a href="{% url 'gradetracker:delete_course' course_id=course.id%}" onclick="return confirm('Are you sure you want to delete this course?')" class="btn btn-danger" style="width: 75%">Delete</a>
                 </div>
               </div>
         </li>
