@@ -83,3 +83,14 @@ def CourseDashboard(request):
         return render(request, "gradetracker/dashboard.html", context)
     else:
         return HttpResponseRedirect(reverse("google_login"))
+
+def delete_course(request, course_id=None):
+    course_to_delete = Course.objects.get(id=course_id)
+    course_to_delete.delete()
+
+    context = {
+        'username' : request.user,
+        'courses_list' : Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+    }
+
+    return render(request, "gradetracker/dashboard.html", context)
