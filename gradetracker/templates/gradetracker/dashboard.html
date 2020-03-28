@@ -4,12 +4,14 @@
 
 <div class="container justify-content-center">
 
-        <div style="padding-bottom: 2%; text-align: center;">
-            <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);">add another course</a>
-            </div>
+        
 
         
 {% if courses_list %}
+
+<div style="padding-bottom: 2%; text-align: center;">
+  <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);">add another course</a>
+  </div>
 
     <!--<ul>-->
         <div class="cardGrid">
