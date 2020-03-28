@@ -8,8 +8,8 @@
     padding-left: 40px;
 }
 </style>
-<div class = "jumbotron" style="background-color: #efefed;padding-bottom: 1%;">
-    <h1 class = "display-5" align = "center" style="font-family: 'Source Sans Pro', sans-serif;"><b>grade</b>tracker</h1>
+<div class = "jumbotron" style="background-color: #efefed; padding-bottom: 1%;transition-duration: 1s;">
+    <h1 class = "display-5" align = "center" style="font-family: 'Source Sans Pro', sans-serif;"><b>Grade</b>Tracker</h1>
     <p align = "center" style="color:#464646">by four80ty</p>
     <nav class="nav">
         <form>
@@ -29,7 +29,8 @@
                 {% if redirect_field_value %}
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                 {% endif %}
-                <button type="submit" class="btn btn-info" onclick="return confirm('Are you sure you want to logout?')" style="width: auto; border-radius: 99px;" >logout {{ username }}</button>
+                
+                <button type="submit" class="btn btn-info" onclick="return confirm('Are you sure you want to logout?')" id="logOutButton">logout {{ username }}</button>
             </form>
         {% else %}
             <form>
