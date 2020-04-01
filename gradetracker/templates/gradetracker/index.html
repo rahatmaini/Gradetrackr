@@ -1,7 +1,11 @@
 {% extends 'gradetracker/template.html' %}
 {% block content %}
 <div class = "tabbed">
-    <label>epic overview</label>
+    <h2>Your one-stop shop for tracking your academic performance.</h2>
+
+    <div style="padding-bottom: 2%; text-align: center;">
+        <a href="{% url 'gradetracker:dashboard' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);">Get Started!</a>
+        </div>
 </div>
 
 {% endblock %}
