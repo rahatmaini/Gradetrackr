@@ -8,8 +8,6 @@ from .models import Course, CourseForm, Student, GradeCategory
 from django.contrib.auth.models import User
 
 
-# new stuff
-
 # in gradetracker directory
 # Create your views here.
 
@@ -48,7 +46,7 @@ def add(request):
             new_course.save()
         except Exception as e:
             return render(request, 'gradetracker/add.html', {'error_message': "HELLO " + str(e)})
-        return HttpResponseRedirect(reverse('gradetracker:index'))
+        return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     else:
         return render(request, 'gradetracker/add.html',)
 
