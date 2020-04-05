@@ -102,20 +102,20 @@ div.horizontalgap {
 
 #logOutButton {
 	text-decoration: none;
-	background-color:rgb(39, 39, 39);
+	background-color:red;
 	border-radius: 99px;
 	color: white;
 	border-style: none;
 	outline: 0;
-	transition: all .7s;
+	transition: all .5s;
 	box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
 }
 
 #logOutButton:hover {
 	text-decoration: none;
-	background-color:red;
+	background-color:rgb(214, 0, 0);
 	color: white;
-	transition: all .7s;
+	transition: all .5;
 	box-shadow: 0 5px 15px rgba(255, 32, 32, 0.2);
 }
 
@@ -1536,6 +1536,6 @@ div.horizontalgap {
 	text-decoration: none;
 	background-color:rgb(231, 58, 94);
 	color: white;
-	transition: all .7s;
+	transition: all .5s;
 	box-shadow: 0 5px 15px rgba(18, 73, 255,0.2);
 }

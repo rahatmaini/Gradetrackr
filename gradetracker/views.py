@@ -105,3 +105,15 @@ def delete_course(request, course_id=None):
     }
 
     return render(request, "gradetracker/dashboard.html", context)
+
+def duplicate_course(request, course_id=None):
+    courseToDuplicate = Course.objects.get(id=course_id)
+    newCourse = Course(Finished_Course=courseToDuplicate.Finished_Course,Verified_Class=courseToDuplicate.Verified_Class, Include_In_GPA=False, Professor_Email=courseToDuplicate.Professor_Email, Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name = courseToDuplicate.name, number_Of_Credits=courseToDuplicate.number_Of_Credits, target_Grade=courseToDuplicate.target_Grade, student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To)
+    newCourse.save()
+
+    context = {
+        'username' : request.user,
+        'courses_list' : Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+    }
+
+    return render(request, "gradetracker/dashboard.html", context)
