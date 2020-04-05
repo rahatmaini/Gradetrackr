@@ -141,6 +141,6 @@ if '/app' in os.environ['HOME']:
     django_heroku.settings(locals())
 
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/gradetracker/dashboard'
+LOGIN_REDIRECT_URL = '/dashboard'
 LOGOUT_URL = "/"
 

@@ -108,7 +108,7 @@ div.horizontalgap {
 	border-style: none;
 	outline: 0;
 	transition: all .7s;
-	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
+	box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
 }
 
 #logOutButton:hover {
@@ -116,11 +116,31 @@ div.horizontalgap {
 	background-color:red;
 	color: white;
 	transition: all .7s;
-	box-shadow: 0 5px 15px rgba(255, 32, 32, 0.4);
+	box-shadow: 0 5px 15px rgba(255, 32, 32, 0.2);
 }
+
+/*#logInButton {
+	text-decoration: none;
+	background-color:rgb(1, 165, 190);
+	border-radius: 99px;
+	color: white;
+	border-style: none;
+	outline: 0;
+	transition: all .7s;
+	box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+#logInButton:hover {
+	text-decoration: none;
+	background-color:rgb(0, 134, 155);
+	color: white;
+	transition: all .7s;
+	box-shadow: 0 5px 15px rgba(0,134,155,0.15);
+}
+
 #logOutButton:focus {
 	outline: 0;
-}
+}*/
 
 /* modal code from https://codepen.io/ettrics/pen/Jdjdzp */
 .modal {
@@ -1300,3 +1320,188 @@ div.horizontalgap {
 .ti-rss-alt:before {
 	content: "\e75f";
 }
+
+.wave {
+    opacity: .6;
+    position: absolute;
+    top: 3%;
+    left: 50%;
+    background: rgb(29, 122, 134);
+    width: 200vw;
+    height: 200vw;
+    margin-left: -100vw;
+    margin-top: -145vw;
+    transform-origin: 50% 48%;
+    border-radius: 40%;
+	animation: drift 20000ms infinite linear;
+	z-index: -1;
+  }
+  
+  @media screen and (max-width: 2000px) {
+    .wave {
+      opacity: .6;
+      position: absolute;
+      top: 3%;
+      left: 50%;
+      background: rgb(29, 122, 134);
+      width: 200vw;
+      height: 200vw;
+      margin-left: -100vw;
+      margin-top: -155vw;
+      transform-origin: 50% 48%;
+      border-radius: 40%;
+	  animation: drift 20000ms infinite linear;
+	  z-index: -1;
+    }
+  }
+  @media screen and (max-width: 1800px) {
+    .wave {
+      opacity: .6;
+      position: absolute;
+      top: 3%;
+      left: 50%;
+      background: rgb(29, 122, 134);
+      width: 200vw;
+      height: 200vw;
+      margin-left: -100vw;
+      margin-top: -140vw;
+      transform-origin: 50% 48%;
+      border-radius: 40%;
+	  animation: drift 20000ms infinite linear;
+	  z-index: -1;
+    }
+  }
+  @media screen and (max-width: 1500px) {
+    .wave {
+      opacity: .6;
+      position: absolute;
+      top: 3%;
+      left: 50%;
+      background: rgb(29, 122, 134);
+      width: 200vw;
+      height: 200vw;
+      margin-left: -100vw;
+      margin-top: -130vw;
+      transform-origin: 50% 48%;
+      border-radius: 40%;
+	  animation: drift 20000ms infinite linear;
+	  z-index: -1;
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    .wave {
+      opacity: .6;
+      position: absolute;
+      top: 3%;
+      left: 50%;
+      background: rgb(29, 122, 134);
+      width: 200vw;
+      height: 200vw;
+      margin-left: -100vw;
+      margin-top: -115vw;
+      transform-origin: 50% 48%;
+      border-radius: 40%;
+	  animation: drift 20000ms infinite linear;
+	  z-index: -1;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    .wave {
+      opacity: .6;
+      position: absolute;
+      top: 3%;
+      left: 50%;
+      background: rgb(29, 122, 134);
+      width: 200vw;
+      height: 200vw;
+      margin-left: -100vw;
+      margin-top: -105vw;
+      transform-origin: 50% 48%;
+      border-radius: 40%;
+	  animation: drift 20000ms infinite linear;
+	  z-index: -1;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    .wave {
+      opacity: .6;
+      position: absolute;
+      top: 3%;
+      left: 50%;
+      background: rgb(29, 122, 134);
+      width: 200vw;
+      height: 200vw;
+      margin-left: -100vw;
+      margin-top: -75vw;
+      transform-origin: 50% 48%;
+      border-radius: 40%;
+	  animation: drift 20000ms infinite linear;
+	  z-index: -1;
+    }
+  }
+
+  .wave.-three {
+    animation: drift 15000ms infinite linear;
+  }
+  
+  .wave.-two {
+    animation: drift 22000ms infinite linear;
+    opacity: .3;
+    background: rgb(219, 255, 253);
+  }
+  
+  @keyframes drift {
+    from { transform: rotate(0deg); }
+    from { transform: rotate(360deg); }
+  }
+
+  @keyframes bounce {
+    0%,
+    100%,
+    20%,
+    50%,
+    80% {
+      -webkit-transform: translateY(0);
+      -ms-transform: translateY(0);
+      transform: translateY(0);
+    }
+    40% {
+      -webkit-transform: translateY(-10px);
+      -ms-transform: translateY(-10px);
+      transform: translateY(-10px);
+    }
+    60% {
+      -webkit-transform: translateY(-5px);
+      -ms-transform: translateY(-5px);
+      transform: translateY(-5px);
+    }
+  }
+
+  .logInButton {
+    font-size: 16px;
+	width: 10vw;
+	overflow: hidden;
+    white-space: nowrap;
+    margin-left: 44.5%;
+    display: block;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 10px 12px;
+    text-decoration: none;
+    border-radius: 99px;
+    -webkit-animation: bounce 2s infinite 2s;
+    animation: bounce 2s infinite 2s;
+    -webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;
+    transform: scale(1);
+  }
+
+  a:hover {
+	text-decoration: none;
+	color:black
+  }
