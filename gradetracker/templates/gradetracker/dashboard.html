@@ -50,14 +50,9 @@
 </div>
 
 {% else %}
-    <ul>
-
-
-    <li class="list-group-item"> 
-        <h3>No courses have been added.</h3>
-        <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: 100%">Add a course</a>
-    </li>
-    </ul>
+<div style="padding-bottom: 2%; text-align: center;">
+  <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);">add a course</a>
+  </div>
 
 {% endif %}
 
