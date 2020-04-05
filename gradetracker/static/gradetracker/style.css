@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 @media (min-width: 900px) {
   .cards { grid-template-columns: repeat(3, 1fr); }
 }
@@ -11,6 +12,10 @@ p {
 
 a {
     color: #33cccc;
+}
+
+h1 {
+	font-family: Ubuntu;
 }
 
 .section {
@@ -102,7 +107,7 @@ div.horizontalgap {
 
 #logOutButton {
 	text-decoration: none;
-	background-color:red;
+	background-color:rgb(100, 100, 100);
 	border-radius: 99px;
 	color: white;
 	border-style: none;
@@ -113,34 +118,86 @@ div.horizontalgap {
 
 #logOutButton:hover {
 	text-decoration: none;
-	background-color:rgb(214, 0, 0);
+	background-color:rgb(255, 0, 0);
 	color: white;
 	transition: all .5;
 	box-shadow: 0 5px 15px rgba(255, 32, 32, 0.2);
 }
 
-/*#logInButton {
+.logInButton {
+    font-size: 16px;
+	width: 10vw;
+	overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
+    color: rgb(255, 255, 255);
+    background-color: rgb(201, 86, 176);
+    text-align: center;
+    padding: 10px 12px;
+    text-decoration: none;
+    border-radius: 99px;
+    -webkit-animation: bounce 2s infinite 2s;
+    animation: bounce 2s infinite 2s;
+    -webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;
+    transform: scale(1);
+  }
+
+
+
+  .logInButton:hover {
 	text-decoration: none;
-	background-color:rgb(1, 165, 190);
-	border-radius: 99px;
+	background-color:rgb(22, 173, 111);
 	color: white;
-	border-style: none;
-	outline: 0;
 	transition: all .7s;
-	box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+	box-shadow: 0px 8px 16px 0px rgba(28, 179, 116, 0.2);
 }
 
-#logInButton:hover {
+.addCourseButton {
+    font-size: 16px;
+	width: 14vw;
+	overflow: hidden;
+    white-space: nowrap;
+	display: block;
+	color: rgb(255, 255, 255);
+	box-shadow: 0 5px 15px rgba(38, 56, 116, 0.4);
+    background-color: rgb(110, 72, 128);
+    text-align: center;
+    padding: 10px 12px;
+    text-decoration: none;
+    border-radius: 99px;
+    -webkit-animation: bounce 2s infinite 2s;
+    animation: bounce 2s infinite 2s;
+    -webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;
+    transform: scale(1);
+  }
+
+
+
+  .addCourseButton:hover {
 	text-decoration: none;
-	background-color:rgb(0, 134, 155);
+	background-color:rgb(231, 58, 94);
 	color: white;
-	transition: all .7s;
-	box-shadow: 0 5px 15px rgba(0,134,155,0.15);
+	transition: all .5s;
+	box-shadow: 0 5px 15px rgba(18, 73, 255,0.2);
 }
 
-#logOutButton:focus {
-	outline: 0;
-}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* modal code from https://codepen.io/ettrics/pen/Jdjdzp */
 .modal {
@@ -237,6 +294,9 @@ div.horizontalgap {
   transition: opacity 0.1s ease-out, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   transition: opacity 0.1s ease-out, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), -webkit-transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
+
+
+
 /**/
 
 @font-face {
@@ -1479,63 +1539,3 @@ div.horizontalgap {
       transform: translateY(-5px);
     }
   }
-
-  .logInButton {
-    font-size: 16px;
-	width: 10vw;
-	overflow: hidden;
-    white-space: nowrap;
-    display: block;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
-    color: rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
-    text-align: center;
-    padding: 10px 12px;
-    text-decoration: none;
-    border-radius: 99px;
-    -webkit-animation: bounce 2s infinite 2s;
-    animation: bounce 2s infinite 2s;
-    -webkit-transition: all .2s ease-in;
-    transition: all .2s ease-in;
-    transform: scale(1);
-  }
-
-
-
-  .logInButton:hover {
-	text-decoration: none;
-	background-color:rgb(22, 173, 111);
-	color: white;
-	transition: all .7s;
-	box-shadow: 0 5px 15px rgba(22, 173, 111,0.2);
-}
-
-.addCourseButton {
-    font-size: 16px;
-	width: 10vw;
-	overflow: hidden;
-    white-space: nowrap;
-    display: block;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
-    color: rgb(0, 0, 0);
-    background-color:rgb(255, 255, 255);
-    text-align: center;
-    padding: 10px 12px;
-    text-decoration: none;
-    border-radius: 99px;
-    -webkit-animation: bounce 2s infinite 2s;
-    animation: bounce 2s infinite 2s;
-    -webkit-transition: all .2s ease-in;
-    transition: all .2s ease-in;
-    transform: scale(1);
-  }
-
-
-
-  .addCourseButton:hover {
-	text-decoration: none;
-	background-color:rgb(231, 58, 94);
-	color: white;
-	transition: all .5s;
-	box-shadow: 0 5px 15px rgba(18, 73, 255,0.2);
-}
