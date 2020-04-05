@@ -10,21 +10,27 @@
 html {
     overflow: hidden;
 }
+
 </style>
-<div class="wrapper">
+<!--<div class="wrapper"> UNCOMMENT THIS FOR AN EXPERIMENT IF YOU ARE READING THIS, AND TELL ME (rahat) WHAT U THINK? SIGN OUT AND RELOAD
     <div class='wave -one'></div>
     <div class='wave -two'></div>
-    <div class='wave -three'></div>
+    <div class='wave -three'></div>-->
 <div class = "jumbotron" style="background-color: transparent; padding-top: 2%; padding-bottom: 0%; transition-duration: 1s;margin-bottom: 0;">
-    <h1 class = "display-5" align = "center" style="font-family: 'Source Sans Pro', sans-serif;color: white;"><b>Grade</b>Tracker</h1>
-    <p align = "center" style="color:#dbdbdb">by four80ty</p>
+    <h1 class = "display-5" align = "center" style="font-family: 'Source Sans Pro', sans-serif;color: rgb(0, 0, 0);"><b>Grade</b>Tracker</h1>
+    <p align = "center" style="color:#424242">by four80ty</p>
     
-    <div style="padding-bottom: 2%;text-align: center;">
-        <img src = "{% static 'gradetracker/signup.png' %}" width="15%" style="padding-top: 3%;margin-right: 3%;"><br/>
-        <h2 style="color: rgb(255, 255, 255);padding-top: 5%;padding-bottom: 1.5%;">Track, save, and plan all of your grades in one place.</h2><br />
-        <a href="{% provider_login_url 'google' %}" class="logInButton">sign in&nbsp;&nbsp;<span class="ti-hand-point-right" style="vertical-align: -1px;"></span></a></div>
-        
+    
+       <p> <img src = "{% static 'gradetracker/signup.png' %}" width="25%" style="margin-top: 4%;margin-right:8%;margin-left:8%;float: left;"><br/>
+
+        <h1 style="color: rgb(201, 87, 176);margin-top: 4%;margin-bottom: 3%;font-size: 5vw;">Track, save, and plan all of your grades in one place. <span style="color: rgb(139, 139, 139);">Effortlessly.</span></h1>
+            
+
+
+        <a href="{% provider_login_url 'google' %}" class="logInButton">sign in&nbsp;&nbsp;<span class="ti-hand-point-right" style="vertical-align: -1px;"></span></a>
+    </p>
 
 </div>
 </div>
+
 
