@@ -11,9 +11,8 @@
 <div class="container justify-content-center">
 
 
-<div style="padding-bottom: 2%; text-align: center;">
-  <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);"><b>add another course</b></a>
-  </div>
+  <!--<a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;add another course&nbsp;</b></a>-->
+
 
     <!--<ul>-->
         <div class="cardGrid">
@@ -21,7 +20,7 @@
 
 
           <!--DASHBOARD OVERVIEW CARD-->
-    <div class="card" style="width: auto" id="beautifiedCard">
+    <div class="card" style="width: auto; float:left" id="beautifiedCard">
       <div class="card-body" style="padding-bottom: 1.75%;">
         <h4 class="card-title"><b>At a glance<span style="float:right; color:green">69.0 GPA</span></b></h4>
         <p class="card-text" style="color:black; text-align: left;">
@@ -46,7 +45,7 @@
                   <p class="card-text" style="color:black; text-align: center;">
                     
                     <!--do not uncomment, we are not ready for this monstrosity<a href="" data-modal="#modal" class="modal__trigger" >add a grade category</a>-->
-                    
+                    <a class="nav-item nav-link" href="{% url 'gradetracker:gradecat' %}">Add a Grade Category (UNLINKED TO COURSE OBJ, TODO LINK IT)</a>
                     
                   </p>
 

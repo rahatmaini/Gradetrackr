@@ -45,7 +45,7 @@ div.horizontalgap {
 }
 
 .cardGrid {
-  max-width: 1200px;
+  max-width: auto;
   margin: 0 auto;
   display: grid;
   grid-gap: 1rem;
@@ -107,7 +107,7 @@ div.horizontalgap {
 
 #logOutButton {
 	text-decoration: none;
-	background-color:rgb(100, 100, 100);
+	background-color:rgb(27, 27, 27);
 	border-radius: 99px;
 	color: white;
 	border-style: none;
@@ -123,6 +123,7 @@ div.horizontalgap {
 	transition: all .5;
 	box-shadow: 0 5px 15px rgba(255, 32, 32, 0.2);
 }
+
 
 .logInButton {
     font-size: 16px;
