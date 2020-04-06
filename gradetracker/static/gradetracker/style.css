@@ -186,8 +186,13 @@ div.horizontalgap {
 }
 
 
-
-
+.mainLogo {
+	color: black;
+}
+.mainLogo:hover{
+	text-decoration: none;
+    color: initial; /* Takes initial value of the property which is black in this case */
+}
 
 
 
