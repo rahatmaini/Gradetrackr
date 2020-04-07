@@ -52,7 +52,7 @@
 
                   <a href="{% url 'gradetracker:delete_course' course_id=course.id%}" onclick="return confirm('Are you sure you want to delete this course?')" id="miniButtonRed"><span class="ti-trash"></span></a>
                   <a href="{% url 'gradetracker:duplicate_course' course_id=course.id%}" onclick="" id="miniButtons"><span class="ti-layers"></span></a>
-                  <a href="" onclick="" id="miniButtons" style="vertical-align: 1px; padding-right: 1%;"><span class="ti-new-window"></span></a>
+                  <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" onclick="" id="miniButtons" style="vertical-align: 1px; padding-right: 1%;"><span class="ti-new-window"></span></a>
 
 
                   <span style="color:black; float: right;"><b>{{ course.number_Of_Credits }} credits</b></span>
@@ -68,6 +68,7 @@
 
 </div>
 
+<!-- If the user has no courses -->
 {% else %}
 <div>
 <p> <img src = "{% static 'gradetracker/addcourse.png' %}" width="25%" style="margin-top: 4%;margin-right:8%;margin-left:8%;float: right;"><br/>

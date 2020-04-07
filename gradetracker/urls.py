@@ -14,4 +14,5 @@ urlpatterns = [
     path('gradecat', views.gradecat, name='gradecat'),
     re_path(r'^delete-course/(?P<course_id>\d+)/$', views.delete_course, name='delete_course'),
     re_path(r'^duplicate-course/(?P<course_id>\d+)/$', views.duplicate_course, name='duplicate_course'),
+    re_path(r'^course-overview/(?P<course_id>\d+)/$', views.CourseOverview, name='course_overview'),
 ]
