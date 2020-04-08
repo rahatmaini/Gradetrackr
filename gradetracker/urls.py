@@ -11,8 +11,11 @@ urlpatterns = [
     path('test/', views.TestView.as_view(), name='test'),
     path('dashboard/', views.CourseDashboard, name='dashboard'),
     path('', views.SignIn, name='signin'),
-    path('gradecat', views.gradecat, name='gradecat'),
+    # path('addAssignment/', views.addAssignment, name='addAssignment'),
+    # path('gradecat', views.gradecat, name='gradecat'),
     re_path(r'^delete-course/(?P<course_id>\d+)/$', views.delete_course, name='delete_course'),
     re_path(r'^duplicate-course/(?P<course_id>\d+)/$', views.duplicate_course, name='duplicate_course'),
     re_path(r'^course-overview/(?P<course_id>\d+)/$', views.CourseOverview, name='course_overview'),
+    re_path(r'^addAssignment/(?P<course_id>\d+)/$', views.addAssignment, name='addAssignment'),
+    re_path(r'^gradecat/(?P<course_id>\d+)/$', views.gradecat, name='gradecat')
 ]
