@@ -126,16 +126,17 @@ def CourseOverview(request, course_id=None):
         course_to_display = Course.objects.get(id=course_id)
 
         # Get all the grade categories associated with that course
-        grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display)
+        grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display).values()
 
         # Get all the assignments associated with that grade category
 
         # dict that will contain all the assignments indexed by the grade category they belong to
         category_assignments = {}
 
+
         for category in grade_categories:
             # Add all the assignments belonging to a category to the dictionary at that category's key
-            category_assignments[category.name].append(Assignment.objects.all().filter(gradeCategoryItBelongsTo=category))
+            category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
 
         # TODO Get all the courses associated with that user (as a student)
         context = {

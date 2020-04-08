@@ -53,11 +53,10 @@ class GradeCategory(models.Model):
     courseItBelongsTo = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="categories")
     
     
-    def getAssignments(self):
-            return Assignment.objects.filter(gradeCategoryItBelongsTo = self)
+    @property
+    def assignments(self):
+            return Assignment.objects.all().filter(gradeCategoryItBelongsTo = self)
 
-# Get a list of assignments of this gradecategory
-    assignments = property(getAssignments)
 
     def __str__(self):
         return self.name 

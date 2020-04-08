@@ -1,6 +1,7 @@
 {% extends 'gradetracker/template.html' %}
 {% block content %}
 {% load static %}
+{% load gradetracker_tags %}
 
 
         
@@ -30,18 +31,18 @@
     {% for category in grade_categories %}
           
     <!--<li class="list-group-item">-->      
-        <div class="card" style="width: auto" id="beautifiedCard">
+        <div class="card" style="width: auto">
             <div class="card-body" style="padding-bottom: 1.75%;">
 
                 <!-- List all the categories associated with that course -->
 
               <h4 class="card-title"><b>{{ category.name }}</b></h4>
               
-              {% for assignment in category.assignments%}
+              {% for assignment in category_assignments|get_item:category.name %}
               
               <!-- List of assignments associated with that course -->
               <ul class="list-group">
-                <li class="list-group-item">assignment.name</li>
+                <li class="list-group-item">{{ assignment.name }}</li>
               </ul>
 
               {% endfor %}
