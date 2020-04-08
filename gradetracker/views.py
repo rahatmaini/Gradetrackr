@@ -4,7 +4,7 @@ from django.views import generic
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 # new stuff
-from .models import Course, CourseForm, Student, GradeCategory
+from .models import Course, CourseForm, Student, GradeCategory, Assignment
 from django.contrib.auth.models import User
 
 
@@ -117,3 +117,32 @@ def duplicate_course(request, course_id=None):
     }
 
     return render(request, "gradetracker/dashboard.html", context)
+
+
+def CourseOverview(request, course_id=None):
+    # Render the details of the course that the authenticated user clicks
+    if request.user.is_authenticated:
+        # Get the course that the user wants to expand
+        course_to_display = Course.objects.get(id=course_id)
+
+        # Get all the grade categories associated with that course
+        grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display)
+
+        # Get all the assignments associated with that grade category
+
+        # dict that will contain all the assignments indexed by the grade category they belong to
+        category_assignments = {}
+
+        for category in grade_categories:
+            # Add all the assignments belonging to a category to the dictionary at that category's key
+            category_assignments[category.name].append(Assignment.objects.all().filter(gradeCategoryItBelongsTo=category))
+
+        # TODO Get all the courses associated with that user (as a student)
+        context = {
+        'course' : course_to_display,
+        'grade_categories' : grade_categories,
+        'category_assignments' : category_assignments
+    }
+        return render(request, "gradetracker/course.html", context)
+    else:
+        return HttpResponseRedirect(reverse("google_login"))

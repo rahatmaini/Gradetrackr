@@ -51,6 +51,13 @@ class GradeCategory(models.Model):
                                     decimal_places=2)  # wont work for grade categories that are worth 100% of the class. Hopefully this is never an issue
 
     courseItBelongsTo = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="categories")
+    
+    
+    def getAssignments(self):
+            return Assignment.objects.filter(gradeCategoryItBelongsTo = self)
+
+# Get a list of assignments of this gradecategory
+    assignments = property(getAssignments)
 
     def __str__(self):
         return self.name 

@@ -1,0 +1,79 @@
+{% extends 'gradetracker/template.html' %}
+{% block content %}
+{% load static %}
+
+
+        
+
+<div class="container justify-content-center">
+  <div class="card text-center" style="width: auto" id="beautifiedCard">
+  <!-- Course Title -->
+  <div class="card-header">
+    <h4 class="card-title"><b>{{ course.name }}<span style="float:right; color:green">X%</span></b></h4>
+  </div>
+  
+  <!-- Course Instructor Email -->
+  <h4 class="card-title">{{ course.Professor_Email }}</h4>
+  <!-- Is course verified? -->
+  {% if course.Verified_Class %}
+    <h4 class="card-title">Course is verified</h4>
+  {% else %}
+    <h4 class="card-title">Course is not verified</h4>
+  {% endif %}
+    <!--<ul>-->
+  <div class="cardGrid">
+
+
+<!-- If there is at least one category in the course -->
+  {% if grade_categories %} 
+
+    {% for category in grade_categories %}
+          
+    <!--<li class="list-group-item">-->      
+        <div class="card" style="width: auto" id="beautifiedCard">
+            <div class="card-body" style="padding-bottom: 1.75%;">
+
+                <!-- List all the categories associated with that course -->
+
+              <h4 class="card-title"><b>{{ category.name }}</b></h4>
+              
+              {% for assignment in category.assignments%}
+              
+              <!-- List of assignments associated with that course -->
+              <ul class="list-group">
+                <li class="list-group-item">assignment.name</li>
+              </ul>
+
+              {% endfor %}
+
+            </div>
+          </div>
+
+    <!--</li>-->
+    {% endfor %}
+  
+
+
+  <!-- If there are no grade categories associated with that course -->
+  {% else %}
+  <h4 class="card-title"><b>Add a grade category to start tracking your grades for {{ course.name }}</b></h4>
+
+  {% endif %} 
+
+            </div>
+    
+    </ul>
+
+    <div class="card-footer">
+      <a href="/dashboard/"><div>
+        Return to dashboard.
+    </div></a>
+    </div>
+
+</div>
+
+</div>
+
+
+
+{% endblock content %}
