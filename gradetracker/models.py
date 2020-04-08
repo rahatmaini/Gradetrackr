@@ -102,3 +102,6 @@ class Assignment(models.Model):  # abstract name, could be exam or quiz or anyth
     dueDate = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)  # default none
 
     gradeCategoryItBelongsTo = models.ForeignKey(GradeCategory, on_delete=models.CASCADE, related_name="assignments")
+
+    def __str__(self):
+        return self.name
