@@ -125,16 +125,29 @@ def SignIn(request):
 
 
 def delete_course(request, course_id=None):
-    course_to_delete = Course.objects.get(id=course_id)
-    course_to_delete.delete()
+    """
+    delete the requested course. Only if the user is authenticated.
+    """
+    
+    if request.user.is_authenticated:
+        
+        # if the course exists
+        if Course.objects.filter(id=course_id).exists():
+            course_to_delete = Course.objects.get(id=course_id)
+            # If the course belongs to the user who is trying to delete the course.
+            if course_to_delete.student_It_Belongs_To.user==request.user:
+                course_to_delete.delete()
 
-    context = {
-        'username': request.user,
-        'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
-    }
+        context = {
+            'username': request.user,
+            'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+        }
 
-    return render(request, "gradetracker/dashboard.html", context)
-
+        return render(request, "gradetracker/dashboard.html", context)
+    
+    # otherwise, prompt the user to login
+    else:
+        return redirect('gradetracker:index')
 
 def duplicate_course(request, course_id=None):
     courseToDuplicate = Course.objects.get(id=course_id)
