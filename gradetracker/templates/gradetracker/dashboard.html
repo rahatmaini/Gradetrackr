@@ -10,13 +10,11 @@
 {% if courses_list %}
 <div class="container justify-content-center">
 
-
   <!--<a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;add another course&nbsp;</b></a>-->
 
 
     <!--<ul>-->
         <div class="cardGrid">
-
 
 
           <!--DASHBOARD OVERVIEW CARD-->
@@ -41,19 +39,19 @@
             <div class="card" style="width: auto" id="beautifiedCard">
                 <div class="card-body" style="padding-bottom: 1.75%;">
                     <!-- List all the courses associated with a user -->
-                  <h4 class="card-title"><b>{{ course.name }}<span style="float:right; color:green">X%</span></b></h4>
+                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title"><b>{{ course.name }}<span style="float:right; color:green">X%</span></b></h4></a>
                   <p class="card-text" style="color:black; text-align: center;">
                     
                     <!--do not uncomment, we are not ready for this monstrosity<a href="" data-modal="#modal" class="modal__trigger" >add a grade category</a>-->
-                    <a class="nav-item nav-link" href="{% url 'gradetracker:gradecat' %}">Add a Grade Category (UNLINKED TO COURSE OBJ, TODO LINK IT)</a>
+                    <a class="nav-item nav-link" href="{% url 'gradetracker:gradecat' course_id=course.id%}">Add a Grade Category (UNLINKED TO COURSE OBJ, TODO LINK IT)</a>
                     
                   </p>
 
 
                   <a href="{% url 'gradetracker:delete_course' course_id=course.id%}" onclick="return confirm('Are you sure you want to delete this course?')" id="miniButtonRed"><span class="ti-trash"></span></a>
                   <a href="{% url 'gradetracker:duplicate_course' course_id=course.id%}" onclick="" id="miniButtons"><span class="ti-layers"></span></a>
-                  <a href="" onclick="" id="miniButtons" style="vertical-align: 1px; padding-right: 1%;"><span class="ti-new-window"></span></a>
-
+                  <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" onclick="" id="miniButtons" style="vertical-align: 1px; padding-right: 1%;"><span class="ti-new-window"></span></a>
+                  <a href="{% url 'gradetracker:addAssignment' course_id=course.id%}" class="btn btn-primary"><b>Add assignment</span></b></a>
 
                   <span style="color:black; float: right;"><b>{{ course.number_Of_Credits }} credits</b></span>
 
@@ -68,17 +66,16 @@
 
 </div>
 
+<!-- If the user has no courses -->
 {% else %}
 <div>
 <p> <img src = "{% static 'gradetracker/addcourse.png' %}" width="25%" style="margin-top: 4%;margin-right:8%;margin-left:8%;float: right;"><br/>
+    <h1 style="color: rgb(110, 72, 128);margin-top: 4%;margin-left: 6%;font-size: 5vw;line-height: 130%;">Get started tracking your academic performance.</h1>
+    <a href="{% url 'gradetracker:add' %}" class="addCourseButton" style="margin-left: 6%;margin-top:2%"><b>add course&nbsp;&nbsp;<span class="ti-hand-point-right" style="vertical-align: -1px;"></span></b></a>
 
-  <h1 style="color: rgb(110, 72, 128);margin-top: 4%;margin-left: 6%;font-size: 5vw;line-height: 130%;">Get started tracking your academic performance.</h1>
-      
-
-
-  <a href="{% url 'gradetracker:add' %}" class="addCourseButton" style="margin-left: 6%;margin-top:2%"><b>add course&nbsp;&nbsp;<span class="ti-hand-point-right" style="vertical-align: -1px;"></span></b></a>
 </p>
-  
+</div>
+
  
 
 {% endif %}
