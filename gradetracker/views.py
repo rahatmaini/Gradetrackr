@@ -150,49 +150,75 @@ def delete_course(request, course_id=None):
         return redirect('gradetracker:index')
 
 def duplicate_course(request, course_id=None):
-    courseToDuplicate = Course.objects.get(id=course_id)
-    newCourse = Course(Finished_Course=courseToDuplicate.Finished_Course,
-                       Verified_Class=courseToDuplicate.Verified_Class, Include_In_GPA=False,
-                       Professor_Email=courseToDuplicate.Professor_Email,
-                       Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,
-                       number_Of_Credits=courseToDuplicate.number_Of_Credits,
-                       target_Grade=courseToDuplicate.target_Grade,
-                       student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To)
-    newCourse.save()
 
-    context = {
-        'username': request.user,
-        'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
-    }
+    # if the user is authenticated
+    if request.user.is_authenticated:
 
-    return render(request, "gradetracker/dashboard.html", context)
+        # if the course exists
+        if Course.objects.filter(id=course_id).exists():
+            courseToDuplicate = Course.objects.get(id=course_id)
+            # If the course belongs to the user who is trying to duplicate the course.
+            if courseToDuplicate.student_It_Belongs_To.user==request.user:
+                newCourse = Course(Finished_Course=courseToDuplicate.Finished_Course,
+                                Verified_Class=courseToDuplicate.Verified_Class, Include_In_GPA=False,
+                                Professor_Email=courseToDuplicate.Professor_Email,
+                                Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,
+                                number_Of_Credits=courseToDuplicate.number_Of_Credits,
+                                target_Grade=courseToDuplicate.target_Grade,
+                                student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To)
+                newCourse.save()
+
+        context = {
+            'username': request.user,
+            'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+        }
+
+        return render(request, "gradetracker/dashboard.html", context)
+    
+    # otherwise, prompt the user to login
+    else:
+        return redirect('gradetracker:index')
 
 
 def CourseOverview(request, course_id=None):
     # Render the details of the course that the authenticated user clicks
     if request.user.is_authenticated:
-        # Get the course that the user wants to expand
-        course_to_display = Course.objects.get(id=course_id)
+        # if the course exists and belongs to the user 
+        if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
 
-        # Get all the grade categories associated with that course
-        grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display).values()
+            # Get the course that the user wants to expand
+            course_to_display = Course.objects.get(id=course_id)
 
-        # Get all the assignments associated with that grade category
+            # Get all the grade categories associated with that course
+            grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display).values()
 
-        # dict that will contain all the assignments indexed by the grade category they belong to
-        category_assignments = {}
+            # Get all the assignments associated with that grade category
+
+            # dict that will contain all the assignments indexed by the grade category they belong to
+            category_assignments = {}
 
 
-        for category in grade_categories:
-            # Add all the assignments belonging to a category to the dictionary at that category's key
-            category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
+            for category in grade_categories:
+                # Add all the assignments belonging to a category to the dictionary at that category's key
+                category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
 
-        # TODO Get all the courses associated with that user (as a student)
-        context = {
-            'course': course_to_display,
-            'grade_categories': grade_categories,
-            'category_assignments': category_assignments
-        }
-        return render(request, "gradetracker/course.html", context)
-    else:
-        return HttpResponseRedirect(reverse("google_login"))
+            # Get all the courses associated with that user (as a student)
+            context = {
+                'course': course_to_display,
+                'grade_categories': grade_categories,
+                'category_assignments': category_assignments
+            }
+            return render(request, "gradetracker/course.html", context)
+
+        # If the course does not exist or does not belong to the user, render the user's dashboard
+        else:
+            context = {
+                'username': request.user,
+                'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+            }
+
+        return render(request, "gradetracker/dashboard.html", context)
+
+    
+    # If the user is not authenticated
+    return redirect('gradetracker:index')
