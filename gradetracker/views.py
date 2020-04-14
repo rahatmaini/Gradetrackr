@@ -15,92 +15,115 @@ class TestView(TemplateView):
     template_name = 'gradetracker/test.html'
 
 
+# Create and add a new course
 def add(request):
-    if request.method == 'POST':
-        try:
-            finishedCourse = request.POST.get('enrolled')
-            if finishedCourse == "False":
-                finishedCourse = "True"
-            else:
-                finishedCourse = "False"
-            verifiedClass = request.POST.get('verified')
-            includeInGPA = request.POST.get('included')
-            professorEmail = request.POST.get('email')
-            VAGradeAvg = request.POST.get('VAavg')
-            courseTitle = request.POST.get('courseTitle')
-            numCredits = request.POST.get('credits')
-            targetGrade = request.POST.get('goal')
-            current_student = request.user.student
-            new_course = Course()
-            new_course.Finished_Course = finishedCourse
-            new_course.Verified_Class = verifiedClass
-            new_course.Include_In_GPA = includeInGPA
-            new_course.Professor_Email = professorEmail
-            new_course.Average_From_VAgrades = VAGradeAvg
-            new_course.name = courseTitle
-            new_course.number_Of_Credits = numCredits
-            new_course.target_Grade = targetGrade
-            new_course.student_It_Belongs_To = current_student
-            new_course.save()
-        except Exception as e:
-            return render(request, 'gradetracker/add.html', {'error_message': "HELLO " + str(e)})
-        return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                finishedCourse = request.POST.get('enrolled')
+                if finishedCourse == "False":
+                    finishedCourse = "True"
+                else:
+                    finishedCourse = "False"
+                verifiedClass = request.POST.get('verified')
+                includeInGPA = request.POST.get('included')
+                professorEmail = request.POST.get('email')
+                VAGradeAvg = request.POST.get('VAavg')
+                courseTitle = request.POST.get('courseTitle')
+                numCredits = request.POST.get('credits')
+                targetGrade = request.POST.get('goal')
+                current_student = request.user.student
+                new_course = Course()
+                new_course.Finished_Course = finishedCourse
+                new_course.Verified_Class = verifiedClass
+                new_course.Include_In_GPA = includeInGPA
+                new_course.Professor_Email = professorEmail
+                new_course.Average_From_VAgrades = VAGradeAvg
+                new_course.name = courseTitle
+                new_course.number_Of_Credits = numCredits
+                new_course.target_Grade = targetGrade
+                new_course.student_It_Belongs_To = current_student
+                new_course.save()
+            except Exception as e:
+                return render(request, 'gradetracker/add.html', {'error_message': "HELLO " + str(e)})
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+        else:
+            return render(request, 'gradetracker/add.html', )
     else:
-        return render(request, 'gradetracker/add.html', )
+        # if the user is not authenticated
+        return redirect('gradetracker:index')
 
 
 def gradecat(request, course_id=None):
-    theCourse = Course.objects.get(id=course_id)
-    if request.method == 'POST':
-        # courseTitle = request.POST.get('courseTitle')
-        gradeCategoryN = request.POST.get('name')
-        weight = request.POST.get('weight')
-        try:
-            new_gradecat = GradeCategory(name=gradeCategoryN, weightage=weight, courseItBelongsTo=theCourse)
-            new_gradecat.save()
-        except Exception as e:
-            return render(request, 'gradetracker/gradecat.html', {'error_message': "HELLO " + str(e), 'course_id' : course_id})
-        return redirect('gradetracker:dashboard')
+    if request.user.is_authenticated:
+        # If the course exists and belongs to the user
+        if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
+            theCourse = Course.objects.get(id=course_id)
+            if request.method == 'POST':
+                # courseTitle = request.POST.get('courseTitle')
+                gradeCategoryN = request.POST.get('name')
+                weight = request.POST.get('weight')
+                try:
+                    new_gradecat = GradeCategory(name=gradeCategoryN, weightage=weight, courseItBelongsTo=theCourse)
+                    new_gradecat.save()
+                except Exception as e:
+                    return render(request, 'gradetracker/gradecat.html', {'error_message': "HELLO " + str(e), 'course_id' : course_id})
+                return redirect('gradetracker:dashboard')
+            else:
+                return render(request, 'gradetracker/gradecat.html', {'course_id' : course_id})
+        # If the user is authenticated but the course does not exist or belong to that user, render the dashboard
+        else:
+            return CourseDashboard(request)
     else:
-        return render(request, 'gradetracker/gradecat.html', {'course_id' : course_id})
-
+        # if the user is not authenticated
+        return redirect('gradetracker:index')
 
 class IndexView(TemplateView):
     template_name = 'gradetracker/index.html'
 
 
 def addAssignment(request, course_id=None):
-    theCourse = Course.objects.get(id=course_id)
-    grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=theCourse)
-    context = {'theCourse' : theCourse,
-               'grade_categories' : grade_categories,
-               'course_id' : course_id}
-    if request.method == 'POST':
-        try:
-            name = request.POST.get('assignmentName')
-            percentage = request.POST.get('weight')
-            notification = request.POST.get('notify')
-            gradeCatName = request.POST.get('categoryChoice')
-            dueDate = request.POST.get('date')
-            new_assignment = Assignment()
-            new_assignment.name = name
-            new_assignment.gradePercentage = percentage
-            new_assignment.notifyStudentOrNot = notification
-            new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(name=gradeCatName)
-            new_assignment.dueDate = dueDate
-            new_assignment.save()
-        except Exception as e:
-            return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse, 'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " + str(e)})
-        return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+    if request.user.is_authenticated:
+        # If the course exists and belongs to the user
+        if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
+            theCourse = Course.objects.get(id=course_id)
+            grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=theCourse)
+            context = {'theCourse' : theCourse,
+                    'grade_categories' : grade_categories,
+                    'course_id' : course_id}
+            if request.method == 'POST':
+                try:
+                    name = request.POST.get('assignmentName')
+                    percentage = request.POST.get('weight')
+                    notification = request.POST.get('notify')
+                    gradeCatName = request.POST.get('categoryChoice')
+                    dueDate = request.POST.get('date')
+                    new_assignment = Assignment()
+                    new_assignment.name = name
+                    new_assignment.gradePercentage = percentage
+                    new_assignment.notifyStudentOrNot = notification
+                    new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(name=gradeCatName)
+                    new_assignment.dueDate = dueDate
+                    new_assignment.save()
+                except Exception as e:
+                    return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse, 'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " + str(e)})
+                return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+            else:
+                return render(request, 'gradetracker/addAssignment.html', context)
+        
+        # If the user is authenticated but the course does not exist or belong to that user, render the dashboard
+        else:
+            return CourseDashboard(request)
     else:
-        return render(request, 'gradetracker/addAssignment.html', context)
+        # if the user is not authenticated
+        return redirect('gradetracker:index')
+
 
 
 def CourseDashboard(request):
     # Render the course dashboard of the authenticated user
     if request.user.is_authenticated:
-        print(request.user)
-        # TODO Get all the courses associated with that user (as a student)
+    #    Get all the courses associated with that user (as a student)
         context = {
             'username': request.user,
             'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
@@ -113,8 +136,7 @@ def CourseDashboard(request):
 def SignIn(request):
     # Render the course dashboard of the authenticated user
     if request.user.is_authenticated:
-        print(request.user)
-        # TODO Get all the courses associated with that user (as a student)
+    #   Get all the courses associated with that user (as a student)
         context = {
             'username': request.user,
             'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
@@ -138,61 +160,71 @@ def delete_course(request, course_id=None):
             if course_to_delete.student_It_Belongs_To.user==request.user:
                 course_to_delete.delete()
 
-        context = {
-            'username': request.user,
-            'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
-        }
-
-        return render(request, "gradetracker/dashboard.html", context)
+        return CourseDashboard(request)
     
     # otherwise, prompt the user to login
     else:
         return redirect('gradetracker:index')
 
 def duplicate_course(request, course_id=None):
-    courseToDuplicate = Course.objects.get(id=course_id)
-    newCourse = Course(Finished_Course=courseToDuplicate.Finished_Course,
-                       Verified_Class=courseToDuplicate.Verified_Class, Include_In_GPA=False,
-                       Professor_Email=courseToDuplicate.Professor_Email,
-                       Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,
-                       number_Of_Credits=courseToDuplicate.number_Of_Credits,
-                       target_Grade=courseToDuplicate.target_Grade,
-                       student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To)
-    newCourse.save()
 
-    context = {
-        'username': request.user,
-        'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
-    }
+    # if the user is authenticated
+    if request.user.is_authenticated:
 
-    return render(request, "gradetracker/dashboard.html", context)
+        # if the course exists
+        if Course.objects.filter(id=course_id).exists():
+            courseToDuplicate = Course.objects.get(id=course_id)
+            # If the course belongs to the user who is trying to duplicate the course.
+            if courseToDuplicate.student_It_Belongs_To.user==request.user:
+                newCourse = Course(Finished_Course=courseToDuplicate.Finished_Course,
+                                Verified_Class=courseToDuplicate.Verified_Class, Include_In_GPA=False,
+                                Professor_Email=courseToDuplicate.Professor_Email,
+                                Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,
+                                number_Of_Credits=courseToDuplicate.number_Of_Credits,
+                                target_Grade=courseToDuplicate.target_Grade,
+                                student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To)
+                newCourse.save()
+
+        return CourseDashboard(request)
+    
+    # otherwise, prompt the user to login
+    else:
+        return redirect('gradetracker:index')
 
 
 def CourseOverview(request, course_id=None):
     # Render the details of the course that the authenticated user clicks
     if request.user.is_authenticated:
-        # Get the course that the user wants to expand
-        course_to_display = Course.objects.get(id=course_id)
+        # if the course exists and belongs to the user 
+        if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
 
-        # Get all the grade categories associated with that course
-        grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display).values()
+            # Get the course that the user wants to expand
+            course_to_display = Course.objects.get(id=course_id)
 
-        # Get all the assignments associated with that grade category
+            # Get all the grade categories associated with that course
+            grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display).values()
 
-        # dict that will contain all the assignments indexed by the grade category they belong to
-        category_assignments = {}
+            # Get all the assignments associated with that grade category
+
+            # dict that will contain all the assignments indexed by the grade category they belong to
+            category_assignments = {}
 
 
-        for category in grade_categories:
-            # Add all the assignments belonging to a category to the dictionary at that category's key
-            category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
+            for category in grade_categories:
+                # Add all the assignments belonging to a category to the dictionary at that category's key
+                category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
 
-        # TODO Get all the courses associated with that user (as a student)
-        context = {
-            'course': course_to_display,
-            'grade_categories': grade_categories,
-            'category_assignments': category_assignments
-        }
-        return render(request, "gradetracker/course.html", context)
-    else:
-        return HttpResponseRedirect(reverse("google_login"))
+            # Get all the courses associated with that user (as a student)
+            context = {
+                'course': course_to_display,
+                'grade_categories': grade_categories,
+                'category_assignments': category_assignments
+            }
+            return render(request, "gradetracker/course.html", context)
+
+        # If the course does not exist or does not belong to the user, render the user's dashboard
+        else:
+            return CourseDashboard(request)
+    
+    # If the user is not authenticated
+    return redirect('gradetracker:index')
