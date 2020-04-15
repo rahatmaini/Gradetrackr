@@ -10,7 +10,7 @@ r = requests.get(url = URL+course_name)
 
 data = r.json()
 
-print(data)
+print(data['course'])
 
 # def getCourseInfo(course_name):
 #     """
