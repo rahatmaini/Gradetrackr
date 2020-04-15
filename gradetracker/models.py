@@ -6,6 +6,24 @@ from django.dispatch import receiver
 from django.forms import ModelForm
 
 
+class SingularGradeItem(models.Model):
+    gradePercentage = models.DecimalField(max_digits=5, decimal_places=2)
+    datetimeWhenInputted = models.DateTimeField(auto_now=False, auto_now_add=True)
+    didGradeGoUp = models.BooleanField(null=True)  # true means it went up compared to last stored value
+
+    def __str__(self):
+        return str(self.gradePercentage)
+
+    # whichStudentsSemesterGPAisThis = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="semGPA",
+    #                                                    null=True)
+    # whichStudentsCumulativeGPAisThis = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="cumGPA",
+    #                                                      null=True),
+
+    # whichGradeCategorysAvgGradeIsThis = models.ForeignKey(GradeCategory, on_delete=models.CASCADE,
+    #                                                       related_name="gradeCategory", null=True)
+
+    # student_It_Belongs_To = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="stud")
+
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -40,6 +58,7 @@ class Course(models.Model):
                                        null=True)  # for assholes who want a target grade of a 100.00%
 
     student_It_Belongs_To = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="courses")
+    avgGrade = models.ForeignKey(SingularGradeItem, on_delete=models.CASCADE, related_name="avgGrade", null=True)
 
     def __str__(self):
         return self.name
@@ -76,22 +95,6 @@ class CourseForm(ModelForm):
         fields = ['Finished_Course', 'Verified_Class', 'Include_In_GPA', 'Professor_Email',
                   'Average_From_VAgrades', 'name', 'number_Of_Credits', 'target_Grade', 'student_It_Belongs_To']
 
-
-
-class SingularGradeItem(models.Model):
-    gradePercentage = models.DecimalField(max_digits=5, decimal_places=2)
-    datetimeWhenInputted = models.DateTimeField(auto_now=False, auto_now_add=True)
-    didGradeGoUp = models.BooleanField(null=True)  # true means it went up compared to last stored value
-
-    whichStudentsSemesterGPAisThis = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="semGPA",
-                                                       null=True)
-    whichStudentsCumulativeGPAisThis = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="cumGPA",
-                                                         null=True)
-
-    whichCoursesAvgGradeIsThis = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="courseAvgGrade",
-                                                   null=True)
-    whichGradeCategorysAvgGradeIsThis = models.ForeignKey(GradeCategory, on_delete=models.CASCADE,
-                                                          related_name="gradeCategory", null=True)
 
 
 class Assignment(models.Model):  # abstract name, could be exam or quiz or anything that is worth something

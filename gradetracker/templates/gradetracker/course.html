@@ -7,6 +7,26 @@
         
 
 <div class="container justify-content-center">
+  <div class="card text-center" style="width: auto" id="beautifiedCard">
+  <!-- Course Title -->
+  <div class="card-header">
+    <h4 class="card-title"><b>{{ course.name }}
+      {% if course.avgGrade.didGradeGoUp %}
+      <span style="float:right; color:green">{{ course.avgGrade.gradePercentage }}%</span>
+      {% else %}
+      <span style="float:right; color:red">{{ course.avgGrade.gradePercentage }}%</span>
+      {% endif %}</b></h4>
+  </div>
+  
+  <!-- Course Instructor Email -->
+  <h4 class="card-title"><span class="ti-email"></span>{{ course.Professor_Email }}</h4>
+  <!-- Is course verified? -->
+  {% if course.Verified_Class %}
+    <h4 class="card-title">Course is verified</h4>
+  {% else %}
+    <h4 class="card-title">Course is not verified</h4>
+  {% endif %}
+    <!--<ul>-->
   <div class="cardGrid">
   
     <div class="card" style="width: auto; overflow: hidden;" id="beautifiedCard">
