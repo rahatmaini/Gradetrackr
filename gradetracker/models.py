@@ -27,7 +27,7 @@ class SingularGradeItem(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    #cumulativeCredits = models.DecimalField(max_digits=4, decimal_places=1, null=True)
+    cumulativeCredits = models.DecimalField(max_digits=4, decimal_places=1, null=True)
 
     def __str__(self):
         return self.user.username

@@ -8,6 +8,7 @@ from .models import Course, CourseForm, Student, GradeCategory, Assignment, Sing
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 import sys
+from decimal import Decimal
 
 
 # in gradetracker directory
@@ -45,6 +46,8 @@ def add(request):
                 new_course.number_Of_Credits = numCredits
                 new_course.target_Grade = targetGrade
                 new_course.student_It_Belongs_To = current_student
+                current_student.cumulativeCredits += Decimal(numCredits)
+                request.user.student.save()
                 new_course.save()
             except Exception as e:
                 return render(request, 'gradetracker/add.html', {'error_message': "HELLO " + str(e)})
@@ -129,7 +132,8 @@ def CourseDashboard(request):
     #    Get all the courses associated with that user (as a student)
         context = {
             'username': request.user,
-            'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+            'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user)),
+            'cum': Student.objects.all().get(user=request.user).cumulativeCredits
         }
         return render(request, "gradetracker/dashboard.html", context)
     else:
@@ -218,8 +222,10 @@ def getAverage(course_id=None):
         
         for assignment in list_of_assignments_in_categories:
             average_grade += assignment.gradePercentage
-        average_grade /= len(list_of_assignments_in_categories)
-        grades_and_their_weights.append((float(category.weightage), float(average_grade)))
+        if (len(list_of_assignments_in_categories)!=0):
+            average_grade /= len(list_of_assignments_in_categories)
+            grades_and_their_weights.append((float(category.weightage), float(average_grade)))
+
 
     average_class_grade = 0
     for item in grades_and_their_weights:
