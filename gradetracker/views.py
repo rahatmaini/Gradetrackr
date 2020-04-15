@@ -90,7 +90,7 @@ def addAssignment(request, course_id=None):
             grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=theCourse)
             context = {'theCourse' : theCourse,
                     'grade_categories' : grade_categories,
-                    'course_id' : course_id}
+                    'course' : theCourse}
             if request.method == 'POST':
                 try:
                     name = request.POST.get('assignmentName')
@@ -233,11 +233,10 @@ def CourseOverview(request, course_id=None):
 def delete_category(request, category_id=None):
     """
     delete the requested grade category. Only if the user is authenticated.
+    TODO we probably want to delete all assignments associated with a category when we delete the category
     """
     
     if request.user.is_authenticated:
-        
-
         
         # if the category exists
         if GradeCategory.objects.filter(id=category_id).exists():
@@ -248,6 +247,33 @@ def delete_category(request, category_id=None):
             # If the course belongs to the user who is trying to delete the category.
             if course.student_It_Belongs_To.user==request.user:
                 category_to_delete.delete()
+                # delete the category and display the course overview page
+                return CourseOverview(request, course.id)
+
+        return CourseDashboard(request)
+    
+    # otherwise, prompt the user to login
+    else:
+        return redirect('gradetracker:index')
+
+
+def delete_assignment(request, assignment_id=None):
+    """
+    delete the requested assignment. Only if the user is authenticated.
+    """
+    
+    if request.user.is_authenticated:
+        
+        # if the category exists
+        if Assignment.objects.filter(id=assignment_id).exists():
+            # Get the assignment that we want to delete
+            assignment_to_delete = Assignment.objects.get(id=assignment_id)
+            # Get the course it belongs to
+            course = assignment_to_delete.gradeCategoryItBelongsTo.courseItBelongsTo 
+
+            # If the course belongs to the user who is trying to delete the category.
+            if course.student_It_Belongs_To.user==request.user:
+                assignment_to_delete.delete()
                 # delete the category and display the course overview page
                 return CourseOverview(request, course.id)
 

@@ -18,5 +18,6 @@ urlpatterns = [
     re_path(r'^course-overview/(?P<course_id>\d+)/$', views.CourseOverview, name='course_overview'),
     re_path(r'^addAssignment/(?P<course_id>\d+)/$', views.addAssignment, name='addAssignment'),
     re_path(r'^gradecat/(?P<course_id>\d+)/$', views.gradecat, name='gradecat'),
-        re_path(r'^delete-category/(?P<category_id>\d+)/$', views.delete_category, name='delete_category'),
+    re_path(r'^delete-category/(?P<category_id>\d+)/$', views.delete_category, name='delete_category'),
+    re_path(r'^delete-assignment/(?P<assignment_id>\d+)/$', views.delete_assignment, name='delete_assignment')
 ]
