@@ -104,7 +104,7 @@ def addAssignment(request, course_id=None):
                     new_assignment.name = name
                     new_assignment.gradePercentage = percentage
                     new_assignment.notifyStudentOrNot = notification
-                    new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(name=gradeCatID)
+                    new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(id=gradeCatID)
                     new_assignment.dueDate = dueDate
                     new_assignment.save()
                     getAverage(course_id)
