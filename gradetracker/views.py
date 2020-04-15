@@ -200,7 +200,7 @@ def duplicate_course(request, course_id=None):
 
         return CourseDashboard(request)
     
-    # otherwise, prompt the user to login
+    # otherwise, prompt the user to login.
     else:
         return redirect('gradetracker:index')
 
