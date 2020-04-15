@@ -19,7 +19,7 @@
   </div>
   
   <!-- Course Instructor Email -->
-  <h4 class="card-title">{{ course.Professor_Email }}</h4>
+  <h4 class="card-title"><span class="ti-email"></span>{{ course.Professor_Email }}</h4>
   <!-- Is course verified? -->
   {% if course.Verified_Class %}
     <h4 class="card-title">Course is verified</h4>
@@ -28,6 +28,11 @@
   {% endif %}
     <!--<ul>-->
   <div class="cardGrid">
+
+
+    <!-- Button to add a grade category -->
+        <a href="{% url 'gradetracker:gradecat' course_id=course.id%}" class="btn btn-primary">Add a Grade Category</a>      
+
 
 
 <!-- If there is at least one category in the course -->
@@ -41,13 +46,24 @@
 
                 <!-- List all the categories associated with that course -->
 
-              <h4 class="card-title"><b>{{ category.name }}</b></h4>
-              
+              <h4 class="card-title"><b>
+                <a style="float:left" href="{% url 'gradetracker:delete_category' category_id=category.id%}" onclick="return confirm('Are you sure you want to delete this grade category?')" id="miniButtonRed"><span class="ti-trash"></span></a>
+                {{ category.name }}
+                <span style="float:right; color: green">{{ category.weightage}}%</span>
+              </b></h4>
+              <!-- button to delete the grade category -->
               {% for assignment in category_assignments|get_item:category.name %}
               
               <!-- List of assignments associated with that course -->
               <ul class="list-group">
-                <li class="list-group-item">{{ assignment.name }}</li>
+                <!-- Button to add an assignment -->
+                <a href="{% url 'gradetracker:addAssignment' course_id=course.id%}" class="btn btn-primary">Add an Assignment</a>      
+
+                <li class="list-group-item">
+                  <a style="float:left" href="{% url 'gradetracker:delete_assignment' assignment_id=assignment.id%}" onclick="return confirm('Are you sure you want to delete this assignment?')" id="miniButtonRed"><span class="ti-close"></span></a>
+                  {{ assignment.name }}
+                  <span style="float:right; color: green">{{ assignment.gradePercentage}}%</span>
+                </li>
               </ul>
 
               {% endfor %}
@@ -72,7 +88,7 @@
 
     <div class="card-footer">
       <a href="/dashboard/"><div>
-        Return to dashboard.
+        <span class="ti-arrow-left"></span>Return to dashboard.
     </div></a>
     </div>
 
