@@ -194,7 +194,7 @@ def duplicate_course(request, course_id=None):
                     newGradecat.save()
                     assingmentsToDuplicate = category.assignments.all()
                     for assignment in assingmentsToDuplicate:
-                        new_assignment = Assignment(gradePercentage=assignment.gradePercentage, notifyStudentOrNot=assignment.notifyStudentOrNot, name=Assignment.name, dueDate=assignment.dueDate, gradeCategoryItBelongsTo=newGradecat)
+                        new_assignment = Assignment(gradePercentage=assignment.gradePercentage, notifyStudentOrNot=assignment.notifyStudentOrNot, name=assignment.name, dueDate=assignment.dueDate, gradeCategoryItBelongsTo=newGradecat)
                         new_assignment.save()
                             #getAverage(course_id)
 
