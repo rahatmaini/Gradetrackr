@@ -4,8 +4,10 @@ from django.views import generic
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 # new stuff
-from .models import Course, CourseForm, Student, GradeCategory, Assignment
+from .models import Course, CourseForm, Student, GradeCategory, Assignment, SingularGradeItem
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+import sys
 
 
 # in gradetracker directory
@@ -86,7 +88,7 @@ def addAssignment(request, course_id=None):
     if request.user.is_authenticated:
         # If the course exists and belongs to the user
         if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
-            theCourse = Course.objects.get(id=course_id)
+            theCourse = Course.objects.get(pk=course_id)
             grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=theCourse)
             context = {'theCourse' : theCourse,
                     'grade_categories' : grade_categories,
@@ -105,6 +107,7 @@ def addAssignment(request, course_id=None):
                     new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(name=gradeCatName)
                     new_assignment.dueDate = dueDate
                     new_assignment.save()
+                    getAverage(course_id)
                 except Exception as e:
                     return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse, 'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " + str(e)})
                 return HttpResponseRedirect(reverse('gradetracker:dashboard'))
@@ -174,6 +177,7 @@ def duplicate_course(request, course_id=None):
         # if the course exists
         if Course.objects.filter(id=course_id).exists():
             courseToDuplicate = Course.objects.get(id=course_id)
+            gradeCategoriesToDuplicate = courseToDuplicate.categories.all()
             # If the course belongs to the user who is trying to duplicate the course.
             if courseToDuplicate.student_It_Belongs_To.user==request.user:
                 newCourse = Course(Finished_Course=courseToDuplicate.Finished_Course,
@@ -184,12 +188,55 @@ def duplicate_course(request, course_id=None):
                                 target_Grade=courseToDuplicate.target_Grade,
                                 student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To)
                 newCourse.save()
+                #trying to duplicate grade categories and assignments
+                for category in gradeCategoriesToDuplicate:
+                    newGradecat = GradeCategory(name=category.name, weightage=category.weightage, courseItBelongsTo=newCourse)
+                    newGradecat.save()
+                    assingmentsToDuplicate = category.assignments.all()
+                    for assignment in assingmentsToDuplicate:
+                        new_assignment = Assignment(gradePercentage=assignment.gradePercentage, notifyStudentOrNot=assignment.notifyStudentOrNot, name=Assignment.name, dueDate=assignment.dueDate, gradeCategoryItBelongsTo=newGradecat)
+                        new_assignment.save()
+                            #getAverage(course_id)
 
         return CourseDashboard(request)
     
     # otherwise, prompt the user to login
     else:
         return redirect('gradetracker:index')
+
+
+def getAverage(course_id=None):
+    
+    theCourse = Course.objects.get(pk=course_id)
+    grade_categories = theCourse.categories.all()
+    grades_and_their_weights = []
+    
+    for category in grade_categories:
+        
+        list_of_assignments_in_categories = category.assignments.all()
+        average_grade = 0
+        
+        for assignment in list_of_assignments_in_categories:
+            average_grade += assignment.gradePercentage
+        average_grade /= len(list_of_assignments_in_categories)
+        grades_and_their_weights.append((float(category.weightage), float(average_grade)))
+
+    average_class_grade = 0
+    for item in grades_and_their_weights:
+        average_class_grade += item[0]*item[1]/100
+
+    if (theCourse.avgGrade == None):
+        avgGrade = SingularGradeItem.objects.create(gradePercentage=average_class_grade, didGradeGoUp=True)
+        theCourse.avgGrade = avgGrade
+    else:
+        theCourse.avgGrade.didGradeGoUp = (theCourse.avgGrade.gradePercentage < average_class_grade)
+        print(theCourse.avgGrade.didGradeGoUp, file=sys.stderr)
+        print(average_class_grade, file=sys.stderr)
+        theCourse.avgGrade.gradePercentage = average_class_grade
+        print(theCourse.avgGrade.gradePercentage, file=sys.stderr)
+    
+    theCourse.avgGrade.save()
+    theCourse.save()
 
 
 def CourseOverview(request, course_id=None):

@@ -10,7 +10,12 @@
   <div class="card text-center" style="width: auto" id="beautifiedCard">
   <!-- Course Title -->
   <div class="card-header">
-    <h4 class="card-title"><b>{{ course.name }}<span style="float:right; color:green">X%</span></b></h4>
+    <h4 class="card-title"><b>{{ course.name }}
+      {% if course.avgGrade.didGradeGoUp %}
+      <span style="float:right; color:green">{{ course.avgGrade.gradePercentage }}%</span>
+      {% else %}
+      <span style="float:right; color:red">{{ course.avgGrade.gradePercentage }}%</span>
+      {% endif %}</b></h4>
   </div>
   
   <!-- Course Instructor Email -->
