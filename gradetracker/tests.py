@@ -42,16 +42,16 @@ class GradeTrackerTestCase(TestCase):
         self.assertEqual(gradesThatShouldveBeenAdded, gradesSoFar)
 
 
-    def test_update_semester_GPA(self):
-        # Create a user (and thus a student)
-        test_user = User.objects.create_user(username='testuser', password='12345')
-        student1 = Student.objects.all().filter(user=Student.objects.get(user=test_user))[0]
+    # def test_update_semester_GPA(self):
+    #     # Create a user (and thus a student)
+    #     test_user = User.objects.create_user(username='testuser', password='12345')
+    #     student1 = Student.objects.all().filter(user=Student.objects.get(user=test_user))[0]
 
-        SingularGradeItem.objects.create(gradePercentage=3.5, whichStudentsSemesterGPAisThis=student1)
-        SingularGradeItem.objects.create(gradePercentage=3.7, whichStudentsSemesterGPAisThis=student1)
-        #TODO write helper function to get latest GPA before setting, and set the boolean of current grade to be up or down
+    #     SingularGradeItem.objects.create(gradePercentage=3.5, whichStudentsSemesterGPAisThis=student1)
+    #     SingularGradeItem.objects.create(gradePercentage=3.7, whichStudentsSemesterGPAisThis=student1)
+    #     #TODO write helper function to get latest GPA before setting, and set the boolean of current grade to be up or down
 
-        self.assertEqual (float(student1.semGPA.latest('datetimeWhenInputted').gradePercentage),3.7)
+    #     self.assertEqual (float(student1.semGPA.latest('datetimeWhenInputted').gradePercentage),3.7)
 
 
     def test_this_course_belongs_to_this_student(self):
