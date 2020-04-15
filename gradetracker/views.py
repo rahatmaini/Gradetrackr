@@ -228,3 +228,31 @@ def CourseOverview(request, course_id=None):
     
     # If the user is not authenticated
     return redirect('gradetracker:index')
+
+
+def delete_category(request, category_id=None):
+    """
+    delete the requested grade category. Only if the user is authenticated.
+    """
+    
+    if request.user.is_authenticated:
+        
+
+        
+        # if the category exists
+        if GradeCategory.objects.filter(id=category_id).exists():
+            category_to_delete = GradeCategory.objects.get(id=category_id)
+            # Get the course it belongs to
+            course = category_to_delete.courseItBelongsTo 
+
+            # If the course belongs to the user who is trying to delete the category.
+            if course.student_It_Belongs_To.user==request.user:
+                category_to_delete.delete()
+                # delete the category and display the course overview page
+                return CourseOverview(request, course.id)
+
+        return CourseDashboard(request)
+    
+    # otherwise, prompt the user to login
+    else:
+        return redirect('gradetracker:index')
