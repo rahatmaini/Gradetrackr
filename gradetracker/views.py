@@ -192,6 +192,7 @@ def duplicate_course(request, course_id=None):
         return redirect('gradetracker:index')
 
 
+
 def CourseOverview(request, course_id=None):
     # Render the details of the course that the authenticated user clicks
     if request.user.is_authenticated:

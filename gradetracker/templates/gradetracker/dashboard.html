@@ -53,10 +53,11 @@
                   <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" onclick="" id="miniButtons" style="vertical-align: 1px; padding-right: 1%;"><span class="ti-new-window"></span></a>
                   <a href="{% url 'gradetracker:addAssignment' course_id=course.id%}" class="btn btn-primary"><b>Add assignment</span></b></a>
 
-                  <span style="color:black; float: right;"><b>{{ course.number_Of_Credits }} credits</b></span>
+                  <span style="color:black; float: right;"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
 
                 </div>
               </div>
+              
         <!--</li>-->
         
     {% endfor %}
