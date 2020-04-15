@@ -25,6 +25,16 @@
   <div class="cardGrid">
 
 
+    <!-- Button to add a grade category -->
+    <div class="card text-center" style="width: auto">
+      <div class="card-body" style="padding-bottom: 1.75%;">
+
+        <a href="{% url 'gradetracker:gradecat' course_id=course.id%}" class="btn btn-primary">Add a Grade Category</a>      
+
+      </div>
+    </div>
+
+
 <!-- If there is at least one category in the course -->
   {% if grade_categories %} 
 

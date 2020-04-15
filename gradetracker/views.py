@@ -68,9 +68,9 @@ def gradecat(request, course_id=None):
                     new_gradecat.save()
                 except Exception as e:
                     return render(request, 'gradetracker/gradecat.html', {'error_message': "HELLO " + str(e), 'course_id' : course_id})
-                return redirect('gradetracker:dashboard')
+                return CourseOverview(request, course_id)
             else:
-                return render(request, 'gradetracker/gradecat.html', {'course_id' : course_id})
+                return render(request, 'gradetracker/gradecat.html', {'course' : theCourse})
         # If the user is authenticated but the course does not exist or belong to that user, render the dashboard
         else:
             return CourseDashboard(request)
