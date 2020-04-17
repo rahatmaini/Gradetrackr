@@ -98,19 +98,17 @@ def addAssignment(request, course_id=None):
                     name = request.POST.get('assignmentName')
                     percentage = request.POST.get('weight')
                     notification = request.POST.get('notify')
-                    gradeCatName = request.POST.get('categoryChoice')
-                    dueDate = request.POST.get('date')
+                    gradeCatID = request.POST.get('categoryChoice')
                     new_assignment = Assignment()
                     new_assignment.name = name
                     new_assignment.gradePercentage = percentage
                     new_assignment.notifyStudentOrNot = notification
-                    new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(name=gradeCatName)
-                    new_assignment.dueDate = dueDate
+                    new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(id=gradeCatID)
                     new_assignment.save()
                     getAverage(course_id)
                 except Exception as e:
                     return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse, 'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " + str(e)})
-                return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+                return CourseOverview(request, course_id)
             else:
                 return render(request, 'gradetracker/addAssignment.html', context)
         
@@ -194,7 +192,7 @@ def duplicate_course(request, course_id=None):
                     newGradecat.save()
                     assingmentsToDuplicate = category.assignments.all()
                     for assignment in assingmentsToDuplicate:
-                        new_assignment = Assignment(gradePercentage=assignment.gradePercentage, notifyStudentOrNot=assignment.notifyStudentOrNot, name=Assignment.name, dueDate=assignment.dueDate, gradeCategoryItBelongsTo=newGradecat)
+                        new_assignment = Assignment(gradePercentage=assignment.gradePercentage, name=assignment.name, gradeCategoryItBelongsTo=newGradecat)
                         new_assignment.save()
                             #getAverage(course_id)
 
@@ -218,8 +216,34 @@ def getAverage(course_id=None):
         
         for assignment in list_of_assignments_in_categories:
             average_grade += assignment.gradePercentage
-        average_grade /= len(list_of_assignments_in_categories)
-        grades_and_their_weights.append((float(category.weightage), float(average_grade)))
+        if (len(list_of_assignments_in_categories)!=0):
+            average_grade /= len(list_of_assignments_in_categories)
+            grades_and_their_weights.append((float(category.weightage), float(average_grade)))
+        else:
+            average_grade = 0
+
+
+        
+        if (category.avgCategoryGrade == None):
+            avgCategoryGrade = SingularGradeItem.objects.create(gradePercentage=average_grade, didGradeGoUp=True)
+            category.avgCategoryGrade = avgCategoryGrade
+        else:
+            if (category.avgCategoryGrade.gradePercentage < average_grade):
+                category.avgCategoryGrade.didGradeGoUp = True
+            elif (category.avgCategoryGrade.gradePercentage == average_grade):
+                category.avgCategoryGrade.didGradeGoUp = True
+            else:
+                category.avgCategoryGrade.didGradeGoUp = False
+            category.avgCategoryGrade.gradePercentage = average_grade
+
+        print(category.avgCategoryGrade.didGradeGoUp, file=sys.stderr)
+        print(category, file=sys.stderr)
+
+        category.avgCategoryGrade.save()
+        category.save()
+
+        
+
 
     average_class_grade = 0
     for item in grades_and_their_weights:
@@ -229,11 +253,16 @@ def getAverage(course_id=None):
         avgGrade = SingularGradeItem.objects.create(gradePercentage=average_class_grade, didGradeGoUp=True)
         theCourse.avgGrade = avgGrade
     else:
-        theCourse.avgGrade.didGradeGoUp = (theCourse.avgGrade.gradePercentage < average_class_grade)
-        print(theCourse.avgGrade.didGradeGoUp, file=sys.stderr)
-        print(average_class_grade, file=sys.stderr)
-        theCourse.avgGrade.gradePercentage = average_class_grade
         print(theCourse.avgGrade.gradePercentage, file=sys.stderr)
+        if (theCourse.avgGrade.gradePercentage < average_class_grade):
+            theCourse.avgGrade.didGradeGoUp = True
+        elif (theCourse.avgGrade.gradePercentage == average_class_grade):
+            theCourse.avgGrade.didGradeGoUp = True
+        else:
+            theCourse.avgGrade.didGradeGoUp = False
+    
+    theCourse.avgGrade.gradePercentage = average_class_grade
+        #print(theCourse.avgGrade.gradePercentage, file=sys.stderr)
     
     theCourse.avgGrade.save()
     theCourse.save()
@@ -249,7 +278,7 @@ def CourseOverview(request, course_id=None):
             course_to_display = Course.objects.get(id=course_id)
 
             # Get all the grade categories associated with that course
-            grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display).values()
+            grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display)
 
             # Get all the assignments associated with that grade category
 
@@ -257,7 +286,7 @@ def CourseOverview(request, course_id=None):
             category_assignments = {}
 
 
-            for category in grade_categories:
+            for category in grade_categories.values():
                 # Add all the assignments belonging to a category to the dictionary at that category's key
                 category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
 

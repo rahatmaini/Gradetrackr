@@ -28,8 +28,7 @@
   {% endif %}
     <!--<ul>-->
   <div class="cardGrid">
-  
-    <div class="card" style="width: auto; overflow: hidden;" id="beautifiedCard">
+    <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
       <div class="card-body" style="padding-bottom: 1.75%;background-color: #f7f7f7;">
 
           <!-- List all the categories associated with that course -->
@@ -47,14 +46,19 @@
     {% for category in grade_categories %}
           
     <!--<li class="list-group-item">-->      
-      <div class="card" style="width: auto; overflow: hidden;" id="beautifiedCard">
+      <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
             <div class="card-body" style="padding-bottom: 1.75%;background-color: #f7f7f7;">
 
                 <!-- List all the categories associated with that course -->
 
               <h4 class="card-title"><b>
                 {{ category.name }}
-                <span style="float:right; color: green">X%</span>
+                {% if category.avgCategoryGrade.didGradeGoUp %}
+                      <span style="float:right; color:rgb(0, 165, 27)">{{ category.avgCategoryGrade.gradePercentage }}%</span>
+                {% else %}
+                      <span style="float:right; color:red">{{ category.avgCategoryGrade.gradePercentage }}%</span>
+                {% endif %}
+                
               </b></h4>
 
             <!--<p class="card-text" style="color:black; text-align: center;"> </p>-->  
@@ -69,7 +73,6 @@
                   
                   <tr style="padding:1%">
                     <th>Name</th>
-                    <th>Due Date</th>
                     <th>Grade</th>
                     <th><span class="ti-more-alt" style="vertical-align: -1.85px;"></span></th>
                   </tr>
@@ -83,7 +86,6 @@
             
                   <tr>
                     <td>{{ assignment.name }}</td>
-                    <td>{{ assignment.dueDate }}</td>
                     <td>{{ assignment.gradePercentage|floatformat }}%</td>
                     <td><span class="ti-pencil" style="vertical-align: -1.85px;">&nbsp;<span class="ti-bell" style="vertical-align: 1px;"></span>&nbsp;<span class="ti-trash" style="vertical-align: 0.75px;"></span>
                     </td>
