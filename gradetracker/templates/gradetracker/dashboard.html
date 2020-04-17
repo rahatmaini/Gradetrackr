@@ -8,7 +8,7 @@
 
         
 {% if courses_list %}
-<div class="container justify-content-center">
+<div class="m container justify-content-center" id="main">
 
   <!--<a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;add another course&nbsp;</b></a>-->
 
@@ -22,10 +22,10 @@
       <div class="card-body" style="padding-bottom: 1.75%;">
         <h4 class="card-title"><b>At a glance<span style="float:right; color:rgb(0, 165, 27)">X.X GPA</span></b></h4>
         <p class="card-text" style="color:black; text-align: left;">
-          use this space for gain/loss percent for classes, semester GPA, etc
+          Use this space for gain/loss percent for classes, semester GPA, etc
           
         </p>
-        <span style="color:black; float: right;"><b>X.X credits being tracked</b></span>
+        <span style="color:black; float: right;"><b>{{cum}} credits being tracked</b></span>
 
       </div>
     </div>

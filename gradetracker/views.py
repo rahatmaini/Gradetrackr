@@ -8,6 +8,7 @@ from .models import Course, CourseForm, Student, GradeCategory, Assignment, Sing
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 import sys
+from decimal import Decimal
 
 
 # in gradetracker directory
@@ -45,9 +46,11 @@ def add(request):
                 new_course.number_Of_Credits = numCredits
                 new_course.target_Grade = targetGrade
                 new_course.student_It_Belongs_To = current_student
+                current_student.cumulativeCredits += Decimal(numCredits)
+                request.user.student.save()
                 new_course.save()
             except Exception as e:
-                return render(request, 'gradetracker/add.html', {'error_message': "HELLO " + str(e)})
+                return render(request, 'gradetracker/add.html', {'error_message': "PEANUT " + str(e)})
             return HttpResponseRedirect(reverse('gradetracker:dashboard'))
         else:
             return render(request, 'gradetracker/add.html', )
@@ -127,7 +130,8 @@ def CourseDashboard(request):
     #    Get all the courses associated with that user (as a student)
         context = {
             'username': request.user,
-            'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+            'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user)),
+            'cum': Student.objects.all().get(user=request.user).cumulativeCredits
         }
         return render(request, "gradetracker/dashboard.html", context)
     else:
@@ -324,6 +328,7 @@ def delete_category(request, category_id=None):
             if course.student_It_Belongs_To.user==request.user:
                 category_to_delete.delete()
                 # delete the category and display the course overview page
+                getAverage(course.id)
                 return CourseOverview(request, course.id)
 
         return CourseDashboard(request)
@@ -350,6 +355,7 @@ def delete_assignment(request, assignment_id=None):
             # If the course belongs to the user who is trying to delete the category.
             if course.student_It_Belongs_To.user==request.user:
                 assignment_to_delete.delete()
+                getAverage(course.id)
                 # delete the category and display the course overview page
                 return CourseOverview(request, course.id)
 

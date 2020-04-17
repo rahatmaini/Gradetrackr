@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 @media (min-width: 900px) {
-  .cards { grid-template-columns: repeat(3, 1fr); }
+  .cards { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 600px) {
   .cards { grid-template-columns: repeat(2, 1fr); }
@@ -29,27 +29,35 @@
 	}
 }
 
-.scene_element {
+.m .scene_element {
     animation-duration: 0.45s;
     transition-timing-function: ease-in;
     animation-fill-mode: both;
 
   }
 
-.scene_element--fadein {
+.m .scene_element--fadein {
     animation-name: fadeInTranslate;
   }
 
-.scene_element2 {
+.m .scene_element2 {
     animation-duration: 0.65s;
     transition-timing-function: ease-in;
     animation-fill-mode: both;
 
   }
 
-.scene_element2--fadein {
+.m .scene_element2--fadein {
     animation-name: fadeIn;
   }
+
+.m.is-exiting .scene_element{
+	animation-direction: alternate-reverse;
+}
+
+.m.is-exiting .scene_element2{
+	animation-direction: alternate-reverse;
+}
 
 
 p {
@@ -121,6 +129,7 @@ div.horizontalgap {
 }
 
 #beautifiedCard {
+  background-color: #f7f7f7;
   transition: all .5s;
   transition-duration: 1s;
   border-style: none;
