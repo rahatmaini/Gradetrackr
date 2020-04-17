@@ -278,27 +278,11 @@ def CourseOverview(request, course_id=None):
         # if the course exists and belongs to the user 
         if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
 
-            # Get the course that the user wants to expand
-            course_to_display = Course.objects.get(id=course_id)
-
-            # Get all the grade categories associated with that course
-            grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display)
-
-            # Get all the assignments associated with that grade category
-
-            # dict that will contain all the assignments indexed by the grade category they belong to
-            category_assignments = {}
-
-
-            for category in grade_categories.values():
-                # Add all the assignments belonging to a category to the dictionary at that category's key
-                category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
-
             # Get all the courses associated with that user (as a student)
             context = {
-                'course': course_to_display,
-                'grade_categories': grade_categories,
-                'category_assignments': category_assignments
+                'course': categoryHelperFunction(course_id)[2],
+                'grade_categories': categoryHelperFunction(course_id)[0],
+                'category_assignments': categoryHelperFunction(course_id)[1]
             }
             return render(request, "gradetracker/course.html", context)
 
@@ -309,6 +293,24 @@ def CourseOverview(request, course_id=None):
     # If the user is not authenticated
     return redirect('gradetracker:index')
 
+def categoryHelperFunction(course_id):
+    # Get the course that the user wants to expand
+    course_to_display = Course.objects.get(id=course_id)
+
+    # Get all the grade categories associated with that course
+    grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display)
+
+    # Get all the assignments associated with that grade category
+
+    # dict that will contain all the assignments indexed by the grade category they belong to
+    category_assignments = {}
+
+
+    for category in grade_categories.values():
+    # Add all the assignments belonging to a category to the dictionary at that category's key
+        category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
+    
+    return (grade_categories,category_assignments,course_to_display)
 
 def delete_category(request, category_id=None):
     """

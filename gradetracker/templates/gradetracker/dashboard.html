@@ -48,11 +48,12 @@
                       {% endif %}
                     </b></h4></a>
                   <p class="card-text" style="color:black; text-align: center;">
+
                     
                     <!--do not uncomment, we are not ready for this monstrosity<a href="" data-modal="#modal" class="modal__trigger" >add a grade category</a>-->
                     <a class="nav-item nav-link" href="{% url 'gradetracker:gradecat' course_id=course.id%}">Add a Grade Category</a>
                     <a class="nav-item nav-link" href="{% url 'gradetracker:addAssignment' course_id=course.id%}">Add an assignment</a>
-                    TODO restyle above links
+                    TODO restyle above links, add category grade info
                   </p>
 
 
