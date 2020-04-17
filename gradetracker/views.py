@@ -202,7 +202,7 @@ def duplicate_course(request, course_id=None):
 
         return CourseDashboard(request)
     
-    # otherwise, prompt the user to login
+    # otherwise, prompt the user to login.
     else:
         return redirect('gradetracker:index')
 
@@ -329,6 +329,7 @@ def delete_category(request, category_id=None):
             # If the course belongs to the user who is trying to delete the category.
             if course.student_It_Belongs_To.user==request.user:
                 category_to_delete.delete()
+                getAverage(course.id)
                 # delete the category and display the course overview page
                 getAverage(course.id)
                 return CourseOverview(request, course.id)
