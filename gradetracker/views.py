@@ -171,6 +171,27 @@ def delete_course(request, course_id=None):
     else:
         return redirect('gradetracker:index')
 
+def gpaInclude(request):
+    
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                course = Course.objects.get(id=request.POST.get('courseToAffect'))
+                print(course.Include_In_GPA, file=sys.stderr)
+                course.Include_In_GPA=not(course.Include_In_GPA)
+                request.user.student.save()
+                course.save()
+                print(course.Include_In_GPA, file=sys.stderr)
+            except Exception as e:
+                return render(request, 'gradetracker/dashboard.html', {'error_message': "PEANUT " + str(e)})
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+        else:
+            
+            return render(request, 'gradetracker/dashboard.html', )
+    else:
+        # if the user is not authenticated
+        return redirect('gradetracker:index')
+
 def duplicate_course(request, course_id=None):
 
     # if the user is authenticated
