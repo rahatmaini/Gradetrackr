@@ -188,18 +188,18 @@ def duplicate_course(request, course_id=None):
                                 Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,
                                 number_Of_Credits=courseToDuplicate.number_Of_Credits,
                                 target_Grade=courseToDuplicate.target_Grade,
-                                student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To)
+                                student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To,avgGrade=courseToDuplicate.avgGrade)
                 newCourse.save()
                 #trying to duplicate grade categories and assignments
                 for category in gradeCategoriesToDuplicate:
-                    newGradecat = GradeCategory(name=category.name, weightage=category.weightage, courseItBelongsTo=newCourse)
+                    newGradecat = GradeCategory(name=category.name, weightage=category.weightage, courseItBelongsTo=newCourse, avgCategoryGrade=category.avgCategoryGrade)
                     newGradecat.save()
                     assingmentsToDuplicate = category.assignments.all()
                     for assignment in assingmentsToDuplicate:
                         new_assignment = Assignment(gradePercentage=assignment.gradePercentage, name=assignment.name, gradeCategoryItBelongsTo=newGradecat)
                         new_assignment.save()
-                            #getAverage(course_id)
-
+                    #getAverage(course_id)
+                
         return CourseDashboard(request)
     
     # otherwise, prompt the user to login.
