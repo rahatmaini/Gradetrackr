@@ -4,13 +4,13 @@ import json
 URL = "https://vagrades.com/api/uvaclass/"
 
 
-course_name = "CS3240"
+course_name = ""
 r = requests.get(url = URL+course_name) 
 
 
 data = r.json()
 
-print(data['course'])
+print(data)
 
 # def getCourseInfo(course_name):
 #     """
