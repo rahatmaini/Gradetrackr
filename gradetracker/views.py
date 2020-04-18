@@ -162,7 +162,10 @@ def delete_course(request, course_id=None):
         if Course.objects.filter(id=course_id).exists():
             course_to_delete = Course.objects.get(id=course_id)
             # If the course belongs to the user who is trying to delete the course.
-            if course_to_delete.student_It_Belongs_To.user==request.user:
+            current_student = request.user.student
+            if course_to_delete.student_It_Belongs_To==current_student:
+                # Remove it from the credits being tracked and delete the course
+                current_student.cumulativeCredits -= Decimal(course_to_delete.number_Of_Credits)
                 course_to_delete.delete()
 
         return CourseDashboard(request)
