@@ -50,7 +50,7 @@ def add(request):
                 request.user.student.save()
                 new_course.save()
             except Exception as e:
-                return render(request, 'gradetracker/add.html', {'error_message': "HELLO " + str(e)})
+                return render(request, 'gradetracker/add.html', {'error_message': "PEANUT " + str(e)})
             return HttpResponseRedirect(reverse('gradetracker:dashboard'))
         else:
             return render(request, 'gradetracker/add.html', )
@@ -102,18 +102,16 @@ def addAssignment(request, course_id=None):
                     percentage = request.POST.get('weight')
                     notification = request.POST.get('notify')
                     gradeCatID = request.POST.get('categoryChoice')
-                    dueDate = request.POST.get('date')
                     new_assignment = Assignment()
                     new_assignment.name = name
                     new_assignment.gradePercentage = percentage
                     new_assignment.notifyStudentOrNot = notification
                     new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(id=gradeCatID)
-                    new_assignment.dueDate = dueDate
                     new_assignment.save()
                     getAverage(course_id)
                 except Exception as e:
                     return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse, 'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " + str(e)})
-                return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+                return CourseOverview(request, course_id)
             else:
                 return render(request, 'gradetracker/addAssignment.html', context)
         
@@ -190,18 +188,18 @@ def duplicate_course(request, course_id=None):
                                 Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,
                                 number_Of_Credits=courseToDuplicate.number_Of_Credits,
                                 target_Grade=courseToDuplicate.target_Grade,
-                                student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To)
+                                student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To,avgGrade=courseToDuplicate.avgGrade)
                 newCourse.save()
                 #trying to duplicate grade categories and assignments
                 for category in gradeCategoriesToDuplicate:
-                    newGradecat = GradeCategory(name=category.name, weightage=category.weightage, courseItBelongsTo=newCourse)
+                    newGradecat = GradeCategory(name=category.name, weightage=category.weightage, courseItBelongsTo=newCourse, avgCategoryGrade=category.avgCategoryGrade)
                     newGradecat.save()
                     assingmentsToDuplicate = category.assignments.all()
                     for assignment in assingmentsToDuplicate:
-                        new_assignment = Assignment(gradePercentage=assignment.gradePercentage, notifyStudentOrNot=assignment.notifyStudentOrNot, name=assignment.name, dueDate=assignment.dueDate, gradeCategoryItBelongsTo=newGradecat)
+                        new_assignment = Assignment(gradePercentage=assignment.gradePercentage, name=assignment.name, gradeCategoryItBelongsTo=newGradecat)
                         new_assignment.save()
-                            #getAverage(course_id)
-
+                    #getAverage(course_id)
+                
         return CourseDashboard(request)
     
     # otherwise, prompt the user to login.
@@ -225,6 +223,30 @@ def getAverage(course_id=None):
         if (len(list_of_assignments_in_categories)!=0):
             average_grade /= len(list_of_assignments_in_categories)
             grades_and_their_weights.append((float(category.weightage), float(average_grade)))
+        else:
+            average_grade = 0
+
+
+        
+        if (category.avgCategoryGrade == None):
+            avgCategoryGrade = SingularGradeItem.objects.create(gradePercentage=average_grade, didGradeGoUp=True)
+            category.avgCategoryGrade = avgCategoryGrade
+        else:
+            if (category.avgCategoryGrade.gradePercentage < average_grade):
+                category.avgCategoryGrade.didGradeGoUp = True
+            elif (category.avgCategoryGrade.gradePercentage == average_grade):
+                category.avgCategoryGrade.didGradeGoUp = True
+            else:
+                category.avgCategoryGrade.didGradeGoUp = False
+            category.avgCategoryGrade.gradePercentage = average_grade
+
+        print(category.avgCategoryGrade.didGradeGoUp, file=sys.stderr)
+        print(category, file=sys.stderr)
+
+        category.avgCategoryGrade.save()
+        category.save()
+
+        
 
 
     average_class_grade = 0
@@ -235,11 +257,16 @@ def getAverage(course_id=None):
         avgGrade = SingularGradeItem.objects.create(gradePercentage=average_class_grade, didGradeGoUp=True)
         theCourse.avgGrade = avgGrade
     else:
-        theCourse.avgGrade.didGradeGoUp = (theCourse.avgGrade.gradePercentage < average_class_grade)
-        print(theCourse.avgGrade.didGradeGoUp, file=sys.stderr)
-        print(average_class_grade, file=sys.stderr)
-        theCourse.avgGrade.gradePercentage = average_class_grade
         print(theCourse.avgGrade.gradePercentage, file=sys.stderr)
+        if (theCourse.avgGrade.gradePercentage < average_class_grade):
+            theCourse.avgGrade.didGradeGoUp = True
+        elif (theCourse.avgGrade.gradePercentage == average_class_grade):
+            theCourse.avgGrade.didGradeGoUp = True
+        else:
+            theCourse.avgGrade.didGradeGoUp = False
+    
+    theCourse.avgGrade.gradePercentage = average_class_grade
+        #print(theCourse.avgGrade.gradePercentage, file=sys.stderr)
     
     theCourse.avgGrade.save()
     theCourse.save()
@@ -251,27 +278,11 @@ def CourseOverview(request, course_id=None):
         # if the course exists and belongs to the user 
         if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
 
-            # Get the course that the user wants to expand
-            course_to_display = Course.objects.get(id=course_id)
-
-            # Get all the grade categories associated with that course
-            grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display).values()
-
-            # Get all the assignments associated with that grade category
-
-            # dict that will contain all the assignments indexed by the grade category they belong to
-            category_assignments = {}
-
-
-            for category in grade_categories:
-                # Add all the assignments belonging to a category to the dictionary at that category's key
-                category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
-
             # Get all the courses associated with that user (as a student)
             context = {
-                'course': course_to_display,
-                'grade_categories': grade_categories,
-                'category_assignments': category_assignments
+                'course': categoryHelperFunction(course_id)[2],
+                'grade_categories': categoryHelperFunction(course_id)[0],
+                'category_assignments': categoryHelperFunction(course_id)[1]
             }
             return render(request, "gradetracker/course.html", context)
 
@@ -282,6 +293,24 @@ def CourseOverview(request, course_id=None):
     # If the user is not authenticated
     return redirect('gradetracker:index')
 
+def categoryHelperFunction(course_id):
+    # Get the course that the user wants to expand
+    course_to_display = Course.objects.get(id=course_id)
+
+    # Get all the grade categories associated with that course
+    grade_categories = GradeCategory.objects.all().filter(courseItBelongsTo=course_to_display)
+
+    # Get all the assignments associated with that grade category
+
+    # dict that will contain all the assignments indexed by the grade category they belong to
+    category_assignments = {}
+
+
+    for category in grade_categories.values():
+    # Add all the assignments belonging to a category to the dictionary at that category's key
+        category_assignments[category.get('name')] = Assignment.objects.all().filter(gradeCategoryItBelongsTo=category.get('id'))
+    
+    return (grade_categories,category_assignments,course_to_display)
 
 def delete_category(request, category_id=None):
     """
@@ -302,6 +331,7 @@ def delete_category(request, category_id=None):
                 category_to_delete.delete()
                 getAverage(course.id)
                 # delete the category and display the course overview page
+                getAverage(course.id)
                 return CourseOverview(request, course.id)
 
         return CourseDashboard(request)

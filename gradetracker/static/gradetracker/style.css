@@ -1,11 +1,65 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 @media (min-width: 900px) {
-  .cards { grid-template-columns: repeat(3, 1fr); }
+  .cards { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 600px) {
   .cards { grid-template-columns: repeat(2, 1fr); }
 }
+
+@keyframes fadeInTranslate {
+	0% {
+	  opacity: 0;
+	  transform: translate3d(0%, 20%, 0);
+	}
+  
+	100% {
+	  opacity: 1;
+	  transform: none;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+	  opacity: 0;
+	}
+  
+	100% {
+	  opacity: 1;
+	}
+}
+
+.m .scene_element {
+    animation-duration: 0.45s;
+    transition-timing-function: ease-in;
+    animation-fill-mode: both;
+
+  }
+
+.m .scene_element--fadein {
+    animation-name: fadeInTranslate;
+  }
+
+.m .scene_element2 {
+    animation-duration: 0.65s;
+    transition-timing-function: ease-in;
+    animation-fill-mode: both;
+
+  }
+
+.m .scene_element2--fadein {
+    animation-name: fadeIn;
+  }
+
+.m.is-exiting .scene_element{
+	animation-direction: alternate-reverse;
+}
+
+.m.is-exiting .scene_element2{
+	animation-direction: alternate-reverse;
+}
+
+
 p {
     color: #33cccc;
 }
@@ -52,6 +106,8 @@ h1 {
 
 html {
   overflow-y: scroll;
+  opacity: 1;
+  transition: 4s opacity;
 }
 
 body {
@@ -73,6 +129,7 @@ div.horizontalgap {
 }
 
 #beautifiedCard {
+  background-color: #f7f7f7;
   transition: all .5s;
   transition-duration: 1s;
   border-style: none;

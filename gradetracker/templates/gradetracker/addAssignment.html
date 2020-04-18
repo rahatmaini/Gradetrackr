@@ -11,14 +11,6 @@
             <label class = "section">Add an assignment to {{ course.name }}</label>
         </div>
         <hr class="my-4">
-        <div class = "tabbed">
-            <div>
-                <input type="hidden" name="notify" value="False">
-                <input type="checkbox" id="notify" name="notify" value="True">
-                <label for="notify">Notify me when due date is near</label>
-            </div>
-            <br>
-        </div>
         <div>
             <div class="col-3">
                 <label for="assignmentName">Assignment Name</label>
@@ -26,14 +18,10 @@
             </div>
             <br>
             <div class="col-2">
-                <label for="weight">Grade Received</label>
+                <label for="weight">Grade Earned</label>
                 <input type="text" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Ex: 30.50" title="In format of XX.XX">
             </div>
             <br>
-            <div class="col-2">
-                <label for="date">Due Date</label>
-                <input type="text" class="form-control" id="date" name="date" value = "Ex: 2015-06-23" title = "In format of yyyy-mm-dd">
-            </div>
             {% if grade_categories %}
                 <ul class = "list-group">
                     <label>Category it Belongs To</label>

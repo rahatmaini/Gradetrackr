@@ -70,6 +70,7 @@ class GradeCategory(models.Model):
                                     decimal_places=2)  # wont work for grade categories that are worth 100% of the class. Hopefully this is never an issue
 
     courseItBelongsTo = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="categories")
+    avgCategoryGrade = models.ForeignKey(SingularGradeItem, on_delete=models.CASCADE, related_name="avgCategoryGrade", null=True)
     
     
     @property
@@ -99,9 +100,7 @@ class CourseForm(ModelForm):
 
 class Assignment(models.Model):  # abstract name, could be exam or quiz or anything that is worth something
     gradePercentage = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    notifyStudentOrNot = models.BooleanField(default=False)  # maybe a few days in advance of due date, email student
     name = models.CharField(max_length=100)
-    dueDate = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)  # default none
 
     gradeCategoryItBelongsTo = models.ForeignKey(GradeCategory, on_delete=models.CASCADE, related_name="assignments")
 
