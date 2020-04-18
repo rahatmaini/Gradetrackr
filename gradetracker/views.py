@@ -23,11 +23,11 @@ def add(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             try:
-                finishedCourse = request.POST.get('enrolled')
-                if finishedCourse == "False":
-                    finishedCourse = "True"
-                else:
-                    finishedCourse = "False"
+                # finishedCourse = request.POST.get('enrolled')
+                # if finishedCourse == "False":
+                #     finishedCourse = "True"
+                # else:
+                #     finishedCourse = "False"
                 verifiedClass = request.POST.get('verified')
                 includeInGPA = request.POST.get('included')
                 professorEmail = request.POST.get('email')
@@ -37,7 +37,7 @@ def add(request):
                 targetGrade = request.POST.get('goal')
                 current_student = request.user.student
                 new_course = Course()
-                new_course.Finished_Course = finishedCourse
+                #new_course.Finished_Course = finishedCourse
                 new_course.Verified_Class = verifiedClass
                 new_course.Include_In_GPA = includeInGPA
                 new_course.Professor_Email = professorEmail
@@ -206,7 +206,7 @@ def duplicate_course(request, course_id=None):
             gradeCategoriesToDuplicate = courseToDuplicate.categories.all()
             # If the course belongs to the user who is trying to duplicate the course.
             if courseToDuplicate.student_It_Belongs_To.user==request.user:
-                newCourse = Course(Finished_Course=courseToDuplicate.Finished_Course,
+                newCourse = Course(
                                 Verified_Class=courseToDuplicate.Verified_Class, Include_In_GPA=False,
                                 Professor_Email=courseToDuplicate.Professor_Email,
                                 Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,
