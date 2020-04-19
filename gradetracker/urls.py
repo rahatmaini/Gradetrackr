@@ -8,6 +8,7 @@ urlpatterns = [
     #path('home', personaldashboard.views.HomeView.as_view(), name="home"),
     path('index', views.IndexView.as_view(), name='index'),
     path('add', views.add, name='add'),
+    path('verify_course', views.verify_course_and_get_avg, name='verify_course'),
     path('test/', views.TestView.as_view(), name='test'),
     path('dashboard/', views.CourseDashboard, name='dashboard'),
     path('', views.SignIn, name='signin'),

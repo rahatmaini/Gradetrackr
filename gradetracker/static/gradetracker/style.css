@@ -1623,3 +1623,16 @@ div.horizontalgap {
       transform: translateY(-5px);
     }
   }
+
+  .rotunda {
+	background: url('uva_logo_2.png');
+	background-size: 22px;
+    height: 22px;
+    width: 22px;
+	display:inline-block;
+}
+
+#verification {
+	color: orange;
+	font-size: small;
+}
