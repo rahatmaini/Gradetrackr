@@ -45,7 +45,7 @@ def add(request):
                 # new_course.Finished_Course = finishedCourse
                 # Add the course VAGrades verification
                 new_course.Verified_Class = bool(course_verification_obj["avg"])
-                new_course.Average_From_VAgrades = course_verification_obj["avg"] if new_course.Verified_Class else None
+                new_course.Average_From_VAgrades = Decimal(course_verification_obj["avg"]) if new_course.Verified_Class else None
 
                 new_course.Include_In_GPA = includeInGPA
                 new_course.Professor_Email = professorEmail
