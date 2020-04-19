@@ -19,8 +19,16 @@
     <div style="color:#2c2c2c;padding-bottom: 0.5%;line-height: 1.8;float:left;"><b>
         <span class="ti-receipt" style="vertical-align: -2px;"></span>&nbsp;&nbsp;{{course.number_Of_Credits}} credits<br />
         <span class="ti-email" style="vertical-align: -2px;"></span>&nbsp;&nbsp;{{ course.Professor_Email }}<br />
-        {% if course.Verified_Class %}<span class="ti-face-smile" style="vertical-align: -1px;"></span>&nbsp;&nbsp;Verified Course<br />{% endif %}
-        <span class="ti-bar-chart" style="vertical-align: -0.75px;"></span>&nbsp;&nbsp;69% Average Grade (from VAgrades.com) <br />
+        {% if course.Verified_Class %}<span class="rotunda" style="vertical-align: -1px;"></span>&nbsp;&nbsp;Verified UVA Course<br />
+        {% else %}
+        <span class="ti-close" style="vertical-align: -1px;"></span>&nbsp;&nbsp;Not a verified UVA Course<br />
+
+        {% endif %}
+
+
+        {% if course.Average_From_VAgrades %}<span class="ti-bar-chart" style="vertical-align: -0.75px;"></span>&nbsp;&nbsp;{{ course.Average_From_VAgrades }}% Average Grade <a href= {{ va_grades_link }} target="_blank" rel="noopener noreferrer">(VAgrades.com)</a>
+        {% endif %}
+        
     </b>
     </div>
     

@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 import sys
 from decimal import Decimal
+import re
+import requests
+import json
 
 
 # in gradetracker directory
@@ -28,21 +31,25 @@ def add(request):
                 #     finishedCourse = "True"
                 # else:
                 #     finishedCourse = "False"
-                verifiedClass = request.POST.get('verified')
+                # verifiedClass = request.POST.get('verified')
                 includeInGPA = request.POST.get('included')
                 professorEmail = request.POST.get('email')
                 VAGradeAvg = request.POST.get('VAavg')
                 courseTitle = request.POST.get('courseTitle')
+                # Call the helper function to check VAGrades for course verification
+                course_verification_obj = verify_course_and_get_avg(courseTitle)
                 numCredits = request.POST.get('credits')
                 targetGrade = request.POST.get('goal')
                 current_student = request.user.student
                 new_course = Course()
-                #new_course.Finished_Course = finishedCourse
-                new_course.Verified_Class = verifiedClass
+                # new_course.Finished_Course = finishedCourse
+                # Add the course VAGrades verification
+                new_course.Verified_Class = bool(course_verification_obj["avg"])
+                new_course.Average_From_VAgrades = course_verification_obj["avg"] if new_course.Verified_Class else None
+
                 new_course.Include_In_GPA = includeInGPA
                 new_course.Professor_Email = professorEmail
-                new_course.Average_From_VAgrades = VAGradeAvg
-                new_course.name = courseTitle
+                new_course.name = course_verification_obj["course_name"]
                 new_course.number_Of_Credits = numCredits
                 new_course.target_Grade = targetGrade
                 new_course.student_It_Belongs_To = current_student
@@ -57,6 +64,36 @@ def add(request):
     else:
         # if the user is not authenticated
         return redirect('gradetracker:index')
+
+def verify_course_and_get_avg(course_name):
+    """
+    Parse course name string and check with VAGrades API if there exists a course with that name. Return course average (rounded to 3 decimal places).
+
+    courseName -- (str) Name of user entered course name. May contain spaces.
+
+    returns a dictionary {"avg": avg_grade, "course_name": adjusted_name} if it exists on VAGrades. Returns {"avg": 0, "course_name": same_name} otherwise.
+    Where adjusted_name is the name of the course after removing spaces and converting to upper case if necessary (e.g, "cs 3240 " --> "CS3240").
+    This is for VAGrades API naming conventions.
+    """
+    # UVA Course Regex
+    # uva_course_pattern = re.compile("^([A-Za-z]{2,4} *[0-9]{4})$")
+
+    # If the course name matches UVA Course naming conventions
+    course_name = course_name.strip()
+    if re.match(r"^([A-Za-z]{2,4} *[0-9]{4})$", course_name):
+
+        letters = course_name[:-4].strip().upper()
+        numbers = course_name[-4:].strip()
+        # Make a request to VAGrades API
+        r = requests.get(url = "https://vagrades.com/api/uvaclass/" + letters + numbers)
+        course_data = r.json()
+
+        # If there exists a course with that name on VAGrades
+        if course_data != {'sections': []}:
+            return {"course_name": letters+numbers, "avg": round(float(course_data['course']['avg']*100/4), 2)}
+
+    else:
+        return {"course_name": course_name, "avg": 0}
 
 
 def gradecat(request, course_id=None):
@@ -303,10 +340,12 @@ def CourseOverview(request, course_id=None):
         if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
 
             # Get all the courses associated with that user (as a student)
+
             context = {
                 'course': categoryHelperFunction(course_id)[2],
                 'grade_categories': categoryHelperFunction(course_id)[0],
-                'category_assignments': categoryHelperFunction(course_id)[1]
+                'category_assignments': categoryHelperFunction(course_id)[1],
+                'va_grades_link' : "https://vagrades.com/uva/" + categoryHelperFunction(course_id)[2].name
             }
             return render(request, "gradetracker/course.html", context)
 
