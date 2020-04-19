@@ -31,21 +31,25 @@ def add(request):
             #     finishedCourse = "True"
             # else:
             #     finishedCourse = "False"
-            verifiedClass = request.POST.get('verified')
+            # verifiedClass = request.POST.get('verified')
             includeInGPA = request.POST.get('included')
             professorEmail = request.POST.get('email')
             VAGradeAvg = request.POST.get('VAavg')
             courseTitle = request.POST.get('courseTitle')
+            # Call the helper function to check VAGrades for course verification
+            course_verification_obj = verify_course_and_get_avg(courseTitle)
             numCredits = request.POST.get('credits')
             targetGrade = request.POST.get('goal')
             current_student = request.user.student
             new_course = Course()
-            #new_course.Finished_Course = finishedCourse
-            new_course.Verified_Class = verifiedClass
+            # new_course.Finished_Course = finishedCourse
+            # Add the course VAGrades verification
+            new_course.Verified_Class = bool(course_verification_obj["avg"])
+            new_course.Average_From_VAgrades = course_verification_obj["avg"] if new_course.Verified_Class else None
+
             new_course.Include_In_GPA = includeInGPA
             new_course.Professor_Email = professorEmail
-            new_course.Average_From_VAgrades = VAGradeAvg
-            new_course.name = courseTitle
+            new_course.name = course_verification_obj["course_name"]
             new_course.number_Of_Credits = numCredits
             new_course.target_Grade = targetGrade
             new_course.student_It_Belongs_To = current_student
