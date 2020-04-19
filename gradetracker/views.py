@@ -56,8 +56,8 @@ def add(request):
             current_student.cumulativeCredits += Decimal(numCredits)
             request.user.student.save()
             new_course.save()
-            # except Exception as e:
-            #     return render(request, 'gradetracker/add.html', {'error_message': "PEANUT " + str(e)})
+            except Exception as e:
+                return render(request, 'gradetracker/add.html', {'error_message': "PEANUT " + str(e)})
             return HttpResponseRedirect(reverse('gradetracker:dashboard'))
         else:
             return render(request, 'gradetracker/add.html', )
