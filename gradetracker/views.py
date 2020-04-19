@@ -45,7 +45,7 @@ def add(request):
                 # new_course.Finished_Course = finishedCourse
                 # Add the course VAGrades verification
                 new_course.Verified_Class = bool(course_verification_obj["avg"])
-                new_course.Average_From_VAgrades = Decimal(course_verification_obj["avg"]) if new_course.Verified_Class else None
+                new_course.VAgradesavg = Decimal(course_verification_obj["avg"]) if new_course.Verified_Class else None
 
                 new_course.Include_In_GPA = includeInGPA
                 new_course.Professor_Email = professorEmail
@@ -246,7 +246,7 @@ def duplicate_course(request, course_id=None):
                 newCourse = Course(
                                 Verified_Class=courseToDuplicate.Verified_Class, Include_In_GPA=False,
                                 Professor_Email=courseToDuplicate.Professor_Email,
-                                Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,
+                                VAgradesavg=courseToDuplicate.VAgradesavg, name=courseToDuplicate.name,
                                 number_Of_Credits=courseToDuplicate.number_Of_Credits,
                                 target_Grade=courseToDuplicate.target_Grade,
                                 student_It_Belongs_To=courseToDuplicate.student_It_Belongs_To,avgGrade=courseToDuplicate.avgGrade)
