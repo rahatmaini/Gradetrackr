@@ -22,35 +22,35 @@ class TestView(TemplateView):
 def add(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            try:
-                # finishedCourse = request.POST.get('enrolled')
-                # if finishedCourse == "False":
-                #     finishedCourse = "True"
-                # else:
-                #     finishedCourse = "False"
-                verifiedClass = request.POST.get('verified')
-                includeInGPA = request.POST.get('included')
-                professorEmail = request.POST.get('email')
-                VAGradeAvg = request.POST.get('VAavg')
-                courseTitle = request.POST.get('courseTitle')
-                numCredits = request.POST.get('credits')
-                targetGrade = request.POST.get('goal')
-                current_student = request.user.student
-                new_course = Course()
-                #new_course.Finished_Course = finishedCourse
-                new_course.Verified_Class = verifiedClass
-                new_course.Include_In_GPA = includeInGPA
-                new_course.Professor_Email = professorEmail
-                new_course.Average_From_VAgrades = VAGradeAvg
-                new_course.name = courseTitle
-                new_course.number_Of_Credits = numCredits
-                new_course.target_Grade = targetGrade
-                new_course.student_It_Belongs_To = current_student
-                current_student.cumulativeCredits += Decimal(numCredits)
-                request.user.student.save()
-                new_course.save()
-            except Exception as e:
-                return render(request, 'gradetracker/add.html', {'error_message': "PEANUT " + str(e)})
+            # try:
+            # finishedCourse = request.POST.get('enrolled')
+            # if finishedCourse == "False":
+            #     finishedCourse = "True"
+            # else:
+            #     finishedCourse = "False"
+            verifiedClass = request.POST.get('verified')
+            includeInGPA = request.POST.get('included')
+            professorEmail = request.POST.get('email')
+            VAGradeAvg = request.POST.get('VAavg')
+            courseTitle = request.POST.get('courseTitle')
+            numCredits = request.POST.get('credits')
+            targetGrade = request.POST.get('goal')
+            current_student = request.user.student
+            new_course = Course()
+            #new_course.Finished_Course = finishedCourse
+            new_course.Verified_Class = verifiedClass
+            new_course.Include_In_GPA = includeInGPA
+            new_course.Professor_Email = professorEmail
+            new_course.Average_From_VAgrades = VAGradeAvg
+            new_course.name = courseTitle
+            new_course.number_Of_Credits = numCredits
+            new_course.target_Grade = targetGrade
+            new_course.student_It_Belongs_To = current_student
+            current_student.cumulativeCredits += Decimal(numCredits)
+            request.user.student.save()
+            new_course.save()
+            # except Exception as e:
+            #     return render(request, 'gradetracker/add.html', {'error_message': "PEANUT " + str(e)})
             return HttpResponseRedirect(reverse('gradetracker:dashboard'))
         else:
             return render(request, 'gradetracker/add.html', )
