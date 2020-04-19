@@ -47,8 +47,7 @@ class Course(models.Model):
         default=True)  # is this class used in GPA calculation or is it just a fork of a class someone uses purely for "what if" tracking purposes?
 
     Professor_Email = models.EmailField(null=True)  # if verified class, then we should be able to get this info
-    VAgradesavg = models.DecimalField(max_digits=5, decimal_places=2,
-                                                null=True)  # if verified we should be able to scrape grade from VAgrades.com
+    #VAgradesavg = models.DecimalField(max_digits=5, decimal_places=2,null=True)  # if verified we should be able to scrape grade from VAgrades.com
 
     name = models.CharField(max_length=100)  # either searchable name from Lou's List or enter your own, <100 characters
     number_Of_Credits = models.DecimalField(max_digits=2,
@@ -94,7 +93,7 @@ class CourseForm(ModelForm):
     class Meta:
         model = Course
         fields = ['Finished_Course', 'Verified_Class', 'Include_In_GPA', 'Professor_Email',
-                  'VAgradesavg', 'name', 'number_Of_Credits', 'target_Grade', 'student_It_Belongs_To']
+                   'name', 'number_Of_Credits', 'target_Grade', 'student_It_Belongs_To']
 
 
 
