@@ -26,11 +26,11 @@ def add(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             try:
-                finishedCourse = request.POST.get('enrolled')
-                if finishedCourse == "False":
-                    finishedCourse = "True"
-                else:
-                    finishedCourse = "False"
+                # finishedCourse = request.POST.get('enrolled')
+                # if finishedCourse == "False":
+                #     finishedCourse = "True"
+                # else:
+                #     finishedCourse = "False"
                 # verifiedClass = request.POST.get('verified')
                 includeInGPA = request.POST.get('included')
                 professorEmail = request.POST.get('email')
@@ -42,7 +42,7 @@ def add(request):
                 targetGrade = request.POST.get('goal')
                 current_student = request.user.student
                 new_course = Course()
-                new_course.Finished_Course = finishedCourse
+                # new_course.Finished_Course = finishedCourse
                 # Add the course VAGrades verification
                 new_course.Verified_Class = bool(course_verification_obj["avg"])
                 new_course.Average_From_VAgrades = course_verification_obj["avg"] if new_course.Verified_Class else None
@@ -199,13 +199,37 @@ def delete_course(request, course_id=None):
         if Course.objects.filter(id=course_id).exists():
             course_to_delete = Course.objects.get(id=course_id)
             # If the course belongs to the user who is trying to delete the course.
-            if course_to_delete.student_It_Belongs_To.user==request.user:
+            current_student = request.user.student
+            if course_to_delete.student_It_Belongs_To==current_student:
+                # Remove it from the credits being tracked and delete the course
+                current_student.cumulativeCredits -= Decimal(course_to_delete.number_Of_Credits)
                 course_to_delete.delete()
 
         return CourseDashboard(request)
     
     # otherwise, prompt the user to login
     else:
+        return redirect('gradetracker:index')
+
+def gpaInclude(request):
+    
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                course = Course.objects.get(id=request.POST.get('courseToAffect'))
+                print(course.Include_In_GPA, file=sys.stderr)
+                course.Include_In_GPA=not(course.Include_In_GPA)
+                request.user.student.save()
+                course.save()
+                print(course.Include_In_GPA, file=sys.stderr)
+            except Exception as e:
+                return render(request, 'gradetracker/dashboard.html', {'error_message': "PEANUT " + str(e)})
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+        else:
+            
+            return render(request, 'gradetracker/dashboard.html', )
+    else:
+        # if the user is not authenticated
         return redirect('gradetracker:index')
 
 def duplicate_course(request, course_id=None):
@@ -219,7 +243,7 @@ def duplicate_course(request, course_id=None):
             gradeCategoriesToDuplicate = courseToDuplicate.categories.all()
             # If the course belongs to the user who is trying to duplicate the course.
             if courseToDuplicate.student_It_Belongs_To.user==request.user:
-                newCourse = Course(Finished_Course=courseToDuplicate.Finished_Course,
+                newCourse = Course(
                                 Verified_Class=courseToDuplicate.Verified_Class, Include_In_GPA=False,
                                 Professor_Email=courseToDuplicate.Professor_Email,
                                 Average_From_VAgrades=courseToDuplicate.Average_From_VAgrades, name=courseToDuplicate.name,

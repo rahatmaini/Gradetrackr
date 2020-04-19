@@ -31,12 +31,12 @@
                 {% endif %}
 
 
-                <button type="submit" class="btn btn-info" onclick="return confirm('Are you sure you want to logout?')" id="logOutButton">&nbsp;<b><span class="ti-user" style="vertical-align: -1px;"></span>&nbsp;&nbsp;your account&nbsp;</b></button>
+                <!--<button type="submit" class="btn btn-info" onclick="return confirm('Are you sure you want to logout?')" id="accountButton">&nbsp;<b><span class="ti-user" style="vertical-align: -1px;"></span>&nbsp;&nbsp;your account&nbsp;</b></button>-->
 
                 
-                <button type="submit" class="btn btn-info" onclick="return confirm('Are you sure you want to logout?')" id="logOutButton">&nbsp;<b><span class="ti-close" style="vertical-align: -1.5px;"></span>&nbsp;&nbsp;logout&nbsp;</b></button>
+                <button type="submit" class="btn btn-info" onclick="return confirm('Are you sure you want to logout?')" id="logOutButton">&nbsp;<b><span class="ti-close" style="vertical-align: -1.5px;"></span>&nbsp;&nbsp;LOGOUT&nbsp;</b></button>
                 
-                <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);float:right"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;add another course&nbsp;</b></a>
+                <a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);float:right"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A COURSE&nbsp;</b></a>
 
             </form>
         {% else %}
