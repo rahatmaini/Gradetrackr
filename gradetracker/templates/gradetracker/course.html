@@ -3,14 +3,28 @@
 {% load static %}
 {% load gradetracker_tags %}
 
-
+<style>
+  #overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1;
+  cursor: pointer;
+}
+</style>
         
-
+<div id ="overlay"></div>
 <div class="m container justify-content-center" id="main">
   <div class="cardGrid">
   <!-- Course Title -->
-  <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
-    <div class="card-body" style="padding-bottom: 1.75%;">
+  <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard" >
+    <div class="card-body" style="padding-bottom: 1.75%;" >
 
         <!-- List all the categories associated with that course -->
 
@@ -30,6 +44,83 @@
 <!-- If there is at least one category in the course -->
   {% if grade_categories %} 
     {% for category in grade_categories %}
+    <!-- add assignment modal-->
+    <div id="{{category.id}}CAT" class="w3-modal" style="z-index: 2;">
+      <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+        <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
+          <div class="card-body" style="padding-bottom: 1.75%;">
+      
+            
+      
+            <h3 class="card-title" style="text-align: center;"><b>
+              Add an assignment to "{{ category.name }}"
+            </b></h3>
+            <p class="card-text" style="color:black; text-align: center;">
+              <form action = "{% url 'gradetracker:addAssignment' course.id%}" method = "post">
+              {% csrf_token %}
+  
+              <div style="padding:2%">
+              <label for="assignmentName">Name</label>
+              <input type="text" class="form-control" id="assignmentName" name="assignmentName" required pattern=".*" placeholder="Quiz 3">
+              </div>
+  
+              <div style="padding:2%">
+              <label for="weight">% Grade Earned</label>
+              <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Ex: 81" title="In format of XX.XX" min="1" max="100" step="0.01">
+              </div>
+  
+              <input type="hidden" name="categoryChoice" id="categoryChoice" value="{{category.id}}">
+  
+              <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;"><b>ADD</b></button>
+              <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;" onclick="document.getElementById('{{category.id}}CAT').style.display='none';document.getElementById('overlay').style.display='none';"><b>CANCEL</b></button>
+  
+              </form></p>
+            </div></div>
+      </div>
+    </div>
+    <!-- end assignment modal-->
+
+
+    {% for assignment in category_assignments|get_item:category.name %}
+
+              <!-- begin editing modal-->
+              <div id="{{assignment.id}}ASS" class="w3-modal" style="z-index: 2;">
+                <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+                  <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
+                    <div class="card-body" style="padding-bottom: 1.75%;">
+                
+                      
+                
+                      <h3 class="card-title" style="text-align: center;"><b>
+                        Editing "{{assignment.name}}"
+                      </b></h3>
+                      <p class="card-text" style="color:black; text-align: center;">
+                        <form action = "{% url 'gradetracker:edit_assignment' assignment.id%}" method = "post">
+                        {% csrf_token %}
+  
+                        <div style="padding:2%">
+                        <label for="assignmentName">Name</label>
+                        <input type="text" class="form-control" id="assignmentName" name="assignmentName" required pattern=".*" value="{{assignment.name}}">
+                        </div>
+  
+                        <div style="padding:2%">
+                        <label for="weight">% Grade Earned</label>
+                        <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Currently: {{assignment.gradePercentage|floatformat}}" title="In format of XX.XX" min="1" max="100" step="0.01">
+                        </div>
+  
+                        <input type="hidden" class="form-control" id="courseID" name="courseID" required pattern="[0-9]+\.+[0-9][0-9]" value="{{course.id}}" title="In format of XX.XX" min="1" max="100" step="0.01">
+
+                        <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;"><b>UPDATE</b></button>
+                        <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;" onclick="document.getElementById('{{assignment.id}}ASS').style.display='none';document.getElementById('overlay').style.display='none';"><b>CANCEL</b></button>
+  
+                        </form></p>
+                      </div></div>
+                </div>
+              </div>
+              {% endfor %}
+
+
+
     <!--<li class="list-group-item">-->      
       <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
             <div class="card-body" style="padding-bottom: 1.75%;background-color: #f7f7f7;">
@@ -44,9 +135,17 @@
                 
               </b></h4>
               <div style="text-align:center">
-              <a href="{% url 'gradetracker:addAssignment' course_id=course.id%}" class="btn btn-primary" style="width: 40%; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);">
+              <a onclick="document.getElementById('overlay').style.display='block';document.getElementById('{{category.id}}CAT').style.display='block';" class="btn btn-primary" style="width: 40%; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);color:white">
                 <b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD AN ASSIGNMENT</a></b>
               </div>
+
+              
+
+
+
+
+
+
               {% if category_assignments|get_item:category.name %}
                 <table style="margin-top: 2.5%;width:100%;text-align: center;">
                   <tr style="padding:1%">
@@ -56,54 +155,20 @@
                   </tr>
               {% endif %}
               {% for assignment in category_assignments|get_item:category.name %}
+
+             
+
               <!-- List of assignments associated with that course -->
                 
-            
                 <tr>
                   <td>{{ assignment.name }}</td>
                   <td>{{ assignment.gradePercentage|floatformat }}%</td>
-                  <td><a onclick="document.getElementById('{{assignment.id}}').style.display='block'" id="miniButtons"><span class="ti-pencil" style="vertical-align: -0.75px;"></a>
+                  <td><a onclick="document.getElementById('{{assignment.id}}ASS').style.display='block';document.getElementById('overlay').style.display='block';" id="miniButtons"><span class="ti-pencil" style="vertical-align: -0.75px;"></a>
                   <a href="{% url 'gradetracker:delete_assignment' assignment_id=assignment.id%}" onclick="return confirm('Are you sure you want to delete this assignment?')" id="miniButtonRed"><span class="ti-trash" style="vertical-align: 0.75px;"></span></a>
                   </td>
                 </tr>
 
-                
-      
-                <div id="{{assignment.id}}" class="w3-modal">
-                  <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
-                    <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
-                      <div class="card-body" style="padding-bottom: 1.75%;">
-                  
-                        
-                  
-                        <h3 class="card-title" style="text-align: center;"><b>
-                          Editing "{{assignment.name}}"
-                        </b></h3>
-                        <p class="card-text" style="color:black; text-align: center;">
-                          <form action = "{% url 'gradetracker:edit_assignment' assignment.id%}" method = "post">
-                          {% csrf_token %}
-    
-                          <div style="padding:2%">
-                          <label for="assignmentName">Name</label>
-                          <input type="text" class="form-control" id="assignmentName" name="assignmentName" required pattern=".*" value="{{assignment.name}}">
-                          </div>
-    
-                          <div style="padding:2%">
-                          <label for="weight">% Grade Earned</label>
-                          <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Currently: {{assignment.gradePercentage|floatformat}}" title="In format of XX.XX" min="1" max="100" step="0.01">
-                          </div>
-    
-                          <input type="hidden" class="form-control" id="courseID" name="courseID" required pattern="[0-9]+\.+[0-9][0-9]" value="{{course.id}}" title="In format of XX.XX" min="1" max="100" step="0.01">
-
-                          <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;"><b>UPDATE</b></button>
-                          <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;" onclick="document.getElementById('{{assignment.id}}').style.display='none'"><b>CANCEL</b></button>
-    
-                          </form></p>
-                        </div></div>
-                  </div>
-                </div>
-
-                
+                               
              
 
               {% endfor %}
@@ -123,7 +188,17 @@
   {% else %}
   <h4 class="card-title"><b>Add a grade category to start tracking your grades for {{ course.name }}</b></h4>
   {% endif %} 
+
+
+
+  
             </div>
     </ul>
+
+
+    
 </div>
+
+
+
 {% endblock content %}
