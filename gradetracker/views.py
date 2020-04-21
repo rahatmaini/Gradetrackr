@@ -217,11 +217,11 @@ def gpaInclude(request):
         if request.method == 'POST':
             try:
                 course = Course.objects.get(id=request.POST.get('courseToAffect'))
-                print(course.Include_In_GPA, file=sys.stderr)
+                #print(course.Include_In_GPA, file=sys.stderr)
                 course.Include_In_GPA=not(course.Include_In_GPA)
                 request.user.student.save()
                 course.save()
-                print(course.Include_In_GPA, file=sys.stderr)
+                #print(course.Include_In_GPA, file=sys.stderr)
             except Exception as e:
                 return render(request, 'gradetracker/dashboard.html', {'error_message': "PEANUT " + str(e)})
             return HttpResponseRedirect(reverse('gradetracker:dashboard'))
@@ -301,8 +301,8 @@ def getAverage(course_id=None):
                 category.avgCategoryGrade.didGradeGoUp = False
             category.avgCategoryGrade.gradePercentage = average_grade
 
-        print(category.avgCategoryGrade.didGradeGoUp, file=sys.stderr)
-        print(category, file=sys.stderr)
+        #print(category.avgCategoryGrade.didGradeGoUp, file=sys.stderr)
+        #print(category, file=sys.stderr)
 
         category.avgCategoryGrade.save()
         category.save()
@@ -318,7 +318,7 @@ def getAverage(course_id=None):
         avgGrade = SingularGradeItem.objects.create(gradePercentage=average_class_grade, didGradeGoUp=True)
         theCourse.avgGrade = avgGrade
     else:
-        print(theCourse.avgGrade.gradePercentage, file=sys.stderr)
+        #print(theCourse.avgGrade.gradePercentage, file=sys.stderr)
         if (theCourse.avgGrade.gradePercentage < average_class_grade):
             theCourse.avgGrade.didGradeGoUp = True
         elif (theCourse.avgGrade.gradePercentage == average_class_grade):
@@ -436,9 +436,13 @@ def edit_assignment(request, assignment_id=None):
 
         if request.method == 'POST':
             try:
+                course_id = request.POST.get('courseID')
+                if (request.POST.get('submitOrCancel')=="0"):
+                    return CourseOverview(request, course_id)
+                print(request.POST.get('submitOrCancel'), file=sys.stderr)
                 name = request.POST.get('assignmentName')
                 percentage = request.POST.get('weight')
-                course_id = request.POST.get('courseID')
+                
 
                 assignmentToModify = Assignment.objects.get(id=assignment_id)
                     
