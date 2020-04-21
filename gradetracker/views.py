@@ -135,6 +135,8 @@ def addAssignment(request, course_id=None):
                     'course' : theCourse}
             if request.method == 'POST':
                 try:
+                    if (request.POST.get('submitOrCancel')=="0"):
+                        return CourseOverview(request, course_id)
                     name = request.POST.get('assignmentName')
                     percentage = request.POST.get('weight')
                     notification = request.POST.get('notify')
