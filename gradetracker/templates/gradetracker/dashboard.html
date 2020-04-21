@@ -41,7 +41,7 @@
                     <!-- List all the courses associated with a user -->
                     <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title"><b>{{ course.name }} 
                       {% if course.Verified_Class %}
-                       <span id="verification" class="rotunda"></span>
+                       <span id="verification" class="rotunda" style="vertical-align: 0px;"></span>
                        {% endif %}
                        
                       {% if course.avgGrade.didGradeGoUp %}

@@ -22,5 +22,6 @@ urlpatterns = [
     re_path(r'^delete-category/(?P<category_id>\d+)/$', views.delete_category, name='delete_category'),
     re_path(r'^delete-assignment/(?P<assignment_id>\d+)/$', views.delete_assignment, name='delete_assignment'),
     re_path(r'^gpaInclude/', views.gpaInclude, name='gpaInclude'),
+    re_path(r'^edit_assignment/(?P<assignment_id>\d+)/$', views.edit_assignment, name='edit_assignment'),
 
 ]

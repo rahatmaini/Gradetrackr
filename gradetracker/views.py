@@ -430,3 +430,29 @@ def delete_assignment(request, assignment_id=None):
     # otherwise, prompt the user to login
     else:
         return redirect('gradetracker:index')
+
+def edit_assignment(request, assignment_id=None):
+    if request.user.is_authenticated:
+
+        if request.method == 'POST':
+            try:
+                name = request.POST.get('assignmentName')
+                percentage = request.POST.get('weight')
+                course_id = request.POST.get('courseID')
+
+                assignmentToModify = Assignment.objects.get(id=assignment_id)
+                    
+                assignmentToModify.name = name
+                assignmentToModify.gradePercentage = percentage
+                assignmentToModify.save()
+                getAverage(course_id)
+
+            except Exception as e:
+                return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse,'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " +str(e)})
+            return CourseOverview(request, course_id)
+        else:
+            return CourseDashboard(request)
+        
+    else:
+        # if the user is not authenticated
+        return redirect('gradetracker:index')

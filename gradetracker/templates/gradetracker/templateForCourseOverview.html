@@ -6,6 +6,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="{% static 'gradetracker/smoothState.js' %}"></script>
 <script src="{% static 'gradetracker/smoothLoad.js' %}"></script>
+
 <style>
 .tabbed {
     padding-left: 40px;
@@ -17,16 +18,12 @@
     <a class="mainLogo" href="/"><h2 align="left"><b>{{course}}</b></h2></a>
 
     <div style="color:#2c2c2c;padding-bottom: 0.5%;line-height: 1.8;float:left;"><b>
-        <span class="ti-receipt" style="vertical-align: -2px;"></span>&nbsp;&nbsp;{{course.number_Of_Credits}} credits<br />
-        <span class="ti-email" style="vertical-align: -2px;"></span>&nbsp;&nbsp;{{ course.Professor_Email }}<br />
-        {% if course.Verified_Class %}<span class="rotunda" style="vertical-align: -1px;"></span>&nbsp;&nbsp;Verified UVA Course<br />
-        {% else %}
-        <span class="ti-close" style="vertical-align: -1px;"></span>&nbsp;&nbsp;Not a verified UVA Course<br />
-
+        <span class="ti-receipt" style="vertical-align: -2px;width:200px"></span>&nbsp;&nbsp;{{course.number_Of_Credits}} credits<br />
+        <!--<span class="ti-email" style="vertical-align: -2px;"></span>&nbsp;&nbsp;{{ course.Professor_Email }}<br />-->
+        {% if course.Verified_Class %}<span class="rotunda2" style="vertical-align: -1px;"></span>&nbsp;&nbsp;Verified UVA Course<br />
         {% endif %}
 
-
-        {% if course.Average_From_VAgrades %}<span class="ti-bar-chart" style="vertical-align: -0.75px;"></span>&nbsp;&nbsp;{{ course.Average_From_VAgrades }}% Average Grade <a href= {{ va_grades_link }} target="_blank" rel="noopener noreferrer">(VAgrades.com)</a>
+        {% if course.Average_From_VAgrades %}<span class="ti-bar-chart" style="vertical-align: -0.5px;"></span>&nbsp;&nbsp;{{ course.Average_From_VAgrades }}% Average Grade <a href= {{ va_grades_link }} target="_blank" rel="noopener noreferrer" style="color:rgb(95, 95, 95)"><u>(VAgrades.com)</u></a>
         {% endif %}
         
     </b>
@@ -34,9 +31,9 @@
     
     <div style="float:right;margin-top: -1.75%;"><b>
         {% if course.avgGrade.didGradeGoUp %}
-        <div style ="font-size: 3.55em;text-shadow: 0 8px 18px rgba(0, 112, 56, 0.2);color: rgb(0, 165, 27);">{{ course.avgGrade.gradePercentage }}%</div>
+        <div style ="font-size: 3.55em;color: rgb(0, 165, 27);">{{ course.avgGrade.gradePercentage }}%</div>
         {% else %}
-        <div style ="font-size: 3.55em;text-shadow: 0 10px 18px rgba(112, 0, 0, 0.2);color: red;">{{ course.avgGrade.gradePercentage }}%</div>
+        <div style ="font-size: 3.55em;color: red;">{{ course.avgGrade.gradePercentage }}%</div>
         {% endif %}
         <br/>
     </b></div> 
@@ -60,7 +57,7 @@
                 <b>&nbsp;<span class="ti-arrow-left" style="vertical-align: -1.5px;"></span>&nbsp;&nbsp;BACK TO DASHBOARD&nbsp;</a></b>
 
             
-                <a href="{% url 'gradetracker:gradecat' course_id=course.id%}" class="btn btn-primary scene_element scene_element--fadein" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);float:right; margin-right: 2%;"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD ANOTHER GRADE CATEGORY&nbsp;</b></a>
+                <a href="{% url 'gradetracker:gradecat' course_id=course.id%}" class="btn btn-primary scene_element scene_element--fadein" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);float:right; margin-right: 2%;"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A GRADE CATEGORY&nbsp;</b></a>
 
             </form>
         {% else %}
