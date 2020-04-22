@@ -53,9 +53,13 @@ def add(request):
                 new_course.number_Of_Credits = numCredits
                 new_course.target_Grade = targetGrade
                 new_course.student_It_Belongs_To = current_student
-                current_student.cumulativeCredits += Decimal(numCredits)
+            
+
                 request.user.student.save()
                 new_course.save()
+
+                # Update student's cumulative credits
+                update_student_numCredits(request.user.id)
             except Exception as e:
                 return render(request, 'gradetracker/add.html', {'error_message': "PEANUT " + str(e)})
             return HttpResponseRedirect(reverse('gradetracker:dashboard'))
@@ -115,7 +119,7 @@ def gradecat(request, course_id=None):
                 return render(request, 'gradetracker/gradecat.html', {'course' : theCourse})
         # If the user is authenticated but the course does not exist or belong to that user, render the dashboard
         else:
-            return CourseDashboard(request)
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     else:
         # if the user is not authenticated
         return redirect('gradetracker:index')
@@ -146,7 +150,9 @@ def addAssignment(request, course_id=None):
                     new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(id=gradeCatID)
                     new_assignment.save()
                     getAverage(course_id)
-                    update_student_GPA(request.user)
+                    
+                    # update student's GPA
+                    update_student_GPA(request.user.id)
                 except Exception as e:
                     return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse, 'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " + str(e)})
                 return CourseOverview(request, course_id)
@@ -155,7 +161,7 @@ def addAssignment(request, course_id=None):
         
         # If the user is authenticated but the course does not exist or belong to that user, render the dashboard
         else:
-            return CourseDashboard(request)
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     else:
         # if the user is not authenticated
         return redirect('gradetracker:index')
@@ -181,12 +187,7 @@ def CourseDashboard(request):
 def SignIn(request):
     # Render the course dashboard of the authenticated user
     if request.user.is_authenticated:
-    #   Get all the courses associated with that user (as a student)
-        context = {
-            'username': request.user,
-            'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
-        }
-        return render(request, "gradetracker/dashboard.html", context)
+        return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     else:
         return redirect('gradetracker:index')  # HttpResponseRedirect(reverse("google_login"))
 
@@ -204,11 +205,17 @@ def delete_course(request, course_id=None):
             # If the course belongs to the user who is trying to delete the course.
             current_student = request.user.student
             if course_to_delete.student_It_Belongs_To==current_student:
-                # Remove it from the credits being tracked and delete the course
-                current_student.cumulativeCredits -= Decimal(course_to_delete.number_Of_Credits)
+                # delete the course
+                current_student.save()
                 course_to_delete.delete()
 
-        return CourseDashboard(request)
+                # Update student's cumulative credits
+                update_student_numCredits(request.user.id)
+
+                # update student's GPA
+                update_student_GPA(request.user.id)
+
+        return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     
     # otherwise, prompt the user to login
     else:
@@ -221,20 +228,25 @@ def gpaInclude(request):
             try:
                 course = Course.objects.get(id=request.POST.get('courseToAffect'))
                 print(course.Include_In_GPA, file=sys.stderr)
-                course.Include_In_GPA=not(course.Include_In_GPA)
+                course.Include_In_GPA= not (course.Include_In_GPA)
+
                 request.user.student.save()
                 course.save()
+
+
+                # Update student's cumulative credits
+                update_student_numCredits(request.user.id)
+
+                # update student's GPA
+                update_student_GPA(request.user.id)
                 print(course.Include_In_GPA, file=sys.stderr)
+
+                return CourseDashboard(request)
             except Exception as e:
                 return render(request, 'gradetracker/dashboard.html', {'error_message': "PEANUT " + str(e)})
             return HttpResponseRedirect(reverse('gradetracker:dashboard'))
         else:
-                #   Get all the courses associated with that user (as a student)
-            context = {
-                'username': request.user,
-                'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
-            }
-            return render(request, "gradetracker/dashboard.html", context)
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     else:
         # if the user is not authenticated
         return redirect('gradetracker:index')
@@ -268,7 +280,7 @@ def duplicate_course(request, course_id=None):
                         new_assignment.save()
                     #getAverage(course_id)
                 
-        return CourseDashboard(request)
+        return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     
     # otherwise, prompt the user to login.
     else:
@@ -358,7 +370,7 @@ def CourseOverview(request, course_id=None):
 
         # If the course does not exist or does not belong to the user, render the user's dashboard
         else:
-            return CourseDashboard(request)
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     
     # If the user is not authenticated
     return redirect('gradetracker:index')
@@ -402,9 +414,10 @@ def delete_category(request, category_id=None):
                 getAverage(course.id)
                 # delete the category and display the course overview page
                 getAverage(course.id)
+                update_student_GPA(request.user)
                 return CourseOverview(request, course.id)
 
-        return CourseDashboard(request)
+        return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     
     # otherwise, prompt the user to login
     else:
@@ -429,11 +442,12 @@ def delete_assignment(request, assignment_id=None):
             if course.student_It_Belongs_To.user==request.user:
                 assignment_to_delete.delete()
                 getAverage(course.id)
+
                 update_student_GPA(request.user)
                 # delete the category and display the course overview page
                 return CourseOverview(request, course.id)
 
-        return CourseDashboard(request)
+        return HttpResponseRedirect(reverse('gradetracker:dashboard'))
     
     # otherwise, prompt the user to login
     else:
@@ -454,13 +468,14 @@ def edit_assignment(request, assignment_id=None):
                 assignmentToModify.gradePercentage = percentage
                 assignmentToModify.save()
                 getAverage(course_id)
+                # Update the student's GPA
                 update_student_GPA(request.user)
 
             except Exception as e:
-                return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse,'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " +str(e)})
+                return render(request, 'gradetracker/addAssignment.html', {'error_message' : "BIG ERROR " +str(e)})
             return CourseOverview(request, course_id)
         else:
-            return CourseDashboard(request)
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
         
     else:
         # if the user is not authenticated
@@ -482,40 +497,40 @@ def update_student_GPA(student_user_id):
     
     if student_to_update.cumulativeCredits != 0:
 
-        print("Student has some creds...")
+        # print("Student has some creds...")
         grade_points = 0
         active_creds = 0
         for course in student_courses_gpa:
             # Check if the course has any grade associated with it.
-            if course.avgGrade is not None:
+            four_scale = 0
+            if course.avgGrade is None:
                 four_scale = 0
+            elif 60 <= course.avgGrade.gradePercentage < 63:
+                four_scale = 0.7
+            elif 63 <= course.avgGrade.gradePercentage < 67:
+                four_scale = 1.0
+            elif 67 <= course.avgGrade.gradePercentage < 70:
+                four_scale = 1.3
+            elif 70 <= course.avgGrade.gradePercentage < 73:
+                four_scale = 1.7
+            elif 73 <= course.avgGrade.gradePercentage < 77:
+                four_scale = 2.0
+            elif 77 <= course.avgGrade.gradePercentage < 80:
+                four_scale = 2.3
+            elif 80 <= course.avgGrade.gradePercentage < 83:
+                four_scale = 2.7
+            elif 83 <= course.avgGrade.gradePercentage < 87:
+                four_scale = 3.0
+            elif 87 <= course.avgGrade.gradePercentage < 90:
+                four_scale = 3.3
+            elif 90 <= course.avgGrade.gradePercentage < 93:
+                four_scale = 3.7
+            elif 93 <= course.avgGrade.gradePercentage:
+                four_scale = 4.0
 
-                if 60 <= course.avgGrade.gradePercentage < 63:
-                    four_scale = 0.7
-                elif 63 <= course.avgGrade.gradePercentage < 67:
-                    four_scale = 1.0
-                elif 67 <= course.avgGrade.gradePercentage < 70:
-                    four_scale = 1.3
-                elif 70 <= course.avgGrade.gradePercentage < 73:
-                    four_scale = 1.7
-                elif 73 <= course.avgGrade.gradePercentage < 77:
-                    four_scale = 2.0
-                elif 77 <= course.avgGrade.gradePercentage < 80:
-                    four_scale = 2.3
-                elif 80 <= course.avgGrade.gradePercentage < 83:
-                    four_scale = 2.7
-                elif 83 <= course.avgGrade.gradePercentage < 87:
-                    four_scale = 3.0
-                elif 87 <= course.avgGrade.gradePercentage < 90:
-                    four_scale = 3.3
-                elif 90 <= course.avgGrade.gradePercentage < 93:
-                    four_scale = 3.7
-                elif 93 <= course.avgGrade.gradePercentage:
-                    four_scale = 4.0
-
-                print("Got a", four_scale, "in this class:", course.name)
-                grade_points += int(course.number_Of_Credits) * four_scale
-                active_creds += course.number_Of_Credits
+            print("Got a", four_scale, "in this class:", course.name)
+            grade_points += int(course.number_Of_Credits) * four_scale
+            active_creds += course.number_Of_Credits
         
         new_gpa = round(grade_points/int(active_creds), 2)
 
@@ -534,3 +549,25 @@ def update_student_GPA(student_user_id):
 
         student_to_update.cumulativeGPA.save()
         student_to_update.save()
+
+
+
+def update_student_numCredits(student_user_id):
+    """
+    Update a student's cumulative credits. This will count the credits of the courses the student wants to track and update the
+    Student's cumulative credits field.
+
+    """
+
+    student_to_update = Student.objects.get(user_id=student_user_id)
+
+    # Get all courses associated with that student where the course is to be included in the GPA
+    student_courses_gpa = Course.objects.filter(student_It_Belongs_To=student_to_update).filter(Include_In_GPA = True)
+
+    active_creds = 0
+    for course in student_courses_gpa:
+        active_creds += course.number_Of_Credits
+
+    print("Student:", student_to_update, "Credits:", active_creds)
+    student_to_update.cumulativeCredits = Decimal(active_creds)
+    student_to_update.save()
