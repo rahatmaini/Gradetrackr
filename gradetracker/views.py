@@ -309,6 +309,7 @@ def getAverage(course_id=None):
 
         
         if (category.avgCategoryGrade == None):
+            print("(INSIDE getAverage)", "category.avgCategoryGrade == None ?", category.avgCategoryGrade == None)
             avgCategoryGrade = SingularGradeItem.objects.create(gradePercentage=average_grade, didGradeGoUp=True)
             category.avgCategoryGrade = avgCategoryGrade
         else:
@@ -320,8 +321,8 @@ def getAverage(course_id=None):
                 category.avgCategoryGrade.didGradeGoUp = False
             category.avgCategoryGrade.gradePercentage = average_grade
 
-        print(category.avgCategoryGrade.didGradeGoUp, file=sys.stderr)
-        print(category, file=sys.stderr)
+        print("(INSIDE getAverage)", "Did the grade go up?", category.avgCategoryGrade.didGradeGoUp, file=sys.stderr)
+        print("(INSIDE getAverage)", "Category name:", category, file=sys.stderr)
 
         category.avgCategoryGrade.save()
         category.save()
@@ -337,7 +338,7 @@ def getAverage(course_id=None):
         avgGrade = SingularGradeItem.objects.create(gradePercentage=average_class_grade, didGradeGoUp=True)
         theCourse.avgGrade = avgGrade
     else:
-        print(theCourse.avgGrade.gradePercentage, file=sys.stderr)
+        print("(INSIDE getAverage)", "GradePercentage of the course:", theCourse.avgGrade.gradePercentage, file=sys.stderr)
         if (theCourse.avgGrade.gradePercentage < average_class_grade):
             theCourse.avgGrade.didGradeGoUp = True
         elif (theCourse.avgGrade.gradePercentage == average_class_grade):
@@ -528,13 +529,14 @@ def update_student_GPA(student_user_id):
             elif 93 <= course.avgGrade.gradePercentage:
                 four_scale = 4.0
 
-            print("Got a", four_scale, "in this class:", course.name)
+            print("(INSIDE update_student_GPA)", "Got a", four_scale, "in this class:", course.name)
             grade_points += int(course.number_Of_Credits) * four_scale
             active_creds += course.number_Of_Credits
         
         new_gpa = round(grade_points/int(active_creds), 2)
 
         if (student_to_update.cumulativeGPA == None):
+            print("(INSIDE update_student_GPA)", "Student:", student_to_update, "; Cumulative GPA is None?", student_to_update.cumulativeGPA == None)
             cumulativeGPA = SingularGradeItem.objects.create(gradePercentage=new_gpa, didGradeGoUp=True)
             student_to_update.cumulativeGPA = cumulativeGPA
         else:
@@ -549,6 +551,9 @@ def update_student_GPA(student_user_id):
 
         student_to_update.cumulativeGPA.save()
         student_to_update.save()
+
+        print("(INSIDE update_student_GPA)", "Student:", student_to_update, "; Cumulative GPA is None?", student_to_update.cumulativeGPA == None)
+
 
 
 
@@ -568,6 +573,6 @@ def update_student_numCredits(student_user_id):
     for course in student_courses_gpa:
         active_creds += course.number_Of_Credits
 
-    print("Student:", student_to_update, "Credits:", active_creds)
+    print("(INSIDE update_student_numCredits)", "Student:", student_to_update, "; Credits:", active_creds)
     student_to_update.cumulativeCredits = Decimal(active_creds)
     student_to_update.save()
