@@ -57,7 +57,7 @@
                 <b>&nbsp;<span class="ti-arrow-left" style="vertical-align: -1.5px;"></span>&nbsp;&nbsp;BACK TO DASHBOARD&nbsp;</a></b>
 
             
-                <a href="{% url 'gradetracker:gradecat' course_id=course.id%}" class="btn btn-primary scene_element scene_element--fadein" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);float:right; margin-right: 2%;"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A GRADE CATEGORY&nbsp;</b></a>
+                <a onclick="document.getElementById('overlay').style.display='block';document.getElementById('{{course.id}}CATEGORY').style.display='block';" class="btn btn-primary scene_element scene_element--fadein" style="color:white;width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);float:right; margin-right: 2%;"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A GRADE CATEGORY&nbsp;</b></a>
 
             </form>
         {% else %}

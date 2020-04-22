@@ -10,7 +10,7 @@
 {% if courses_list %}
 <div class="m container justify-content-center" id="main">
 
-
+ <!-- new course modal-->
    <div id="addNewCourse" class="w3-modal" style="z-index: 2;">
         <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
           <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
@@ -49,6 +49,51 @@
               </div></div>
         </div>
       </div>
+      <!-- end new course modal-->
+
+
+      <!-- new grade category modal-->
+
+      {% for course in courses_list %}
+
+      <div id="{{course.id}}CATEGORY" class="w3-modal" style="z-index: 2;">
+        <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+          <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
+            <div class="card-body" style="padding-bottom: 1.75%;">
+        
+              <h3 class="card-title" style="text-align: center;"><b>
+                Add a Grade Category to {{course.name}}
+              </b></h3>
+              <p class="card-text" style="color:black; text-align: center;">
+                <form action = "{% url 'gradetracker:gradecat' course.id%}" method = "post">
+                {% csrf_token %}
+                <input type="hidden" name="included" value="True">
+                <div style="padding:2%">
+                <label for="name"><b>Name of Grade Category</b></label>
+                <input type="text" class="form-control" id="name" name="name" required pattern=".*" placeholder="Exams">
+                </div>
+    
+                <div style="padding:2%">
+                <label for="weight">% Weightage Towards Overall Grade</label>
+                <input type="number" class="form-control" id="weight"  name="weight" required pattern="[0-9]+\.[0-9][0-9]" placeholder="Ex: 15" max="100" min="1"> 
+                </div>
+
+                
+                <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
+                
+                <div style="text-align: center;">
+                <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b>ADD</b></button>
+                <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('{{course.id}}CATEGORY').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b>CANCEL</b></button>
+                </div>
+    
+                </form></p>
+              </div></div>
+        </div>
+      </div>
+
+      {% endfor %}
+
+      <!-- end new grade category modal-->
 
 
     <!--<ul>-->
@@ -60,7 +105,11 @@
       <div class="card-body" style="padding-bottom: 1.75%;">
         <h4 class="card-title"><b>At a glance<span style="float:right; color:rgb(0, 165, 27)">X.X GPA</span></b></h4>
         <p class="card-text" style="color:black; text-align: left;">
-          Use this space for gain/loss percent for classes, semester GPA, etc
+          Use this space for gain/loss percent for classes, semester GPA, etc <br/>
+
+          {% for course in courses_list %}
+          {{course}}&nbsp;{{course.avgGrade}}%<br />
+          {% endfor %}
           
         </p>
         <span style="color:black; float: right;"><b>{{cum}} credits being tracked</b></span>
@@ -140,7 +189,7 @@
                   <p class="card-text" style="color:black; text-align: center;">
 
                    
-                    <a class="nav-item nav-link" href="{% url 'gradetracker:gradecat' course_id=course.id%}">Add a Grade Category</a>
+                    <a onclick="document.getElementById('{{course.id}}CATEGORY').style.display='block';document.getElementById('overlay').style.display='block';">Add a Grade Category</a>
                     <a onclick="document.getElementById('{{course.id}}ASS').style.display='block';document.getElementById('overlay').style.display='block';">Add an assignment</a>
                     
                     <br />

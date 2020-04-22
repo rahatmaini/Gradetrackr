@@ -33,7 +33,7 @@ def add(request):
             #     finishedCourse = "False"
             # verifiedClass = request.POST.get('verified')
                 if (request.POST.get('submitOrCancel')=="0"):
-                    return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 includeInGPA = request.POST.get('included')
                 professorEmail = request.POST.get('email')
                 Average_From_VAgrades = request.POST.get('VAavg')
@@ -104,6 +104,8 @@ def gradecat(request, course_id=None):
         if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
             theCourse = Course.objects.get(id=course_id)
             if request.method == 'POST':
+                if (request.POST.get('submitOrCancel')=="0"):
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 # courseTitle = request.POST.get('courseTitle')
                 gradeCategoryN = request.POST.get('name')
                 weight = request.POST.get('weight')
@@ -138,7 +140,7 @@ def addAssignment(request, course_id=None):
             if request.method == 'POST':
                 try:
                     if (request.POST.get('submitOrCancel')=="0"):
-                        return CourseOverview(request, course_id)
+                        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                     name = request.POST.get('assignmentName')
                     percentage = request.POST.get('weight')
                     notification = request.POST.get('notify')
@@ -451,7 +453,7 @@ def edit_assignment(request, assignment_id=None):
             try:
                 course_id = request.POST.get('courseID')
                 if (request.POST.get('submitOrCancel')=="0"):
-                    return CourseOverview(request, course_id)
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 print(request.POST.get('submitOrCancel'), file=sys.stderr)
                 name = request.POST.get('assignmentName')
                 percentage = request.POST.get('weight')
