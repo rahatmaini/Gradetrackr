@@ -28,6 +28,7 @@ class SingularGradeItem(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     cumulativeCredits = models.DecimalField(max_digits=4, decimal_places=1, default=0)
+    cumulativeGPA = models.ForeignKey(SingularGradeItem, on_delete=models.CASCADE, related_name="cumGPA", null=True)
 
     def __str__(self):
         return self.user.username
