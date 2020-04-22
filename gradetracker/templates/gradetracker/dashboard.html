@@ -39,7 +39,7 @@
             <div class="card scene_element scene_element--fadein" style="width: auto" id="beautifiedCard">
                 <div class="card-body" style="padding-bottom: 1.75%;">
                     <!-- List all the courses associated with a user -->
-                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title"><b>{{ course.name }} 
+                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title"><b>{{ course.name }}
                       {% if course.Verified_Class %}
                        <span id="verification" class="rotunda" style="vertical-align: 0px;"></span>
                        {% endif %}
