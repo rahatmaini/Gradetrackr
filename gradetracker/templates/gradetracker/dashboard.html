@@ -6,11 +6,49 @@
 
         
 
-        
+<div id ="overlay"></div>
 {% if courses_list %}
 <div class="m container justify-content-center" id="main">
 
-  <!--<a href="{% url 'gradetracker:add' %}" class="btn btn-primary" style="width: auto; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;add another course&nbsp;</b></a>-->
+
+   <div id="addNewCourse" class="w3-modal" style="z-index: 2;">
+        <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+          <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
+            <div class="card-body" style="padding-bottom: 1.75%;">
+        
+              <h3 class="card-title" style="text-align: center;"><b>
+                Add a Course to Your Schedule
+              </b></h3>
+              <p class="card-text" style="color:black; text-align: center;">
+                <form action = "{% url 'gradetracker:add' %}" method = "post">
+                {% csrf_token %}
+                <input type="hidden" name="included" value="True">
+                <div style="padding:2%">
+                <label for="courseTitle"><b>Course Name</b></label>
+                <input type="text" class="form-control" id="courseTitle" name="courseTitle" required pattern=".*" placeholder="PHYS 2415">
+                </div>
+    
+                <div style="padding:2%">
+                <label for="credits"><b>Credits</b></label>
+                <input class="form-control" type="number" value="3" id="credits" name="credits" min="1" max="6">
+                </div>
+
+                <div style="padding:2%">
+                <label for="goal">Target Grade (out of 100)</label>
+                <input type="number" class="form-control" id="goal" name="goal" required pattern="[0-9]+\.[0-9][0-9]" placeholder="Ex: 95.00" min="0.5" max="100" step="0.5">
+                </div>
+                
+                <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
+                
+                <div style="text-align: center;">
+                <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b>ADD</b></button>
+                <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('addNewCourse').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b>CANCEL</b></button>
+                </div>
+    
+                </form></p>
+              </div></div>
+        </div>
+      </div>
 
 
     <!--<ul>-->
@@ -34,6 +72,53 @@
 
 
     {% for course in courses_list %}
+
+    <div id="{{course.id}}ASS" class="w3-modal" style="z-index: 2;">
+      <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+        <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
+          <div class="card-body" style="padding-bottom: 1.75%;">
+      
+            
+      
+            <h3 class="card-title" style="text-align: center;"><b>
+              Add an assignment
+            </b></h3>
+            <p class="card-text" style="color:black; text-align: center;">
+              <form action = "{% url 'gradetracker:addAssignment' course.id%}" method = "post">
+              {% csrf_token %}
+  
+              <div style="padding:2%">
+              <label for="assignmentName"><b>Name</b></label>
+              <input type="text" class="form-control" id="assignmentName" name="assignmentName" required pattern=".*" placeholder="Quiz 3">
+              </div>
+  
+              <div style="padding:2%">
+              <label for="weight"><b>% Grade Earned</b></label>
+              <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Ex: 81" title="In format of XX.XX" min="1" max="100" step="0.01">
+              </div>
+              
+              <div style="padding:2%">
+              <label><b>Category it Belongs To</b></label><br/>
+              {% for key, value in coursesAndTheirCategories.items %}
+                {% if key == course %}
+                {% for category in value %}
+                    <input type="radio" name="categoryChoice" id="choice{{ forloop.counter }}" value="{{category.id}}">
+                    <label for="choice{{ forloop.counter }}" >{{ category.name }}</label><br>
+                {% endfor %}
+                {% endif %}
+              {% endfor %}
+            </div>
+              <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
+              
+              <div style="text-align: center;">
+              <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b>ADD</b></button>
+              <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('{{course.id}}ASS').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b>CANCEL</b></button>
+              </div>
+  
+              </form></p>
+            </div></div>
+      </div>
+    </div>
         
         <!--<li class="list-group-item">-->      
             <div class="card scene_element scene_element--fadein" style="width: auto" id="beautifiedCard">
@@ -56,7 +141,7 @@
 
                    
                     <a class="nav-item nav-link" href="{% url 'gradetracker:gradecat' course_id=course.id%}">Add a Grade Category</a>
-                    <a class="nav-item nav-link" href="{% url 'gradetracker:addAssignment' course_id=course.id%}">Add an assignment</a>
+                    <a onclick="document.getElementById('{{course.id}}ASS').style.display='block';document.getElementById('overlay').style.display='block';">Add an assignment</a>
                     
                     <br />
                     
@@ -121,6 +206,25 @@
     }
     });
 }
+
+
+function cancelEverything() {
+  var formsToDisable = document.getElementsByClassName("submitOrCancel");
+  var x;
+  for (x in formsToDisable) {
+    formsToDisable[x].value=0;
+  }
+}
+
+function enableEverything() {
+  var formsToEnable = document.getElementsByClassName("submitOrCancel");
+  var x;
+  for (x in formsToEnable) {
+    formsToEnable[x].value=1;
+  }
+}
+
+
         
             </script>
  

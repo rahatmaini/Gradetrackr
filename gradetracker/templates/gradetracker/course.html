@@ -3,21 +3,7 @@
 {% load static %}
 {% load gradetracker_tags %}
 
-<style>
-  #overlay {
-  position: fixed;
-  display: none;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 1;
-  cursor: pointer;
-}
-</style>
+
         
 <div id ="overlay"></div>
 <div class="m container justify-content-center" id="main">
@@ -60,12 +46,12 @@
               {% csrf_token %}
   
               <div style="padding:2%">
-              <label for="assignmentName">Name</label>
+              <label for="assignmentName"><b>Name</b></label>
               <input type="text" class="form-control" id="assignmentName" name="assignmentName" required pattern=".*" placeholder="Quiz 3">
               </div>
   
               <div style="padding:2%">
-              <label for="weight">% Grade Earned</label>
+              <label for="weight"><b>% Grade Earned</b></label>
               <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Ex: 81" title="In format of XX.XX" min="1" max="100" step="0.01">
               </div>
   
@@ -83,6 +69,7 @@
       </div>
     </div>
     <!-- end assignment modal-->
+    
 
 
     {% for assignment in category_assignments|get_item:category.name %}
@@ -103,12 +90,12 @@
                         {% csrf_token %}
   
                         <div style="padding:2%">
-                        <label for="assignmentName">Name</label>
+                        <label for="assignmentName"><b>Name</b></label>
                         <input type="text" class="form-control" id="assignmentName" name="assignmentName" required pattern=".*" value="{{assignment.name}}">
                         </div>
   
                         <div style="padding:2%">
-                        <label for="weight">% Grade Earned</label>
+                        <label for="weight"><b>% Grade Earned</b></label>
                         <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Currently: {{assignment.gradePercentage|floatformat}}" title="In format of XX.XX" min="1" max="100" step="0.01">
                         </div>
   

@@ -32,6 +32,8 @@ def add(request):
             # else:
             #     finishedCourse = "False"
             # verifiedClass = request.POST.get('verified')
+                if (request.POST.get('submitOrCancel')=="0"):
+                    return HttpResponseRedirect(reverse('gradetracker:dashboard'))
                 includeInGPA = request.POST.get('included')
                 professorEmail = request.POST.get('email')
                 Average_From_VAgrades = request.POST.get('VAavg')
@@ -166,11 +168,20 @@ def addAssignment(request, course_id=None):
 def CourseDashboard(request):
     # Render the course dashboard of the authenticated user
     if request.user.is_authenticated:
+        coursesAndTheirCategories={}
+        for course in Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user)):
+            coursesAndTheirCategories[course]=[]
+            cats = GradeCategory.objects.all().filter(courseItBelongsTo=course)
+            for cat in cats:
+                coursesAndTheirCategories[course].append(cat)
+        print(coursesAndTheirCategories, file=sys.stderr)
+
     #    Get all the courses associated with that user (as a student)
         context = {
             'username': request.user,
             'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user)),
-            'cum': Student.objects.all().get(user=request.user).cumulativeCredits
+            'cum': Student.objects.all().get(user=request.user).cumulativeCredits,
+            'coursesAndTheirCategories': coursesAndTheirCategories
         }
         return render(request, "gradetracker/dashboard.html", context)
     else:
