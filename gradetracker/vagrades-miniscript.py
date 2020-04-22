@@ -54,5 +54,5 @@ print(verify_course_and_get_avg(course_name))
 
 # s = "CS   3240"
 
-# print(s.strip().split(" "))
+print("round(3.2324, 2):", round(3.2324, 2))
 

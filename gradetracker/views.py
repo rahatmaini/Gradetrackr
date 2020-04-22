@@ -146,6 +146,7 @@ def addAssignment(request, course_id=None):
                     new_assignment.gradeCategoryItBelongsTo = GradeCategory.objects.get(id=gradeCatID)
                     new_assignment.save()
                     getAverage(course_id)
+                    update_student_GPA(request.user)
                 except Exception as e:
                     return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse, 'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " + str(e)})
                 return CourseOverview(request, course_id)
@@ -165,8 +166,10 @@ def CourseDashboard(request):
     # Render the course dashboard of the authenticated user
     if request.user.is_authenticated:
     #    Get all the courses associated with that user (as a student)
+        print("user.id:", request.user.id)
         context = {
             'username': request.user,
+            'student': Student.objects.get(user_id=request.user.id),
             'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user)),
             'cum': Student.objects.all().get(user=request.user).cumulativeCredits
         }
@@ -226,8 +229,12 @@ def gpaInclude(request):
                 return render(request, 'gradetracker/dashboard.html', {'error_message': "PEANUT " + str(e)})
             return HttpResponseRedirect(reverse('gradetracker:dashboard'))
         else:
-            
-            return render(request, 'gradetracker/dashboard.html', )
+                #   Get all the courses associated with that user (as a student)
+            context = {
+                'username': request.user,
+                'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user))
+            }
+            return render(request, "gradetracker/dashboard.html", context)
     else:
         # if the user is not authenticated
         return redirect('gradetracker:index')
@@ -422,6 +429,7 @@ def delete_assignment(request, assignment_id=None):
             if course.student_It_Belongs_To.user==request.user:
                 assignment_to_delete.delete()
                 getAverage(course.id)
+                update_student_GPA(request.user)
                 # delete the category and display the course overview page
                 return CourseOverview(request, course.id)
 
@@ -446,6 +454,7 @@ def edit_assignment(request, assignment_id=None):
                 assignmentToModify.gradePercentage = percentage
                 assignmentToModify.save()
                 getAverage(course_id)
+                update_student_GPA(request.user)
 
             except Exception as e:
                 return render(request, 'gradetracker/addAssignment.html', {'theCourse' : theCourse,'grade_categories' : grade_categories, 'course_id' : course_id, 'error_message' : "BIG ERROR " +str(e)})
@@ -456,3 +465,72 @@ def edit_assignment(request, assignment_id=None):
     else:
         # if the user is not authenticated
         return redirect('gradetracker:index')
+
+
+
+def update_student_GPA(student_user_id):
+    """
+    Update a student's cumulative GPA. This is to be called whenever an assignment is added/edited/deleted. 
+    Or to be called whenever a Student changes what course to include in GPA.
+
+    """
+    student_to_update = Student.objects.get(user_id=student_user_id)
+
+    # Get all courses associated with that student where the course is to be included in the GPA
+    student_courses_gpa = Course.objects.filter(student_It_Belongs_To=student_to_update).filter(Include_In_GPA = True)
+
+    
+    if student_to_update.cumulativeCredits != 0:
+
+        print("Student has some creds...")
+        grade_points = 0
+        active_creds = 0
+        for course in student_courses_gpa:
+            # Check if the course has any grade associated with it.
+            if course.avgGrade is not None:
+                four_scale = 0
+
+                if 60 <= course.avgGrade.gradePercentage < 63:
+                    four_scale = 0.7
+                elif 63 <= course.avgGrade.gradePercentage < 67:
+                    four_scale = 1.0
+                elif 67 <= course.avgGrade.gradePercentage < 70:
+                    four_scale = 1.3
+                elif 70 <= course.avgGrade.gradePercentage < 73:
+                    four_scale = 1.7
+                elif 73 <= course.avgGrade.gradePercentage < 77:
+                    four_scale = 2.0
+                elif 77 <= course.avgGrade.gradePercentage < 80:
+                    four_scale = 2.3
+                elif 80 <= course.avgGrade.gradePercentage < 83:
+                    four_scale = 2.7
+                elif 83 <= course.avgGrade.gradePercentage < 87:
+                    four_scale = 3.0
+                elif 87 <= course.avgGrade.gradePercentage < 90:
+                    four_scale = 3.3
+                elif 90 <= course.avgGrade.gradePercentage < 93:
+                    four_scale = 3.7
+                elif 93 <= course.avgGrade.gradePercentage:
+                    four_scale = 4.0
+
+                print("Got a", four_scale, "in this class:", course.name)
+                grade_points += int(course.number_Of_Credits) * four_scale
+                active_creds += course.number_Of_Credits
+        
+        new_gpa = round(grade_points/int(active_creds), 2)
+
+        if (student_to_update.cumulativeGPA == None):
+            cumulativeGPA = SingularGradeItem.objects.create(gradePercentage=new_gpa, didGradeGoUp=True)
+            student_to_update.cumulativeGPA = cumulativeGPA
+        else:
+            if (student_to_update.cumulativeGPA.gradePercentage < new_gpa):
+                student_to_update.cumulativeGPA.didGradeGoUp = True
+            elif (student_to_update.cumulativeGPA.gradePercentage == new_gpa):
+                student_to_update.cumulativeGPA.didGradeGoUp = True
+            else:
+                student_to_update.cumulativeGPA.didGradeGoUp = False
+            student_to_update.cumulativeGPA.gradePercentage = new_gpa
+
+
+        student_to_update.cumulativeGPA.save()
+        student_to_update.save()
