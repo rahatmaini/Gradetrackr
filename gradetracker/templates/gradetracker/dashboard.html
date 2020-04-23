@@ -263,7 +263,7 @@
                 {% for category in value %}
                             <tr>
                             <td>{{category.name}}</td>
-                            <td>{{category.weightage|floatformat}}</td>
+                            <td>{{category.weightage|floatformat}}%</td>
                             <td><b>
                             {% if category.avgCategoryGrade.didGradeGoUp %}
                             <span style="color:rgb(0, 165, 27)"><span class="fa fa-caret-up"></span>&nbsp;{{ category.avgCategoryGrade.gradePercentage }}%</span>
