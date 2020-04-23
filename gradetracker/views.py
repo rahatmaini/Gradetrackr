@@ -333,10 +333,10 @@ def getAverage(course_id=None):
         else:
             if (category.avgCategoryGrade.gradePercentage < average_grade):
                 category.avgCategoryGrade.didGradeGoUp = True
-            elif (category.avgCategoryGrade.gradePercentage == average_grade):
-                print("bruh",file=sys.stderr)
-                category.avgCategoryGrade.didGradeGoUp = True
-            else:
+            # elif (category.avgCategoryGrade.gradePercentage == average_grade):
+            #     print("bruh",file=sys.stderr)
+            #     category.avgCategoryGrade.didGradeGoUp = True
+            elif (category.avgCategoryGrade.gradePercentage > average_grade):
                 category.avgCategoryGrade.didGradeGoUp = False
             category.avgCategoryGrade.gradePercentage = average_grade
 
@@ -360,9 +360,9 @@ def getAverage(course_id=None):
         print("(INSIDE getAverage)", "GradePercentage of the course:", theCourse.avgGrade.gradePercentage, file=sys.stderr)
         if (theCourse.avgGrade.gradePercentage < average_class_grade):
             theCourse.avgGrade.didGradeGoUp = True
-        elif (theCourse.avgGrade.gradePercentage == average_class_grade):
-            theCourse.avgGrade.didGradeGoUp = True
-        else:
+        # elif (theCourse.avgGrade.gradePercentage == average_class_grade):
+        #     theCourse.avgGrade.didGradeGoUp = True
+        elif (theCourse.avgGrade.gradePercentage > average_class_grade):
             theCourse.avgGrade.didGradeGoUp = False
     
     theCourse.avgGrade.gradePercentage = average_class_grade
@@ -564,9 +564,9 @@ def update_student_GPA(student_user_id):
         else:
             if (student_to_update.cumulativeGPA.gradePercentage < new_gpa):
                 student_to_update.cumulativeGPA.didGradeGoUp = True
-            elif (student_to_update.cumulativeGPA.gradePercentage == new_gpa):
-                student_to_update.cumulativeGPA.didGradeGoUp = True
-            else:
+            # elif (student_to_update.cumulativeGPA.gradePercentage == new_gpa):
+            #     student_to_update.cumulativeGPA.didGradeGoUp = True
+            elif (student_to_update.cumulativeGPA.gradePercentage > new_gpa):
                 student_to_update.cumulativeGPA.didGradeGoUp = False
             student_to_update.cumulativeGPA.gradePercentage = new_gpa
 

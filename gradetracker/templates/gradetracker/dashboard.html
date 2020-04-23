@@ -7,53 +7,50 @@
         
 
 <div id ="overlay"></div>
+<!-- new course modal-->
+<div id="addNewCourse" class="w3-modal" style="z-index: 2;">
+  <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+    <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
+      <div class="card-body" style="padding-bottom: 1.75%;">
+  
+        <h3 class="card-title" style="text-align: center;"><b>
+          Add a Course to Your Schedule
+        </b></h3>
+        <p class="card-text" style="color:black; text-align: center;">
+          <form action = "{% url 'gradetracker:add' %}" method = "post">
+          {% csrf_token %}
+          <input type="hidden" name="included" value="True">
+          <div style="padding:2%">
+          <label for="courseTitle"><b>Course Name</b></label>
+          <input type="text" class="form-control" id="courseTitle" name="courseTitle" required pattern=".*" placeholder="PHYS 2415">
+          </div>
+
+          <div style="padding:2%">
+          <label for="credits"><b>Credits</b></label>
+          <input class="form-control" type="number" value="3" id="credits" name="credits" min="1" max="6">
+          </div>
+
+          <div style="padding:2%">
+          <label for="goal">Target Grade (out of 100)</label>
+          <input type="number" class="form-control" id="goal" name="goal" required pattern="[0-9]+\.[0-9][0-9]" placeholder="Ex: 95.00" min="0.5" max="100" step="0.5">
+          </div>
+          
+          <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
+          
+          <div style="text-align: center;">
+          <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b>ADD</b></button>
+          <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('addNewCourse').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b>CANCEL</b></button>
+          </div>
+
+          </form></p>
+        </div></div>
+  </div>
+</div>
+<!-- end new course modal-->
 {% if courses_list %}
 <div class="m container justify-content-center" id="main">
 
-
-
-   
-
- <!-- new course modal-->
-   <div id="addNewCourse" class="w3-modal" style="z-index: 2;">
-        <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
-          <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
-            <div class="card-body" style="padding-bottom: 1.75%;">
-        
-              <h3 class="card-title" style="text-align: center;"><b>
-                Add a Course to Your Schedule
-              </b></h3>
-              <p class="card-text" style="color:black; text-align: center;">
-                <form action = "{% url 'gradetracker:add' %}" method = "post">
-                {% csrf_token %}
-                <input type="hidden" name="included" value="True">
-                <div style="padding:2%">
-                <label for="courseTitle"><b>Course Name</b></label>
-                <input type="text" class="form-control" id="courseTitle" name="courseTitle" required pattern=".*" placeholder="PHYS 2415">
-                </div>
-    
-                <div style="padding:2%">
-                <label for="credits"><b>Credits</b></label>
-                <input class="form-control" type="number" value="3" id="credits" name="credits" min="1" max="6">
-                </div>
-
-                <div style="padding:2%">
-                <label for="goal">Target Grade (out of 100)</label>
-                <input type="number" class="form-control" id="goal" name="goal" required pattern="[0-9]+\.[0-9][0-9]" placeholder="Ex: 95.00" min="0.5" max="100" step="0.5">
-                </div>
-                
-                <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
-                
-                <div style="text-align: center;">
-                <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b>ADD</b></button>
-                <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('addNewCourse').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b>CANCEL</b></button>
-                </div>
-    
-                </form></p>
-              </div></div>
-        </div>
-      </div>
-      <!-- end new course modal-->
+ 
 
 
       <!-- new grade category modal-->
@@ -194,7 +191,7 @@
               {% for key, value in coursesAndTheirCategories.items %}
                 {% if key == course %}
                 {% for category in value %}
-                    <input type="radio" name="categoryChoice" id="choice{{ forloop.counter }}" value="{{category.id}}">
+                    <input type="radio" name="categoryChoice" id="choice{{ forloop.counter }}" value="{{category.id}}" required>
                     <label for="choice{{ forloop.counter }}" >{{ category.name }}</label><br>
                 {% endfor %}
                 {% endif %}
@@ -295,7 +292,7 @@
                   <label class="switch" style="vertical-align: 18.5px;margin-left: 1.25%;">
                     <input type="checkbox" onclick="calc('{{course.id}}','{{course.Include_In_GPA}}');" {% if course.Include_In_GPA %} checked{% endif %}>
                     <span class="slider round"></span>
-                  </label><span style="font-size: 0.4em;vertical-align: 2.75px;">&nbsp;&nbsp;&nbsp;<b>COUNT IN REPORT CARD</b></span>
+                  </label><span style="font-size: 0.4em;vertical-align: 2.75px;">&nbsp;&nbsp;&nbsp;<b>SHOW IN REPORT CARD</b></span>
 
                   <span style="color:rgb(32, 32, 32); float: right;"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
 
@@ -316,7 +313,7 @@
 <div>
 <p> <img src = "{% static 'gradetracker/addcourse.png' %}" width="25%" style="margin-top: 4%;margin-right:8%;margin-left:8%;float: right;"><br/>
     <h1 style="color: rgb(51, 51, 51);margin-top: 0%;margin-left: 6%;font-size: 5vw;line-height: 130%;font-family: Source Sans Pro;">Get started tracking your academic performance.</h1>
-    <a href="{% url 'gradetracker:add' %}" class="addCourseButton" style="margin-left: 6%;margin-top:4%"><b>ADD COURSE&nbsp;&nbsp;<span class="ti-hand-point-right" style="vertical-align: -1px;"></span></b></a>
+    <a onclick="document.getElementById('addNewCourse').style.display='block';document.getElementById('overlay').style.display='block';" class="addCourseButton" style="cursor: pointer;margin-left: 6%;margin-top:4%;color:white"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A COURSE&nbsp;</b></a>
 
 </p>
 </div>
