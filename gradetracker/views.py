@@ -118,6 +118,7 @@ def gradecat(request, course_id=None):
                     new_gradecat.save()
                 except Exception as e:
                     return render(request, 'gradetracker/gradecat.html', {'error_message': "HELLO " + str(e), 'course_id' : course_id})
+                getAverage(course_id)
                 return CourseOverview(request, course_id)
             else:
                 return render(request, 'gradetracker/gradecat.html', {'course' : theCourse})
@@ -178,21 +179,24 @@ def CourseDashboard(request):
     # Render the course dashboard of the authenticated user
     if request.user.is_authenticated:
         coursesAndTheirCategories={}
+        showReportCardOrNot = False
         for course in Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user)):
-            coursesAndTheirCategories[course]=[]
             cats = GradeCategory.objects.all().filter(courseItBelongsTo=course)
+            if (course.avgGrade != None and course.Include_In_GPA):
+                showReportCardOrNot = True
+            if (len(cats)>=1):
+                coursesAndTheirCategories[course]=[]   
             for cat in cats:
                 coursesAndTheirCategories[course].append(cat)
-        print(coursesAndTheirCategories, file=sys.stderr)
+        
 
-    #    Get all the courses associated with that user (as a student)
-        print("user.id:", request.user.id)
         context = {
             'username': request.user,
             'student': Student.objects.get(user_id=request.user.id),
             'courses_list': Course.objects.all().filter(student_It_Belongs_To=Student.objects.get(user=request.user)),
             'cum': Student.objects.all().get(user=request.user).cumulativeCredits,
-            'coursesAndTheirCategories': coursesAndTheirCategories
+            'coursesAndTheirCategories': coursesAndTheirCategories,
+            'showReportCardOrNot': showReportCardOrNot
         }
         return render(request, "gradetracker/dashboard.html", context)
     else:
@@ -324,13 +328,13 @@ def getAverage(course_id=None):
 
         
         if (category.avgCategoryGrade == None):
-            print("(INSIDE getAverage)", "category.avgCategoryGrade == None ?", category.avgCategoryGrade == None)
-            avgCategoryGrade = SingularGradeItem.objects.create(gradePercentage=average_grade, didGradeGoUp=True)
+            avgCategoryGrade = SingularGradeItem.objects.create(gradePercentage=average_grade, didGradeGoUp=None)
             category.avgCategoryGrade = avgCategoryGrade
         else:
             if (category.avgCategoryGrade.gradePercentage < average_grade):
                 category.avgCategoryGrade.didGradeGoUp = True
             elif (category.avgCategoryGrade.gradePercentage == average_grade):
+                print("bruh",file=sys.stderr)
                 category.avgCategoryGrade.didGradeGoUp = True
             else:
                 category.avgCategoryGrade.didGradeGoUp = False
@@ -374,13 +378,12 @@ def CourseOverview(request, course_id=None):
         # if the course exists and belongs to the user 
         if Course.objects.filter(id=course_id).exists() and Course.objects.get(id=course_id).student_It_Belongs_To.user==request.user:
 
-            # Get all the courses associated with that user (as a student)
 
             context = {
                 'course': categoryHelperFunction(course_id)[2],
                 'grade_categories': categoryHelperFunction(course_id)[0],
                 'category_assignments': categoryHelperFunction(course_id)[1],
-                'va_grades_link' : "https://vagrades.com/uva/" + categoryHelperFunction(course_id)[2].name
+                'va_grades_link' : "https://vagrades.com/uva/" + categoryHelperFunction(course_id)[2].name            
             }
             return render(request, "gradetracker/course.html", context)
 
@@ -556,7 +559,7 @@ def update_student_GPA(student_user_id):
 
         if (student_to_update.cumulativeGPA == None):
             print("(INSIDE update_student_GPA)", "Student:", student_to_update, "; Cumulative GPA is None?", student_to_update.cumulativeGPA == None)
-            cumulativeGPA = SingularGradeItem.objects.create(gradePercentage=new_gpa, didGradeGoUp=True)
+            cumulativeGPA = SingularGradeItem.objects.create(gradePercentage=new_gpa, didGradeGoUp=None)
             student_to_update.cumulativeGPA = cumulativeGPA
         else:
             if (student_to_update.cumulativeGPA.gradePercentage < new_gpa):

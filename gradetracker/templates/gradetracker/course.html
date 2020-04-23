@@ -80,7 +80,7 @@
             
       
             <h3 class="card-title" style="text-align: center;"><b>
-              Add an assignment to "{{ category.name }}"
+              Add a grade to "{{ category.name }}"
             </b></h3>
             <p class="card-text" style="color:black; text-align: center;">
               <form action = "{% url 'gradetracker:addAssignment' course.id%}" method = "post">
@@ -158,20 +158,26 @@
 
     <!--<li class="list-group-item">-->      
       <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
+
             <div class="card-body" style="padding-bottom: 1.75%;background-color: #f7f7f7;">
                 <!-- List all the categories associated with that course -->
               <h4 class="card-title"><b>
                 {{ category.name }}
+                <div style="float:right">
+                
                 {% if category.avgCategoryGrade.didGradeGoUp %}
-                      <span style="float:right; color:rgb(0, 165, 27)">{{ category.avgCategoryGrade.gradePercentage }}%</span>
+                      <span style="color:rgb(0, 165, 27)" class="fa fa-caret-up"></span><span style="color:rgb(0, 165, 27);">
+                {% elif category.avgCategoryGrade.didGradeGoUp == False %}
+                      <span style="color:red;" class="fa fa-caret-down"></span><span style="color:red;">
                 {% else %}
-                      <span style="float:right; color:red">{{ category.avgCategoryGrade.gradePercentage }}%</span>
-                {% endif %}
+                      <span style="color:rgb(27,27,27);">
+                {% endif %}&nbsp;{{ category.avgCategoryGrade.gradePercentage }}% </span></div>
+                
                 
               </b></h4>
               <div style="text-align:center">
               <a onclick="document.getElementById('overlay').style.display='block';document.getElementById('{{category.id}}CAT').style.display='block';" class="btn btn-primary" style="width: 40%; border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);color:white">
-                <b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD AN ASSIGNMENT</a></b>
+                <b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A GRADED ITEM</a></b>
               </div>
 
               

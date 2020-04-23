@@ -102,6 +102,7 @@
 
     <!--<ul>-->
         <div class="cardGrid">
+{% if showReportCardOrNot %}
 <!--DASHBOARD OVERVIEW CARD-->
 <div class="card scene_element scene_element--fadein" style="width: auto; float:left" id="beautifiedCard">
   <div class="card-body" style="padding-bottom: 1.75%;">
@@ -111,16 +112,19 @@
               <div style="float:right">
               {% if student.cumulativeGPA.didGradeGoUp %}
               <span style="color:rgb(0, 165, 27);" class="fa fa-caret-up">
-              {% else %}
+              {% elif student.cumulativeGPA.didGradeGoUp == False %}
               <span style="color:red;" class="fa fa-caret-down">
+              {% else %}
+              <span style="color:rgb(27,27,27);">
               {% endif %}
-              </span>&nbsp;{{ student.cumulativeGPA.gradePercentage }} GPA
+              </span>&nbsp;&nbsp;{{ student.cumulativeGPA.gradePercentage }} GPA
               </div>
       {% endif %}
     
     
     </b></h4>
     <p class="card-text" style="color:black; text-align: center;">
+      
       
       <table style="margin-top: 5%;width:100%;text-align: center;margin-bottom: 5%;">
         <tr style="padding:1%">
@@ -135,11 +139,13 @@
                   <td>{{course.number_Of_Credits}}</td>
                   <td><b>
                   {% if course.avgGrade.didGradeGoUp %}
-                  <span style="color:rgb(0, 165, 27)">{{ course.avgGrade.gradePercentage }}%</span>
+                  <span style="color:rgb(0, 165, 27)"><span class="fa fa-caret-up"></span>&nbsp;{{ course.avgGrade.gradePercentage }}%</span>
+                  {% elif course.avgGrade.didGradeGoUp == None %}
+                  <span style="color:rgb(27,27,27)">{{ course.avgGrade.gradePercentage }}%</span>
                   {% else %}
-                  <span style="color:red">{{ course.avgGrade.gradePercentage }}%</span></b>
+                  <span style="color:red"><span class="fa fa-caret-down"></span>&nbsp;{{ course.avgGrade.gradePercentage }}%</span>
                   {% endif %}
-                  {% endif %}</td>
+                  {% endif %}</b></td>
                 </tr>
       {% endfor %}
       </table>
@@ -147,12 +153,12 @@
       
       
     </p>
-    <span style="color:rgb(66, 66, 66); float: right;"><b>{{cum}} credits being tracked</b></span>
+    <span style="color:rgb(34, 34, 34); float: right;"><b>{{cum}} credits being tracked</b></span>
 
   </div>
 
 <!--END OF DASHBOARD OVERVIEW CARD--></div>
-    
+{% endif %}
           
 
 
@@ -167,7 +173,7 @@
             
       
             <h3 class="card-title" style="text-align: center;"><b>
-              Add an assignment
+              Add an Assignment
             </b></h3>
             <p class="card-text" style="color:black; text-align: center;">
               <form action = "{% url 'gradetracker:addAssignment' course.id%}" method = "post">
@@ -212,15 +218,15 @@
                     <!-- List all the courses associated with a user -->
                     <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title" style="color:rgb(29, 29, 29)"><b>{{ course.name }}
                       {% if course.Verified_Class %}
-                       <span id="verification" class="rotunda" style="vertical-align: 0px;"></span>
+                       <span id="verification" class="rotunda" style="vertical-align: -1px;"></span>
                        {% endif %}
                       
                       {% if not course.avgGrade == None %}
                       <div style="float:right">
                       {% if course.avgGrade.didGradeGoUp %}
-                      <span class="fa fa-caret-up" style="color:rgb(0, 165, 27);"></span><span style="color:rgb(0, 165, 27);">
+                      <span class="fa fa-caret-up" style="color:rgb(0, 165, 27);vertical-align: 1px;" title="Grade increased since last time"></span><span style="color:rgb(0, 165, 27);">
                       {% else %}
-                      <span class="fa fa-caret-down" style="color:red"></span><span style="color:red;">
+                      <span class="fa fa-caret-down" style="color:red;vertical-align: 1px;" title="Grade decreased since last time"></span><span style="color:red;">
                       {% endif %}
                     &nbsp;{{ course.avgGrade.gradePercentage }}%</span>
                   </div>
@@ -228,16 +234,58 @@
                     </b></h4></a>
 
 
+                    
+
+
                   <p class="card-text" style="color:black; text-align: center;">
 
-                   
-                    <a onclick="document.getElementById('{{course.id}}CATEGORY').style.display='block';document.getElementById('overlay').style.display='block';">Add a Grade Category</a>
-                    <a onclick="document.getElementById('{{course.id}}ASS').style.display='block';document.getElementById('overlay').style.display='block';">Add an assignment</a>
-                    
-                    <br />
-                    
 
-                  </p>
+                    <div style="text-align: center;padding-bottom: 3%;padding-top: 2%;">
+
+                      <a onclick="document.getElementById('overlay').style.display='block';document.getElementById('{{course.id}}CATEGORY').style.display='block';" class="btn btn-primary scene_element scene_element--fadein" style="color:white;border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);font-size: small;"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A CATEGORY&nbsp;</b></a>
+    
+                      &nbsp;
+                      <a onclick="document.getElementById('overlay').style.display='block';document.getElementById('{{course.id}}ASS').style.display='block';" class="btn btn-primary" style="border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);color:white;font-size: small;">
+                        <b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A GRADED ITEM</a></b>
+                      
+                    
+                    </div>
+
+                {% for key, value in coursesAndTheirCategories.items %}
+                {% if key == course %}
+                <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo">
+                <table style="width:100%;text-align: center;">
+                  <tr style="padding:1%">
+                    <th>Category</th>
+                    <th>Weightage</th>
+                    <th>Grade</th>
+                  </tr> <!--should only run once, only one time will the course == key (theoretically)-->
+                {% for category in value %}
+                            <tr>
+                            <td>{{category.name}}</td>
+                            <td>{{category.weightage|floatformat}}</td>
+                            <td><b>
+                            {% if category.avgCategoryGrade.didGradeGoUp %}
+                            <span style="color:rgb(0, 165, 27)"><span class="fa fa-caret-up"></span>&nbsp;{{ category.avgCategoryGrade.gradePercentage }}%</span>
+                            {% elif category.avgCategoryGrade.didGradeGoUp == None %}
+                            <span style="color:rgb(27,27,27)">{{ category.avgCategoryGrade.gradePercentage }}%</span>
+                            {% else %}
+                            <span style="color:red"><span class="fa fa-caret-down"></span>&nbsp;{{ category.avgCategoryGrade.gradePercentage }}%</span></b>
+                            {% endif %}
+                            </td>
+                          </tr>
+                {% endfor %}
+                </table>
+              </a>
+                {% endif %}
+                {% endfor %}
+
+                
+              </p>
+                  
+              
+
+                  
 
 
                   <a href="{% url 'gradetracker:delete_course' course_id=course.id%}" onclick="return confirm('Are you sure you want to delete this course?')" id="miniButtonRed"><span class="ti-trash"></span></a>
@@ -249,7 +297,7 @@
                     <span class="slider round"></span>
                   </label><span style="font-size: 0.4em;vertical-align: 2.75px;">&nbsp;&nbsp;&nbsp;<b>COUNT IN REPORT CARD</b></span>
 
-                  <span style="color:rgb(66, 66, 66); float: right;"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
+                  <span style="color:rgb(32, 32, 32); float: right;"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
 
                 </div>
               </div>
