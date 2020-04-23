@@ -6,6 +6,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="{% static 'gradetracker/smoothState.js' %}"></script>
 <script src="{% static 'gradetracker/smoothLoad.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
 <style>
 .tabbed {
@@ -30,11 +32,16 @@
     </div>
     
     <div style="float:right;margin-top: -1.75%;"><b>
-        {% if course.avgGrade.didGradeGoUp %}
-        <div style ="font-size: 3.55em;color: rgb(0, 165, 27);">{{ course.avgGrade.gradePercentage }}%</div>
-        {% else %}
-        <div style ="font-size: 3.55em;color: red;">{{ course.avgGrade.gradePercentage }}%</div>
-        {% endif %}
+        {% if not course.avgGrade == None %}
+                      <div style="float:right;font-size: 3.55em;">
+                      {% if course.avgGrade.didGradeGoUp %}
+                      <span style="color:rgb(0, 165, 27);" class="fa fa-caret-up">
+                      {% else %}
+                      <span style="color:red;" class="fa fa-caret-down">
+                      {% endif %}
+                    </span>&nbsp;{{ course.avgGrade.gradePercentage }}%
+                  </div>
+                  {% endif %}
         <br/>
     </b></div> 
     

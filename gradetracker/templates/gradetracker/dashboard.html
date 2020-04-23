@@ -2,13 +2,17 @@
 {% block content %}
 {% load static %}
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         
 
 <div id ="overlay"></div>
 {% if courses_list %}
 <div class="m container justify-content-center" id="main">
+
+
+
+   
 
  <!-- new course modal-->
    <div id="addNewCourse" class="w3-modal" style="z-index: 2;">
@@ -98,25 +102,58 @@
 
     <!--<ul>-->
         <div class="cardGrid">
-
-
-          <!--DASHBOARD OVERVIEW CARD-->
-          <div class="card scene_element scene_element--fadein" style="width: auto; float:left" id="beautifiedCard">
-            <div class="card-body" style="padding-bottom: 1.75%;">
-              <h4 class="card-title"><b>At a glance<span style="float:right; color:rgb(0, 165, 27)">{{ student.cumulativeGPA.gradePercentage }} GPA</span></b></h4>
-              <p class="card-text" style="color:black; text-align: left;">
-                Use this space for gain/loss percent for classes, semester GPA, etc <br/>
+<!--DASHBOARD OVERVIEW CARD-->
+<div class="card scene_element scene_element--fadein" style="width: auto; float:left" id="beautifiedCard">
+  <div class="card-body" style="padding-bottom: 1.75%;">
+    <h4 class="card-title"><b>Your Report Card
       
-                {% for course in courses_list %}
-                {{course}}&nbsp;{{course.avgGrade}}%<br />
-                {% endfor %}
-                
-              </p>
-              <span style="color:black; float: right;"><b>{{cum}} credits being tracked</b></span>
+      {% if not student.cumulativeGPA.gradePercentage == None %}
+              <div style="float:right">
+              {% if student.cumulativeGPA.didGradeGoUp %}
+              <span style="color:rgb(0, 165, 27);" class="fa fa-caret-up">
+              {% else %}
+              <span style="color:red;" class="fa fa-caret-down">
+              {% endif %}
+              </span>&nbsp;{{ student.cumulativeGPA.gradePercentage }} GPA
+              </div>
+      {% endif %}
+    
+    
+    </b></h4>
+    <p class="card-text" style="color:black; text-align: center;">
       
-            </div>
-          </div>
-          <!--END OF DASHBOARD OVERVIEW CARD-->
+      <table style="margin-top: 5%;width:100%;text-align: center;margin-bottom: 5%;">
+        <tr style="padding:1%">
+          <th>Class Name</th>
+          <th>Credits</th>
+          <th>Grade</th>
+        </tr>
+        {% for course in courses_list %}
+                  {% if not course.avgGrade == None and course.Include_In_GPA == True%}
+                  <tr>
+                  <td>{{course.name}}</td>
+                  <td>{{course.number_Of_Credits}}</td>
+                  <td><b>
+                  {% if course.avgGrade.didGradeGoUp %}
+                  <span style="color:rgb(0, 165, 27)">{{ course.avgGrade.gradePercentage }}%</span>
+                  {% else %}
+                  <span style="color:red">{{ course.avgGrade.gradePercentage }}%</span></b>
+                  {% endif %}
+                  {% endif %}</td>
+                </tr>
+      {% endfor %}
+      </table>
+
+      
+      
+    </p>
+    <span style="color:rgb(66, 66, 66); float: right;"><b>{{cum}} credits being tracked</b></span>
+
+  </div>
+
+<!--END OF DASHBOARD OVERVIEW CARD--></div>
+    
+          
 
 
 
@@ -173,16 +210,21 @@
             <div class="card scene_element scene_element--fadein" style="width: auto" id="beautifiedCard">
                 <div class="card-body" style="padding-bottom: 1.75%;">
                     <!-- List all the courses associated with a user -->
-                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title"><b>{{ course.name }}
+                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title" style="color:rgb(29, 29, 29)"><b>{{ course.name }}
                       {% if course.Verified_Class %}
                        <span id="verification" class="rotunda" style="vertical-align: 0px;"></span>
                        {% endif %}
-                       
+                      
+                      {% if not course.avgGrade == None %}
+                      <div style="float:right">
                       {% if course.avgGrade.didGradeGoUp %}
-                      <span style="float:right; color:rgb(0, 165, 27)">{{ course.avgGrade.gradePercentage }}%</span>
+                      <span class="fa fa-caret-up" style="color:rgb(0, 165, 27);"></span><span style="color:rgb(0, 165, 27);">
                       {% else %}
-                      <span style="float:right; color:red">{{ course.avgGrade.gradePercentage }}%</span>
+                      <span class="fa fa-caret-down" style="color:red"></span><span style="color:red;">
                       {% endif %}
+                    &nbsp;{{ course.avgGrade.gradePercentage }}%</span>
+                  </div>
+                  {% endif %}
                     </b></h4></a>
 
 
@@ -205,9 +247,9 @@
                   <label class="switch" style="vertical-align: 18.5px;margin-left: 1.25%;">
                     <input type="checkbox" onclick="calc('{{course.id}}','{{course.Include_In_GPA}}');" {% if course.Include_In_GPA %} checked{% endif %}>
                     <span class="slider round"></span>
-                  </label><span style="font-size: 0.4em;vertical-align: 2.75px;">&nbsp;&nbsp;&nbsp;<b>INCLUDE IN GPA</b></span>
+                  </label><span style="font-size: 0.4em;vertical-align: 2.75px;">&nbsp;&nbsp;&nbsp;<b>COUNT IN REPORT CARD</b></span>
 
-                  <span style="color:black; float: right;"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
+                  <span style="color:rgb(66, 66, 66); float: right;"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
 
                 </div>
               </div>
