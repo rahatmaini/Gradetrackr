@@ -1614,7 +1614,7 @@ div.horizontalgap {
 
 
   /* /* Radio buttons */
-  /* [type="radio"]:checked,
+[type="radio"]:checked,
 [type="radio"]:not(:checked) {
     position: absolute;
     left: -9999px;
@@ -1625,7 +1625,7 @@ div.horizontalgap {
     position: relative;
     padding-left: 28px;
     cursor: pointer;
-    line-height: 20px;
+    line-height: 17.5px;
     display: inline-block;
     color: #666;
 }
@@ -1644,9 +1644,9 @@ div.horizontalgap {
 [type="radio"]:checked + label:after,
 [type="radio"]:not(:checked) + label:after {
     content: '';
-    width: 12px;
-    height: 12px;
-    background: #F87DA9;
+    width: 10px;
+    height: 10px;
+    background: rgb(0,123,253);
     position: absolute;
     top: 4px;
     left: 4px;
@@ -1663,4 +1663,4 @@ div.horizontalgap {
     opacity: 1;
     -webkit-transform: scale(1);
     transform: scale(1);
-} */
+} 
