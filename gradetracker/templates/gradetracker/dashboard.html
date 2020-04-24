@@ -292,7 +292,7 @@
 
 
                   <a href="{% url 'gradetracker:delete_course' course_id=course.id%}" onclick="return confirm('Are you sure you want to delete this course?')" id="miniButtonRed"><span class="ti-trash"></span></a>
-                  <a href="{% url 'gradetracker:duplicate_course' course_id=course.id%}" onclick="" id="miniButtons"><span class="ti-layers"></span></a>
+                  <a href="{% url 'gradetracker:duplicate_course' course_id=course.id%}" onclick="" id="miniButtons" data-toggle="tooltip" data-placement="top" title="Duplicate this course"><span class="ti-layers"></span></a>
                   <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" onclick="" id="miniButtons" style="vertical-align: 1px; padding-right: 1%;"><span class="ti-new-window"></span></a>
                       
                   <label class="switch" style="vertical-align: 18.5px;margin-left: 1.25%;">
@@ -366,8 +366,11 @@ function enableEverything() {
   }
 }
 
+// Tooltip
+// $(function () {
+//   $('[data-toggle="tooltip"]').tooltip()
+// })
 
-        
             </script>
  
         
