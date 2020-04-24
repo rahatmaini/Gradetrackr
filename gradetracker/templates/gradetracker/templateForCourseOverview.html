@@ -7,7 +7,11 @@
   </head>
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+{% if student.darkMode == False %}
+<link rel="stylesheet" type="text/css" href="{% static 'gradetracker/lightStyle.css' %}">
+{% else %}
 <link rel="stylesheet" type="text/css" href="{% static 'gradetracker/style.css' %}">
+{% endif %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="{% static 'gradetracker/smoothState.js' %}"></script>
 <script src="{% static 'gradetracker/smoothLoad.js' %}"></script>
@@ -24,7 +28,7 @@
 <div class = "jumbotron scene_element2 scene_element2--fadein" style="background-color: transparent; padding-top: 2%; padding-bottom: 0%; transition-duration: 1s;margin-bottom: 0;display: block;">
     <a class="mainLogo" href="/"><h1 align="left" style='font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"'><b>{{course}}</b></h1></a>
 
-    <div style="color:#2c2c2c;padding-bottom: 0.5%;line-height: 1.8;float:left;"><b>
+    <div style="padding-bottom: 0.5%;line-height: 1.8;float:left;" class="darkMode"><b>
         <span class="ti-receipt" style="vertical-align: -2px;width:200px"></span>&nbsp;&nbsp;{{course.number_Of_Credits}} credits<br />
         <!--<span class="ti-email" style="vertical-align: -2px;"></span>&nbsp;&nbsp;{{ course.Professor_Email }}<br />-->
         {% if course.Verified_Class %}<span class="rotunda2" style="vertical-align: -1px;"></span>&nbsp;&nbsp;Verified UVA Course<br />
@@ -40,15 +44,18 @@
         {% if not course.avgGrade == None %}
                       <div style="float:right;font-size: 3.55em;">
                       {% if course.avgGrade.didGradeGoUp %}
-                      <span style="color:rgb(0, 165, 27);" class="fa fa-caret-up">
+                      <span style="color:rgb(0, 165, 27);" class="fa fa-caret-up"></span>&nbsp;<span class="darkMode">{{ course.avgGrade.gradePercentage }}%</span>
                       {% elif course.avgGrade.didGradeGoUp == None %}
-                      <span style="color:rgb(27,27,27)">
+                      <span class="darkMode">{{ course.avgGrade.gradePercentage }}%</span>
                       {% else %}
-                      <span style="color:red;" class="fa fa-caret-down">
+                      <span style="color:red;" class="fa fa-caret-down"></span>&nbsp;<span class="darkMode">{{ course.avgGrade.gradePercentage }}%</span>
                       {% endif %}
-                    </span>&nbsp;{{ course.avgGrade.gradePercentage }}%
+                    
                   </div>
-                  {% endif %}
+                  {% else %}
+                  <div style="float:right;font-size: 2.55em;" class="darkMode">No Grade Yet</div>
+        {% endif %}
+        
         <br/>
     </b></div> 
     
@@ -67,7 +74,7 @@
 
                 
 
-                <a href="/dashboard/" class="btn btn-primary scene_element scene_element--fadein" style="width: auto; border-radius: 99px;background-color:rgb(27, 27, 27);box-shadow: 0px 3px 10px rgba(0,0,0,0.15);border-style: none;margin-left: 2%;">
+                <a href="/dashboard/" class="btn btn-primary scene_element scene_element--fadein" id="toggleDark" style="width: auto; border-radius: 99px;border-style: none;margin-left: 2%;">
                 <b>&nbsp;<span class="ti-arrow-left" style="vertical-align: -1.5px;"></span>&nbsp;&nbsp;BACK TO DASHBOARD&nbsp;</a></b>
 
             

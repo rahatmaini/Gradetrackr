@@ -10,7 +10,7 @@
 <div id ="overlay"></div>
 <!-- new course modal-->
 <div id="addNewCourse" class="w3-modal" style="z-index: 2;">
-  <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+  <div class="w3-modal-content w3-animate-top" style="border-radius: 15px;">
     <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
       <div class="card-body" style="padding-bottom: 1.75%;">
   
@@ -22,25 +22,25 @@
           {% csrf_token %}
           <input type="hidden" name="included" value="True">
           <div style="padding:2%">
-          <label for="courseTitle"><b>Course Name</b></label>
+          <label for="courseTitle" class="darkMode"><b>Course Name</b></label>
           <input type="text" class="form-control" id="courseTitle" name="courseTitle" required pattern=".*" placeholder="PHYS 2415">
           </div>
 
           <div style="padding:2%">
-          <label for="credits"><b>Credits</b></label>
+          <label for="credits" class="darkMode"><b>Credits</b></label>
           <input class="form-control" type="number" value="3" id="credits" name="credits" min="1" max="6">
           </div>
 
           <div style="padding:2%">
-          <label for="goal">Target Grade (out of 100)</label>
+          <label for="goal" class="darkMode"><b>Target Grade (out of 100)</b></label>
           <input type="number" class="form-control" id="goal" name="goal" required pattern="[0-9]+\.[0-9][0-9]" placeholder="Ex: 95.00" min="0.5" max="100" step="0.5">
           </div>
           
           <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
           
           <div style="text-align: center;">
-          <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b>ADD</b></button>
-          <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('addNewCourse').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b>CANCEL</b></button>
+          <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b><span class="ti-plus" style="vertical-align: -1.25px;"></span>&nbsp;&nbsp;ADD&nbsp;</b></button>
+          <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('addNewCourse').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b><span class="ti-close" style="vertical-align: -1px;"></span>&nbsp;&nbsp;CANCEL&nbsp;</b></button>
           </div>
 
           </form></p>
@@ -59,7 +59,7 @@
       {% for course in courses_list %}
 
       <div id="{{course.id}}CATEGORY" class="w3-modal" style="z-index: 2;">
-        <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+        <div class="w3-modal-content w3-animate-top" style="border-radius: 15px;">
           <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
             <div class="card-body" style="padding-bottom: 1.75%;">
         
@@ -71,12 +71,12 @@
                 {% csrf_token %}
                 <input type="hidden" name="included" value="True">
                 <div style="padding:2%">
-                <label for="name"><b>Name of Grade Category</b></label>
+                <label for="name" class="darkMode"><b>Name of Grade Category</b></label>
                 <input type="text" class="form-control" id="name" name="name" required pattern=".*" placeholder="Exams">
                 </div>
     
                 <div style="padding:2%">
-                <label for="weight">% Weightage Towards Overall Grade</label>
+                <label for="weight" class="darkMode">% Weightage Towards Overall Grade</label>
                 <input type="number" class="form-control" id="weight"  name="weight" required pattern="[0-9]+\.[0-9][0-9]" placeholder="Ex: 15" max="99.99" min="1"> 
                 </div>
 
@@ -84,8 +84,8 @@
                 <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
                 
                 <div style="text-align: center;">
-                <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b>ADD</b></button>
-                <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('{{course.id}}CATEGORY').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b>CANCEL</b></button>
+                <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b><span class="ti-plus" style="vertical-align: -1.25px;"></span>&nbsp;&nbsp;ADD&nbsp;</b></button>
+                <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('{{course.id}}CATEGORY').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b><span class="ti-close" style="vertical-align: -1.25px;"></span>&nbsp;&nbsp;CANCEL&nbsp;</b></button>
                 </div>
     
                 </form></p>
@@ -113,7 +113,7 @@
               {% elif student.cumulativeGPA.didGradeGoUp == False %}
               <span style="color:red;" class="fa fa-caret-down">
               {% else %}
-              <span style="color:rgb(27,27,27);">
+              <span class="darkMode">
               {% endif %}
               </span>&nbsp;&nbsp;{{ student.cumulativeGPA.gradePercentage }} GPA
               </div>
@@ -139,7 +139,7 @@
                   {% if course.avgGrade.didGradeGoUp %}
                   <span style="color:rgb(0, 165, 27)"><span class="fa fa-caret-up"></span>&nbsp;{{ course.avgGrade.gradePercentage }}%</span>
                   {% elif course.avgGrade.didGradeGoUp == None %}
-                  <span style="color:rgb(27,27,27)">{{ course.avgGrade.gradePercentage }}%</span>
+                  <span class="darkMode">{{ course.avgGrade.gradePercentage }}%</span>
                   {% else %}
                   <span style="color:red"><span class="fa fa-caret-down"></span>&nbsp;{{ course.avgGrade.gradePercentage }}%</span>
                   {% endif %}
@@ -151,7 +151,7 @@
       
       
     </p>
-    <span style="color:rgb(34, 34, 34); float: right;"><b>{{cum}} credits being tracked</b></span>
+    <span style="float: right;" class="lighterDarkMode"><b>{{cum}} credits being tracked</b></span>
 
   </div>
 
@@ -164,7 +164,7 @@
     {% for course in courses_list %}
 
     <div id="{{course.id}}ASS" class="w3-modal" style="z-index: 2;">
-      <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
+      <div class="w3-modal-content w3-animate-top" style="border-radius: 15px;">
         <div class="card scene_element scene_element--fadein" style="width: auto; overflow: hidden;" id="beautifiedCard">
           <div class="card-body" style="padding-bottom: 1.75%;">
       
@@ -178,17 +178,17 @@
               {% csrf_token %}
   
               <div style="padding:2%">
-              <label for="assignmentName"><b>Name</b></label>
+              <label for="assignmentName" class="darkMode"><b>Name</b></label>
               <input type="text" class="form-control" id="assignmentName" name="assignmentName" required pattern=".*" placeholder="Quiz 3">
               </div>
   
               <div style="padding:2%">
-              <label for="weight"><b>% Grade Earned</b></label>
+              <label for="weight" class="darkMode"><b>% Grade Earned</b></label>
               <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Ex: 81" title="In format of XX.XX" min="0" max="100" step="0.01">
               </div>
               
               <div style="padding:2%">
-              <label><b>Category it Belongs To</b></label><br/>
+              <label class="darkMode"><b>Category it Belongs To</b></label><br/>
               {% for key, value in coursesAndTheirCategories.items %}
                 {% if key == course %}
                 {% for category in value %}
@@ -201,8 +201,8 @@
               <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
               
               <div style="text-align: center;">
-              <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b>ADD</b></button>
-              <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('{{course.id}}ASS').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b>CANCEL</b></button>
+              <button type="submit" class="btn btn-info" style="margin-left:2%;margin-right:0.5%;margin-top:2%;background-color: rgb(27,27,27);border-style: none;border-radius: 20px;" onclick="enableEverything()"><b><span class="ti-plus" style="vertical-align: -1.25px;"></span>&nbsp;&nbsp;ADD&nbsp;</b></button>
+              <button type="cancel" class="btn btn-danger" style="margin-top:2%;border-radius: 20px;background-color: #ff3737;border-style: none;" onclick="document.getElementById('{{course.id}}ASS').style.display='none';document.getElementById('overlay').style.display='none';cancelEverything()"><b><span class="ti-close" style="vertical-align: -1.25px;"></span>&nbsp;&nbsp;CANCEL&nbsp;</b></button>
               </div>
   
               </form></p>
@@ -214,9 +214,9 @@
             <div class="card scene_element scene_element--fadein" style="width: 80%;margin-left: 10%;" id="beautifiedCard">
                 <div class="card-body" style="padding-bottom: 1.75%;">
                     <!-- List all the courses associated with a user -->
-                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title" style="color:rgb(29, 29, 29);font-size:2em"><b>{{ course.name }}
+                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title darkMode" style="font-size:2em"><b>{{ course.name }}
                       {% if course.Verified_Class %}
-                       <span id="verification" class="rotunda" style="vertical-align: -5px;"></span>
+                       <span id="verification" class="rotunda" style="vertical-align: -5px;" title="This is a verified UVA course"></span>
                        {% endif %}
                       
                       {% if not course.avgGrade == None %}
@@ -224,7 +224,7 @@
                       {% if course.avgGrade.didGradeGoUp %}
                       <span class="fa fa-caret-up" style="color:rgb(0, 165, 27);vertical-align: 1px;" title="Grade increased since last time"></span><span style="color:rgb(0, 165, 27);">
                       {% elif course.avgGrade.didGradeGoUp == None %}
-                      <span style="color:rgb(27,27,27)">
+                      <span class="darkMode">
                       {% else %}
                       <span class="fa fa-caret-down" style="color:red;vertical-align: 1px;" title="Grade decreased since last time"></span><span style="color:red;">
                       {% endif %}
@@ -271,7 +271,7 @@
                             {% if category.avgCategoryGrade.didGradeGoUp %}
                             <span style="color:rgb(0, 165, 27)"><span class="fa fa-caret-up"></span>&nbsp;{{ category.avgCategoryGrade.gradePercentage }}%</span>
                             {% elif category.avgCategoryGrade.didGradeGoUp == None %}
-                            <span style="color:rgb(27,27,27)">{{ category.avgCategoryGrade.gradePercentage }}%</span>
+                            <span class="darkMode">{{ category.avgCategoryGrade.gradePercentage }}%</span>
                             {% else %}
                             <span style="color:red"><span class="fa fa-caret-down"></span>&nbsp;{{ category.avgCategoryGrade.gradePercentage }}%</span></b>
                             {% endif %}
@@ -298,9 +298,9 @@
                   <label class="switch" style="vertical-align: 18.5px;margin-left: 1.25%;">
                     <input type="checkbox" onclick="calc('{{course.id}}','{{course.Include_In_GPA}}');" {% if course.Include_In_GPA %} checked{% endif %}>
                     <span class="slider round"></span>
-                  </label><span style="font-size: 0.5em;vertical-align: 2.75px;">&nbsp;&nbsp;&nbsp;<b>SHOW IN REPORT CARD</b></span>
+                  </label><span style="font-size: 0.5em;vertical-align: 2.5px;" class="lighterDarkMode">&nbsp;&nbsp;&nbsp;<b>COUNT IN REPORT CARD</b></span>
 
-                  <span style="color:rgb(32, 32, 32); float: right;"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
+                  <span style="float: right;" class="lighterDarkMode"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
 
                 </div>
               </div>
@@ -318,8 +318,8 @@
 {% else %}
 <div>
 <p> <img src = "{% static 'gradetracker/addcourse.png' %}" width="25%" style="margin-top: 4%;margin-right:8%;margin-left:8%;float: right;"><br/>
-    <h1 style="color: rgb(51, 51, 51);margin-top: 0%;margin-left: 6%;font-size: 5vw;line-height: 130%;font-family: Source Sans Pro;">Get started tracking your academic performance.</h1>
-    <a onclick="document.getElementById('addNewCourse').style.display='block';document.getElementById('overlay').style.display='block';" class="addCourseButton" style="cursor: pointer;margin-left: 6%;margin-top:4%;color:white"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A COURSE&nbsp;</b></a>
+    <h1 style="margin-top: 0%;margin-left: 6%;font-size: 5vw;line-height: 130%;font-family: Source Sans Pro;" class="darkMode">Get started tracking your academic performance.</h1>
+    <a onclick="document.getElementById('addNewCourse').style.display='block';document.getElementById('overlay').style.display='block';" class="addCourseButton" style="cursor: pointer;margin-left: 6%;margin-top:4%;color:white;"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A COURSE&nbsp;</b></a>
 
 </p>
 </div>

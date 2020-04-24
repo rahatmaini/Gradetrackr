@@ -97,6 +97,8 @@ def verify_course_and_get_avg(course_name):
         # If there exists a course with that name on VAGrades
         if course_data != {'sections': []}:
             return {"course_name": letters+numbers, "avg": round(float(course_data['course']['avg']*100/4), 2)}
+        else:
+            return {"course_name": course_name, "avg": 0}
 
     else:
         return {"course_name": course_name, "avg": 0}
@@ -270,6 +272,23 @@ def gpaInclude(request):
         # if the user is not authenticated
         return redirect('gradetracker:index')
 
+def toggleDarkMode(request):
+    
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                request.user.student.darkMode = not request.user.student.darkMode
+                request.user.student.save()
+                return CourseDashboard(request)
+            except Exception as e:
+                return render(request, 'gradetracker/dashboard.html', {'error_message': "SMALL ERROR " + str(e)})
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+        else:
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+    else:
+        # if the user is not authenticated
+        return redirect('gradetracker:index')
+
 def duplicate_course(request, course_id=None):
 
     # if the user is authenticated
@@ -385,7 +404,8 @@ def CourseOverview(request, course_id=None):
                 'course': categoryHelperFunction(course_id)[2],
                 'grade_categories': categoryHelperFunction(course_id)[0],
                 'category_assignments': categoryHelperFunction(course_id)[1],
-                'va_grades_link' : "https://vagrades.com/uva/" + categoryHelperFunction(course_id)[2].name            
+                'va_grades_link' : "https://vagrades.com/uva/" + categoryHelperFunction(course_id)[2].name   ,
+                'student': Student.objects.get(user_id=request.user.id),         
             }
             return render(request, "gradetracker/course.html", context)
 

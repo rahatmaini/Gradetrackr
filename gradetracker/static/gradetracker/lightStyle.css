@@ -16,6 +16,28 @@
 	cursor: pointer;
   }
 
+.darkMode {
+	color: rgb(18,18,18)
+}
+
+
+#toggleDark {
+	background-color: rgb(255,255,255);
+	box-shadow: 0px 3px 10px rgba(0,0,0,0.10);
+	transition: all .5s;
+	color: black;
+}
+
+#toggleDark:hover {
+	background-color: rgb(27, 27, 27);
+	color: white;
+	transition: all .5s;
+}
+
+.lighterDarkMode {
+	color: rgb(58, 58, 58)
+}
+
 .switch {
 	position: relative;
 	display: inline-block;
@@ -23,29 +45,6 @@
 	height: 21px;
   }
   
-.card-title {
-	color:white;
-}
-
-#toggleDark {
-	background-color: rgb(27, 27, 27);
-	color: white;
-	transition: all .5s;
-}
-
-#toggleDark:hover {
-	background-color: rgb(255, 255, 255);
-	color: black;
-	transition: all .5s;
-}
-
-.darkMode {
-	color:white;
-}
-
-.lighterDarkMode {
-	color:#efefef;
-}
   .switch input { 
 	opacity: 0;
 	width: 0;
@@ -161,25 +160,24 @@ a {
 }
 
 table {
-    border:solid #2b2b2b 1px;
+    border:solid #ececec 1px;
 	border-radius:15px;
 	margin-bottom: 2%;
 	overflow: hidden;
 	box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.05);
-	color: white;
 }
 
 td {
 	padding:2%;
-	background-color:#0c0c0c;
+	background-color:#ffffff;
 	
 }
 
 th {
 	border-top: none;
 	padding:2%;
-	background-color:#131313;
-	border:solid #1d1d1d 1px;
+	background-color:#f8f8f8;
+	border:solid #dfdfdf 1px;
 }
 
 h1 {
@@ -206,7 +204,7 @@ html {
 }
 
 body {
-  background-color: #000;
+  background-color: #efefed;
 }
 
 div.horizontalgap {
@@ -224,7 +222,7 @@ div.horizontalgap {
 }
 
 #beautifiedCard {
-  background-color: rgb(10, 10, 10);
+  background-color: #f7f7f7;
   transition: all .5s;
   transition-duration: 1s;
   border-style: none;
@@ -238,7 +236,7 @@ div.horizontalgap {
   border-radius: 20%;
   background-color:transparent;
   border-style: none;
-  color:white;
+  color:black;
   outline: none;
   padding: 1.5%;
   transition: all .7s;
@@ -247,7 +245,8 @@ div.horizontalgap {
 
 #miniButtons:hover {
   text-decoration: none;
-  background-color: #000;
+  background-color: #efefed;
+  color: black;
 }
 
 #miniButtonRed {
@@ -255,7 +254,7 @@ div.horizontalgap {
   border-radius: 20%;
   background-color:transparent;
   border-style: none;
-  color:white;
+  color:black;
   outline: none;
   padding: 1.5%;
   transition: all .7s;
@@ -277,12 +276,13 @@ div.horizontalgap {
 
 #logOutButton {
 	text-decoration: none;
-	background-color:rgb(27,27,27);
+	background-color:#fff;
 	border-radius: 99px;
-	color: white;
+	color: black;
 	border-style: none;
 	outline: 0;
 	transition: all .5s;
+	box-shadow: 0px 3px 10px rgba(0,0,0,0.10);
 }
 
 #logOutButton:hover {
@@ -355,13 +355,12 @@ div.horizontalgap {
 }
 
 
-
 .mainLogo {
-	color: white;
+	color: black;
 }
 .mainLogo:hover{
 	text-decoration: none;
-    color: white; 
+    color: initial; /* Takes initial value of the property which is black in this case */
 }
 
 
@@ -1489,6 +1488,7 @@ div.horizontalgap {
 	background-size: 16px;
     height: 16px;
 	width: 16px;
+	filter: brightness(0%);
 	display:inline-block;
 }
 #verification {
@@ -1522,7 +1522,7 @@ div.horizontalgap {
 .w3-bar-block .w3-dropdown-hover .w3-button,.w3-bar-block .w3-dropdown-click .w3-button{width:100%;text-align:left;padding:8px 16px}
 .w3-main,#main{transition:margin-left .4s}
 .w3-modal{display:none;padding-top:100px;position:fixed;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(0,0,0,0)}
-.w3-modal-content{margin:auto;position:relative;padding:0;outline:0;width:600px}
+.w3-modal-content{margin:auto;background-color:#fff;position:relative;padding:0;outline:0;width:600px}
 .w3-bar{width:100%;overflow:hidden}.w3-center .w3-bar{display:inline-block;width:auto}
 .w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
 .w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
