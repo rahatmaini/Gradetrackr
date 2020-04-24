@@ -14,9 +14,18 @@
 
         <!-- List all the categories associated with that course -->
 
-      <h4 class="card-title" style="text-align: center;"><b>
-        Target Grade of <b>{{course.target_Grade|floatformat}}%</b>
-      </b></h4>
+      <h4 class="card-title">
+        <span style="text-align: left;">
+        Target Grade of <b>{{course.target_Grade|floatformat}}%</b></span>
+        {% if course.avgGrade.gradePercentage >= course.target_Grade %}
+        <span style="color:rgb(0, 165, 27);float:right"><b>Achieved</b></span>
+        {% else %}
+        <span style="color:red;float:right"><b>Unmet</b></span>
+        {% endif %}
+      
+    
+    
+    </b></h4>
       <!--<p class="card-text" style="color:black; text-align: center;">TODO: Add curr grade, target, how to get there</p>-->
       </div></div>
   
