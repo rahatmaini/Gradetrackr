@@ -347,17 +347,17 @@ def getAverage(course_id=None):
         category.save()
 
         
-
+    
 
     average_class_grade = 0
     for item in grades_and_their_weights:
         average_class_grade += item[0]*item[1]/100
-
+    
     if (theCourse.avgGrade == None):
-        avgGrade = SingularGradeItem.objects.create(gradePercentage=average_class_grade, didGradeGoUp=True)
+        avgGrade = SingularGradeItem.objects.create(gradePercentage=average_class_grade, didGradeGoUp=None)
         theCourse.avgGrade = avgGrade
     else:
-        print("(INSIDE getAverage)", "GradePercentage of the course:", theCourse.avgGrade.gradePercentage, file=sys.stderr)
+        
         if (theCourse.avgGrade.gradePercentage < average_class_grade):
             theCourse.avgGrade.didGradeGoUp = True
         # elif (theCourse.avgGrade.gradePercentage == average_class_grade):
@@ -370,6 +370,8 @@ def getAverage(course_id=None):
     
     theCourse.avgGrade.save()
     theCourse.save()
+
+    print("average course grade is", theCourse.avgGrade.didGradeGoUp, file=sys.stderr)
 
 
 def CourseOverview(request, course_id=None):
@@ -490,6 +492,37 @@ def edit_assignment(request, assignment_id=None):
                 assignmentToModify.name = name
                 assignmentToModify.gradePercentage = percentage
                 assignmentToModify.save()
+                getAverage(course_id)
+                # Update the student's GPA
+                update_student_GPA(request.user)
+
+            except Exception as e:
+                return render(request, 'gradetracker/addAssignment.html', {'error_message' : "BIG ERROR " +str(e)})
+            return CourseOverview(request, course_id)
+        else:
+            return HttpResponseRedirect(reverse('gradetracker:dashboard'))
+        
+    else:
+        # if the user is not authenticated
+        return redirect('gradetracker:index')
+
+def edit_category(request, category_id=None):
+    if request.user.is_authenticated:
+
+        if request.method == 'POST':
+            try:
+                course_id = request.POST.get('courseID')
+                if (request.POST.get('submitOrCancel')=="0"):
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+                name = request.POST.get('categoryName')
+                percentage = request.POST.get('weight')
+
+                categoryToModify = GradeCategory.objects.get(id=category_id)
+                    
+                categoryToModify.name = name
+                categoryToModify.weightage = percentage
+                categoryToModify.save()
                 getAverage(course_id)
                 # Update the student's GPA
                 update_student_GPA(request.user)

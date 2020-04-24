@@ -36,10 +36,12 @@
                       <div style="float:right;font-size: 3.55em;">
                       {% if course.avgGrade.didGradeGoUp %}
                       <span style="color:rgb(0, 165, 27);" class="fa fa-caret-up">
+                      {% elif course.avgGrade.didGradeGoUp == None %}
+                      <span style="color:rgb(27,27,27)">
                       {% else %}
                       <span style="color:red;" class="fa fa-caret-down">
                       {% endif %}
-                    </span>&nbsp;&nbsp;{{ course.avgGrade.gradePercentage }}%
+                    </span>&nbsp;{{ course.avgGrade.gradePercentage }}%
                   </div>
                   {% endif %}
         <br/>

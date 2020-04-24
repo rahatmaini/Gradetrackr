@@ -1,6 +1,7 @@
 {% extends 'gradetracker/template.html' %}
 {% block content %}
 {% load static %}
+{% load gradetracker_tags %}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -160,7 +161,7 @@
 
 
 
-  {% for course in courses_list %}
+    {% for course in courses_list %}
 
     <div id="{{course.id}}ASS" class="w3-modal" style="z-index: 2;">
       <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
@@ -170,7 +171,7 @@
             
       
             <h3 class="card-title" style="text-align: center;"><b>
-              Add a graded item
+              Add a Graded Item
             </b></h3>
             <p class="card-text" style="color:black; text-align: center;">
               <form action = "{% url 'gradetracker:addAssignment' course.id%}" method = "post">
@@ -183,24 +184,20 @@
   
               <div style="padding:2%">
               <label for="weight"><b>% Grade Earned</b></label>
-              <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Ex: 81" title="In format of XX.XX" min="1" max="100" step="0.01">
+              <input type="number" class="form-control" id="weight" name="weight" required pattern="[0-9]+\.+[0-9][0-9]" placeholder="Ex: 81" title="In format of XX.XX" min="0" max="100" step="0.01">
               </div>
               
               <div style="padding:2%">
-
-              <!-- <div class="container"> -->
               <label><b>Category it Belongs To</b></label><br/>
               {% for key, value in coursesAndTheirCategories.items %}
                 {% if key == course %}
                 {% for category in value %}
                     <input type="radio" name="categoryChoice" id="choice{{ forloop.counter }}" value="{{category.id}}" required>
                     <label style="padding-bottom: 2%;" for="choice{{ forloop.counter }}" >{{ category.name }}</label><br>
-
                 {% endfor %}
                 {% endif %}
               {% endfor %}
             </div>
-          <!-- </div> -->
               <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
               
               <div style="text-align: center;">
@@ -212,7 +209,7 @@
             </div></div>
       </div>
     </div>
-
+        
         <!--<li class="list-group-item">-->      
             <div class="card scene_element scene_element--fadein" style="width: auto" id="beautifiedCard">
                 <div class="card-body" style="padding-bottom: 1.75%;">
@@ -226,6 +223,8 @@
                       <div style="float:right">
                       {% if course.avgGrade.didGradeGoUp %}
                       <span class="fa fa-caret-up" style="color:rgb(0, 165, 27);vertical-align: 1px;" title="Grade increased since last time"></span><span style="color:rgb(0, 165, 27);">
+                      {% elif course.avgGrade.didGradeGoUp == None %}
+                      <span style="color:rgb(27,27,27)">
                       {% else %}
                       <span class="fa fa-caret-down" style="color:red;vertical-align: 1px;" title="Grade decreased since last time"></span><span style="color:red;">
                       {% endif %}
@@ -235,6 +234,8 @@
                     </b></h4></a>
 
 
+                    
+
 
                   <p class="card-text" style="color:black; text-align: center;">
 
@@ -242,10 +243,13 @@
                     <div style="text-align: center;padding-bottom: 3%;padding-top: 2%;">
 
                       <a onclick="document.getElementById('overlay').style.display='block';document.getElementById('{{course.id}}CATEGORY').style.display='block';" class="btn btn-primary scene_element scene_element--fadein" style="color:white;border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);font-size: small;"><b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A CATEGORY&nbsp;</b></a>
-    
+                      
+                 
+                      {% if coursesAndTheirCategories|get_item:course != None %}
                       &nbsp;
                       <a onclick="document.getElementById('overlay').style.display='block';document.getElementById('{{course.id}}ASS').style.display='block';" class="btn btn-primary" style="border-radius: 99px;box-shadow: 0 5px 15px rgba(18, 73, 255, 0.4);color:white;font-size: small;">
                         <b>&nbsp;<span class="ti-plus" style="vertical-align: -1.85px;"></span>&nbsp;&nbsp;ADD A GRADED ITEM</a></b>
+                      {% endif %}
                       
                     
                     </div>
