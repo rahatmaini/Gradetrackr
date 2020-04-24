@@ -102,9 +102,9 @@
         <div class="cardGrid">
 {% if showReportCardOrNot %}
 <!--DASHBOARD OVERVIEW CARD-->
-<div class="card scene_element scene_element--fadein" style="width: auto; float:left" id="beautifiedCard">
+<div class="card scene_element scene_element--fadein" style="width: 80%; float:left;margin-left: 10%;" id="beautifiedCard">
   <div class="card-body" style="padding-bottom: 1.75%;">
-    <h4 class="card-title"><b>Your Report Card
+    <h4 class="card-title" style="font-size:2em"><b>Report Card
       
       {% if not student.cumulativeGPA.gradePercentage == None %}
               <div style="float:right">
@@ -211,12 +211,12 @@
     </div>
         
         <!--<li class="list-group-item">-->      
-            <div class="card scene_element scene_element--fadein" style="width: auto" id="beautifiedCard">
+            <div class="card scene_element scene_element--fadein" style="width: 80%;margin-left: 10%;" id="beautifiedCard">
                 <div class="card-body" style="padding-bottom: 1.75%;">
                     <!-- List all the courses associated with a user -->
-                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title" style="color:rgb(29, 29, 29)"><b>{{ course.name }}
+                    <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title" style="color:rgb(29, 29, 29);font-size:2em"><b>{{ course.name }}
                       {% if course.Verified_Class %}
-                       <span id="verification" class="rotunda" style="vertical-align: -1px;"></span>
+                       <span id="verification" class="rotunda" style="vertical-align: -5px;"></span>
                        {% endif %}
                       
                       {% if not course.avgGrade == None %}
@@ -298,7 +298,7 @@
                   <label class="switch" style="vertical-align: 18.5px;margin-left: 1.25%;">
                     <input type="checkbox" onclick="calc('{{course.id}}','{{course.Include_In_GPA}}');" {% if course.Include_In_GPA %} checked{% endif %}>
                     <span class="slider round"></span>
-                  </label><span style="font-size: 0.4em;vertical-align: 2.75px;">&nbsp;&nbsp;&nbsp;<b>SHOW IN REPORT CARD</b></span>
+                  </label><span style="font-size: 0.5em;vertical-align: 2.75px;">&nbsp;&nbsp;&nbsp;<b>SHOW IN REPORT CARD</b></span>
 
                   <span style="color:rgb(32, 32, 32); float: right;"><b>{{ course.number_Of_Credits|floatformat }} credits</b></span>
 
