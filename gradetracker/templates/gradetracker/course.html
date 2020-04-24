@@ -76,7 +76,7 @@
         
         {% for category in grade_categories %}
         
-        <input type="range" step="0.1" id="{{category.id}}hypo" name="{{category.weightage}}" min="0" max="100" oninput=calculateHypothetical() value="{{category.avgCategoryGrade.gradePercentage|floatformat}}">
+        <input type="range" step="0.1" id="{{category.id}}hypo" name="{{category.weightage}}" min="0" max="100" oninput=calculateHypothetical() value="{{ category.avgCategoryGrade.gradePercentage|floatformat }}">
         <br /><label for="{{category.id}}hypo" class="darkMode" style="vertical-align: -3.5px;">
         <b><span id="{{category.id}}grade">{{category.avgCategoryGrade.gradePercentage}}</span>%</b> in {{category}}</label>
         <br />
@@ -336,7 +336,7 @@
         
         var sum = 0;
         {% for category in grade_categories %}
-        document.getElementById("{{category.id}}grade").innerHTML = document.getElementById("{{category.id}}hypo").value
+        document.getElementById("{{category.id}}grade").innerHTML = parseFloat(document.getElementById("{{category.id}}hypo").value).toFixed(2);
         sum += parseFloat(document.getElementById("{{category.id}}hypo").value)*0.01*{{category.weightage}};
         {% endfor %}
         
