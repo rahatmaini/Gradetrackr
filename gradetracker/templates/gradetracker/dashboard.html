@@ -160,7 +160,7 @@
 
 
 
-    {% for course in courses_list %}
+  {% for course in courses_list %}
 
     <div id="{{course.id}}ASS" class="w3-modal" style="z-index: 2;">
       <div class="w3-modal-content w3-animate-top " style="border-radius: 15px;">
@@ -170,7 +170,7 @@
             
       
             <h3 class="card-title" style="text-align: center;"><b>
-              Add an Assignment
+              Add a graded item
             </b></h3>
             <p class="card-text" style="color:black; text-align: center;">
               <form action = "{% url 'gradetracker:addAssignment' course.id%}" method = "post">
@@ -187,16 +187,20 @@
               </div>
               
               <div style="padding:2%">
+
+              <!-- <div class="container"> -->
               <label><b>Category it Belongs To</b></label><br/>
               {% for key, value in coursesAndTheirCategories.items %}
                 {% if key == course %}
                 {% for category in value %}
                     <input type="radio" name="categoryChoice" id="choice{{ forloop.counter }}" value="{{category.id}}" required>
-                    <label for="choice{{ forloop.counter }}" >{{ category.name }}</label><br>
+                    <label style="padding-bottom: 2%;" for="choice{{ forloop.counter }}" >{{ category.name }}</label><br>
+
                 {% endfor %}
                 {% endif %}
               {% endfor %}
             </div>
+          <!-- </div> -->
               <input type="hidden" class="submitOrCancel" id="submitOrCancel" name="submitOrCancel" value="">
               
               <div style="text-align: center;">
@@ -208,7 +212,7 @@
             </div></div>
       </div>
     </div>
-        
+
         <!--<li class="list-group-item">-->      
             <div class="card scene_element scene_element--fadein" style="width: auto" id="beautifiedCard">
                 <div class="card-body" style="padding-bottom: 1.75%;">
@@ -230,8 +234,6 @@
                   {% endif %}
                     </b></h4></a>
 
-
-                    
 
 
                   <p class="card-text" style="color:black; text-align: center;">
