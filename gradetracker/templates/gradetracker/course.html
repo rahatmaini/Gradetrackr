@@ -68,12 +68,34 @@
         {% else %}
         <span style="color:red;float:right"><b>Not Yet Achieved</b></span>
         {% endif %}
-      
-    
     
     </b></h4>
-      <!--<p class="card-text" style="color:black; text-align: center;">TODO: Add curr grade, target, how to get there</p>-->
+
+      
+      <p class="card-text darkMode" style="text-align: center;margin-top: 5%;line-height: 250%;">
+        
+        {% for category in grade_categories %}
+        
+        <input type="range" step="0.1" id="{{category.id}}hypo" name="{{category.weightage}}" min="0" max="100" oninput=calculateHypothetical() value="{{category.avgCategoryGrade.gradePercentage|floatformat}}">
+        <br /><label for="{{category.id}}hypo" class="darkMode" style="vertical-align: -3.5px;">
+        <b><span id="{{category.id}}grade">{{category.avgCategoryGrade.gradePercentage}}</span>%</b> in {{category}}</label>
+        <br />
+        
+
+        {% endfor %}
+      
+      
+      </p>
+      <b>
+        <span class="darkMode" style="float:right">
+        {% if course.avgGrade.gradePercentage < course.target_Grade %}
+        These grades earn you a <span id="computedAvg" style="color:red;">{{course.avgGrade.gradePercentage}}%</span> average
+        {% else %}
+        These grades earn you a <span id="computedAvg" style="color:rgb(0, 165, 27);">{{course.avgGrade.gradePercentage}}%</span> average
+        {% endif %}</span></b>
+        </span>
       </div></div>
+      
 
   
     {% for category in grade_categories %}
@@ -308,6 +330,28 @@
       formsToEnable[x].value=1;
     }
   }
+
+  function calculateHypothetical() 
+  {
+        
+        var sum = 0;
+        {% for category in grade_categories %}
+        document.getElementById("{{category.id}}grade").innerHTML = document.getElementById("{{category.id}}hypo").value
+        sum += parseFloat(document.getElementById("{{category.id}}hypo").value)*0.01*{{category.weightage}};
+        {% endfor %}
+        
+        if (sum>={{course.target_Grade}}) {
+          document.getElementById("computedAvg").innerHTML = '<span style="color:rgb(0, 165, 27);">'+ sum.toFixed(2)+'%</span>';
+        }
+        else {
+          document.getElementById("computedAvg").innerHTML = '<span style="color:red;">'+ sum.toFixed(2)+'%</span>';
+        }
+        
+    }
+
+
+
+
 
 </script>
 
