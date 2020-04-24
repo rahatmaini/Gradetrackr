@@ -68,8 +68,8 @@ class Course(models.Model):
 
 class GradeCategory(models.Model):
     name = models.CharField(max_length=100)
-    weightage = models.DecimalField(max_digits=4,
-                                    decimal_places=2)  # wont work for grade categories that are worth 100% of the class. Hopefully this is never an issue
+    weightage = models.DecimalField(max_digits=5,
+                                    decimal_places=2)  
 
     courseItBelongsTo = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="categories")
     avgCategoryGrade = models.ForeignKey(SingularGradeItem, on_delete=models.CASCADE, related_name="avgCategoryGrade", null=True)
