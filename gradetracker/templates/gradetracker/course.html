@@ -62,7 +62,7 @@
 
       <h4 class="card-title">
         <span style="text-align: left;">
-        Target Grade of <b>{{course.target_Grade|floatformat}}%</b></span>
+          <b>Target Grade of <span style="color:rgb(0,123,254);">{{course.target_Grade|floatformat}}%</b></span>
         {% if course.avgGrade.gradePercentage >= course.target_Grade %}
         <span style="color:rgb(0, 165, 27);float:right"><b>Achieved</b></span>
         {% else %}
@@ -341,7 +341,7 @@
         {% endfor %}
         
         if (sum>={{course.target_Grade}}) {
-          document.getElementById("computedAvg").innerHTML = '<span style="color:rgb(0, 165, 27);">'+ sum.toFixed(2)+'%</span>';
+          document.getElementById("computedAvg").innerHTML = '<span style="color:rgb(0,123,254);">'+ sum.toFixed(2)+'%</span>';
         }
         else {
           document.getElementById("computedAvg").innerHTML = '<span style="color:red;">'+ sum.toFixed(2)+'%</span>';
