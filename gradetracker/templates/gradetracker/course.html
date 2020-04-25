@@ -61,15 +61,20 @@
         <!-- List all the categories associated with that course -->
 
       <h4 class="card-title">
-        <span style="text-align: left;">
-          <b>Target Grade of <span style="color:rgb(0,123,254);">{{course.target_Grade|floatformat}}%</b></span>
+        <span style="text-align: left;" id="widgetCardTitle">
+          <b>Average Grade</b></span>
+          
+            <b>
+            <span style="color:rgb(0,123,254);float:right" id="computedAvg">{{course.avgGrade.gradePercentage}}%</span></b>
+
+        <!--
         {% if course.avgGrade.gradePercentage >= course.target_Grade %}
         <span style="color:rgb(0, 165, 27);float:right"><b>Achieved</b></span>
         {% else %}
         <span style="color:red;float:right"><b>Not Yet Achieved</b></span>
-        {% endif %}
+        {% endif %} -->
     
-    </b></h4>
+    </h4>
 
       
       <p class="card-text darkMode" style="text-align: center;margin-top: 5%;line-height: 250%;">
@@ -86,14 +91,10 @@
       
       
       </p>
-      <b>
-        <span class="darkMode" style="float:right">
-        {% if course.avgGrade.gradePercentage < course.target_Grade %}
-        These grades earn you a <span id="computedAvg" style="color:red;">{{course.avgGrade.gradePercentage}}%</span> average
-        {% else %}
-        These grades earn you a <span id="computedAvg" style="color:rgb(0, 165, 27);">{{course.avgGrade.gradePercentage}}%</span> average
-        {% endif %}</span></b>
-        </span>
+      
+        <b><span class="darkMode" style="float:right" id="howManyAwayFromTarget" >
+        Your Target is {{course.target_Grade|floatformat}}%
+        </span></b>
       </div></div>
       
 
@@ -333,7 +334,7 @@
 
   function calculateHypothetical() 
   {
-        
+        document.getElementById("widgetCardTitle").innerHTML = "<b>Hypothetical Grade</b>"
         var sum = 0;
         {% for category in grade_categories %}
         document.getElementById("{{category.id}}grade").innerHTML = parseFloat(document.getElementById("{{category.id}}hypo").value).toFixed(2);
@@ -341,11 +342,17 @@
         {% endfor %}
         
         if (sum>={{course.target_Grade}}) {
-          document.getElementById("computedAvg").innerHTML = '<span style="color:rgb(0,123,254);">'+ sum.toFixed(2)+'%</span>';
+          document.getElementById("computedAvg").innerHTML = '<span style="color:rgb(0, 165, 27);">'+ sum.toFixed(2)+'%</span>';
         }
         else {
-          document.getElementById("computedAvg").innerHTML = '<span style="color:red;">'+ sum.toFixed(2)+'%</span>';
+          document.getElementById("computedAvg").innerHTML = '<span style="color:rgb(0,123,254)">'+ sum.toFixed(2)+'%</span>';
         }
+
+        if ({{course.target_Grade}}-sum > 0)
+          document.getElementById("howManyAwayFromTarget").innerHTML = ({{course.target_Grade}}-sum).toFixed(2) + "% Away From Target"
+        else 
+          document.getElementById("howManyAwayFromTarget").innerHTML = "These Grades Meet Your Target"
+
         
     }
 
