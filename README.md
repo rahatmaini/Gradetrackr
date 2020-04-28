@@ -3,4 +3,4 @@
 
 This app is a one-stop shop for tracking your academic performance. 
 
-Created by Shammi Aijazi, Justin Nguyen-Galante, Rahat Maini, and Tien Tran
+Created by Shami Aijazi, Justin Nguyen-Galante, Rahat Maini, and Tien Tran
