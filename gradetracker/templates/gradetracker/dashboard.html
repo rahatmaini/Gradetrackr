@@ -216,7 +216,7 @@
                     <!-- List all the courses associated with a user -->
                     <a href="{% url 'gradetracker:course_overview' course_id=course.id%}" class="mainLogo"> <h4 class="card-title darkMode" style="font-size:1.5em"><b>{{ course.name }}
                       {% if course.Verified_Class %}
-                       <span id="verification" class="rotunda" style="vertical-align: -5px;" title="This is a verified UVA course"></span>
+                       <span id="verification" class="rotunda" style="vertical-align: -7px;" title="This is a verified UVA course"></span>
                        {% endif %}
                       
                       {% if not course.avgGrade == None %}

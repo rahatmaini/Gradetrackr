@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_jzp-91b)r3hejl5gmh7e6^hyz8_2jg5v+8^t3olj27nz9)%r!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'four80ty.herokuapp.com', 'gradetrackr.com']
 
@@ -52,9 +52,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'personaldashboard.urls'
+
 
 TEMPLATES = [
     {
@@ -72,7 +74,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'personaldashboard.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
