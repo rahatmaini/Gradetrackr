@@ -1545,11 +1545,11 @@ div.horizontalgap {
 
   .rotunda {
 	background: url('uva_logo_2.png');
-	background-size: 33px;
-    height: 33px;
-	width: 33px;
+	background-size: 30px;
+    height: 30px;
+	width: 30px;
 	filter: brightness(110%);
-	margin-left: 0.5%;
+	margin-left: 0.75%;
 	display:inline-block;
 }
 .rotunda2 {
