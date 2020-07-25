@@ -21,8 +21,6 @@ from django.views.generic import TemplateView
 app_name = 'personaldashboard'
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('', views.HomeView.as_view(), name="home"),
-    #path('home', views.HomeView.as_view(), name="home"),
-    path('', include('gradetracker.urls')), #used to be gradetracker/
+    path('', include('gradetracker.urls')),
     path('accounts/', include('allauth.urls')),
 ]

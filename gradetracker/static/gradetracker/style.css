@@ -220,14 +220,6 @@ input[type="range"] {
 }
 
 
-p {
-    color: #33cccc;
-}
-
-a {
-    color: #33cccc;
-}
-
 table {
     border:solid #2b2b2b 1px;
 	border-radius:15px;
@@ -260,10 +252,6 @@ h1 {
     font-size: 200%;
 }
 
-.labelHeader {
-    color: #33cccc;
-    font-weight: bold;
-}
 
 html {
   overflow-y: scroll;
