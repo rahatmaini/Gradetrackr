@@ -192,8 +192,8 @@
               {% for key, value in coursesAndTheirCategories.items %}
                 {% if key == course %}
                 {% for category in value %}
-                    <input type="radio" name="categoryChoice" id="choice{{ forloop.counter }}" value="{{category.id}}" required>
-                    <label style="padding-bottom: 2%;" for="choice{{ forloop.counter }}" >{{ category.name }}</label><br>
+                    <input type="radio" name="categoryChoice" id="choice{{ forloop.counter }} {{category.id}}" value="{{category.id}}" required>
+                    <label style="padding-bottom: 2%;" for="choice{{ forloop.counter }} {{category.id}}" >{{ category.name }}</label><br>
                 {% endfor %}
                 {% endif %}
               {% endfor %}
