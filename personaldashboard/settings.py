@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_jzp-91b)r3hejl5gmh7e6^hyz8_2jg5v+8^t3olj27nz9)%r!'
+SECRET_KEY = os.getenv('GRADETRACKR_SECRET_KEY') #ask rahat for it to run locally, already set on heroku
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
